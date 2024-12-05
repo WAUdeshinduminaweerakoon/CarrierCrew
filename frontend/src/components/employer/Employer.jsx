@@ -14,7 +14,7 @@ const AddEmployerDetails = () => {
     password: "",
     confirmPassword: "",
   });
-
+//
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {

@@ -1,0 +1,164 @@
+/* Register.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+  }
+  
+  .register-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .register-form h2 {
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+  
+  .register-form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .register-form input,
+  .register-form select,
+  .register-form textarea {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .register-form textarea {
+    resize: vertical;
+  }
+  
+  .radio-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .radio-group label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    color: #555;
+  }
+  
+  .radio-group input {
+    margin-right: 5px;
+    border: 2px solid blue;
+
+  }
+  
+  .register-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .register-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .register-form button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  input {
+    border: 2px solid blue; /* Sets border width, style, and default color */
+    padding: 10px;
+    border-radius: 5px; /* Optional: adds rounded corners */
+    outline: none; /* Removes the default outline */
+  }
+
+  /* Change border color on focus */
+  input:focus {
+    border-color: blue; /* Highlighted border color */
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.5); /* Optional: adds a glow effect */
+  }
+
+  /* Add different border color for validation (example: invalid state) */
+  input:invalid {
+    border-color: blue; /* Border color for invalid inputs */
+  }
+
+  /* Example of a disabled input */
+  input:disabled {
+    border-color: lightgray; /* Border color for disabled input */
+    background-color: #f9f9f9; /* Optional: changes background color */
+  }
+
+  /*Select */
+  select {
+    border: 2px solid blue; /* Sets border width, style, and default color */
+    padding: 10px;
+    border-radius: 5px; /* Optional: adds rounded corners */
+    outline: none; /* Removes the default outline */
+  }
+
+  /* Change border color on focus */
+  select:focus {
+    border-color: blue; /* Highlighted border color */
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.5); /* Optional: adds a glow effect */
+  }
+
+  /* Add different border color for validation (example: invalid state) */
+  Select:invalid {
+    border-color: blue; /* Border color for invalid inputs */
+  }
+
+  /* Example of a disabled input */
+  Select :disabled {
+    border-color: lightgray; /* Border color for disabled input */
+    background-color: #f9f9f9; /* Optional: changes background color */
+  }
+
+  /* text area */
+
+  textarea {
+    border: 2px solid blue; /* Sets border width, style, and default color */
+    padding: 10px;
+    border-radius: 5px; /* Optional: adds rounded corners */
+    outline: none; /* Removes the default outline */
+  }
+
+  /* Change border color on focus */
+  textarea:focus {
+    border-color: blue; /* Highlighted border color */
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.5); /* Optional: adds a glow effect */
+  }
+
+  /* Add different border color for validation (example: invalid state) */
+  textarea:invalid {
+    border-color: blue; /* Border color for invalid inputs */
+  }
+
+  /* Example of a disabled input */
+  textarea :disabled {
+    border-color: lightgray; /* Border color for disabled input */
+    background-color: #f9f9f9; /* Optional: changes background color */
+  }
+

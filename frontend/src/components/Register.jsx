@@ -1,163 +1,184 @@
-import React, { useState } from "react";
-
+import React, { useState } from 'react';
+import './Register.css';
 
 const Register = () => {
-    const [formData, setFormData] = useState({
-      firstName: "",
-      lastName: "",
-      email: "",
-      mobile: "",
-      nic: "",
-      address: "",
-      role: "", // Assuming this is the select menu
-      username: "",
-      password: "",
-      confirmPassword: "",
-    });
-  
-    const [error, setError] = useState("");
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      // Simple validation
-      if (formData.password !== formData.confirmPassword) {
-        setError("Passwords do not match!");
-        return;
-      }
-  
-      try {
-        const response = await fetch("http://localhost:5000/api/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        if (response.ok) {
-          alert("User registered successfully!");
-          setFormData({
-            firstName: "",
-            lastName: "",
-            email: "",
-            mobile: "",
-            nic: "",
-            address: "",
-            role: "",
-            username: "",
-            password: "",
-            confirmPassword: "",
-          });
-          setError("");
-        } else {
-          const resData = await response.json();
-          setError(resData.message || "Something went wrong");
-        }
-      } catch (error) {
-        setError("Failed to connect to the server");
-      }
-    };
-  
-    return (
-      <div style={{ maxWidth: "500px", margin: "auto" }}>
-        <h2>Register</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="tel"
-            name="mobile"
-            placeholder="Mobile Number"
-            value={formData.mobile}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="nic"
-            placeholder="NIC"
-            value={formData.nic}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="address"
-            placeholder="Address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-          />
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit">Create</button>
-        </form>
-      </div>
-    );
+  const [formData, setFormData] = useState({
+    role: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    mobile: '',
+    nic: '',
+    address: '',
+    city: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    gender: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
-  
-  export default Register;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Send formData to backend via API call
+    fetch('http://localhost:5000/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  return (
+    <div className="register-container">
+      <form className="register-form" onSubmit={handleSubmit}>
+        <h2 style={{ color: "blue", fontSize: "25px" }}>Unlock Part-Time Jobs <br></br> Join Us!</h2>
+        
+
+        {/*<label htmlFor="role">Role:</label>*/}
+        <select name="role" value={formData.role} onChange={handleChange} required>
+          <option value="">Select Role</option>
+          <option value="Admin">Job Seeker</option>
+          <option value="User">Employee</option>
+        </select>
+
+        {/*<label htmlFor="firstName">First Name:</label>*/}
+        <input
+          type="text"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          placeholder="First Name"
+          required
+        />
+
+        {/*<label htmlFor="lastName">Last Name:</label>*/}
+        <input
+          type="text"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+          placeholder='Last Name'
+          required
+        />
+
+        {/*<label htmlFor="email">Email:</label>*/}
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder='Email'
+          required
+        />
+
+        {/*<label htmlFor="mobile">Mobile Number:</label>*/}
+        <input
+          type="text"
+          name="mobile"
+          value={formData.mobile}
+          onChange={handleChange}
+          placeholder='Mobile Number'
+          required
+        />
+
+       {/* <label htmlFor="nic">NIC:</label>*/}
+        <input
+          type="text"
+          name="nic"
+          value={formData.nic}
+          onChange={handleChange}
+          placeholder='NIC'
+          required
+        />
+
+        {/*<label htmlFor="address">Address:</label>*/}
+        <textarea
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          placeholder='Address'
+          required
+        ></textarea>
+
+        {/*<label htmlFor="city">Nearest City:</label>*/}
+        <select name="city" value={formData.city} onChange={handleChange} required>
+          <option value="">Nearest City</option>
+          <option value="City1">City1</option>
+          <option value="City2">City2</option>
+          <option value="City3">City3</option>
+        </select>
+
+        {/*<label htmlFor="username">Username:</label>*/}
+        <input
+          type="text"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          placeholder='Username'
+          required
+        />
+
+        {/*<label htmlFor="password">Password:</label>*/}
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder='Password'
+          required
+        />
+
+       {/*} <label htmlFor="confirmPassword">Confirm Password:</label>*/}
+        <input
+          type="password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          placeholder='Confirm Password'
+          required
+        />
+
+        {/*<label>Gender:</label>*/}
+        <div className="radio-group">
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              value="Male"
+              checked={formData.gender === 'Male'}
+              onChange={handleChange}
+              required
+            />
+            Male
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              value="Female"
+              checked={formData.gender === 'Female'}
+              onChange={handleChange}
+              required
+            />
+            Female
+          </label>
+        </div>
+
+        <button type="submit">Continue</button>
+      </form>
+    </div>
+  );
+};
+
+export default Register;

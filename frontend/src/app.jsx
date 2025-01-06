@@ -3,6 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Register from "./components/Register";
+import PasswordReset from "./components/PasswordReset";
 
 
 // Create router with routes
@@ -19,7 +20,10 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  
+  {
+    path: "/passwordreset",
+    element: <PasswordReset />,
+  }
 ]);
 
 const App = () => {

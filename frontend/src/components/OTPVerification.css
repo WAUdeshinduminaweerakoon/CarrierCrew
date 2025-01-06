@@ -1,0 +1,58 @@
+.container {
+    text-align: center;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #f9f9f9;
+    margin-top: 5%;
+  }
+  
+  h2 {
+    color: #333;
+  }
+  
+  .otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  
+  .otp-inputs input {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    background: #318CE7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #45a049;
+  }
+  
+  .resend {
+    margin-top: 15px;
+    cursor: pointer;
+    color: #007bff;
+  }
+  
+  .resend span {
+    text-decoration: underline;
+  }
+  
+  .message {
+    margin-top: 10px;
+    color: red;
+  }

@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Register from "./components/Register";
 import PasswordReset from "./components/PasswordReset";
+import OtpSend from "./components/OtpSend";
 
 
 // Create router with routes
@@ -23,7 +24,12 @@ const router = createBrowserRouter([
   {
     path: "/passwordreset",
     element: <PasswordReset />,
+  },
+  {
+    path: "/otpverify",
+    element: <OtpSend />,
   }
+
 ]);
 
 const App = () => {

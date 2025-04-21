@@ -1,11 +1,9 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-// import Login from "./components/Login";
-// import Home from "./components/Home";
+
 import Register from "./components/login/Register";
 import AddCompanyDetails from "./components/employer/CompanyDetails";
-import AddJobPost from "./components/jobpost/CreateJobPost";
-
+import AddJobPost from "./components/employer/CreateJobPost";
 import Login from "./components/login/Login";
 import Home from "./components/jobSeeker/Home";
 import EmployerHome from "./components/employer/Home";
@@ -18,12 +16,16 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/home",
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/jobseeker/home",
     element: <Home />,
   },
   {
-    path: "/register",
-    element: <Register />,
+    path:"/jobseeker/profile",
+    element: <JobSeekerProfile/>
   },
   {
     path: "/employer/home",
@@ -34,12 +36,8 @@ const router = createBrowserRouter([
     element: <AddCompanyDetails />,
   },
   {
-    path: "/create-job",
+    path: "/employer/create-job",
     element: <AddJobPost/>
-  },
-  {
-    path:"/jobseeker/profile",
-    element: <JobSeekerProfile/>
   },
 ]);
 

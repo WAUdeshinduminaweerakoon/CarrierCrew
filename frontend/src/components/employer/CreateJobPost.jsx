@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function NewJobForm() {
+  const navigate = useNavigate();
+
   const [vacancies, setVacancies] = useState(1);
   const [formData, setFormData] = useState({
     jobTitle: "",
@@ -10,7 +13,8 @@ export default function NewJobForm() {
     timeFrom: "",
     timeTo: "",
     duration: "",
-    payment: ""
+    payment: "",
+    description: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -21,7 +25,8 @@ export default function NewJobForm() {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const validateForm = () => {
@@ -45,68 +50,88 @@ export default function NewJobForm() {
     }
   };
 
+  const handleReset = () => {
+    setFormData({
+      jobTitle: "",
+      location: "",
+      dateFrom: "",
+      dateTo: "",
+      timeFrom: "",
+      timeTo: "",
+      duration: "",
+      payment: "",
+      description: "",
+    });
+    setVacancies(1);
+    setErrors({});
+  };
+
+  const handleBack = () => {
+    navigate("/employer/home");
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md mx-auto p-4 rounded-2xl shadow-lg bg-white border border-gray-200"
+      className="max-w-md mx-auto p-4 rounded-2xl shadow-lg bg-white border border-green-200"
     >
       <div className="flex justify-center items-center gap-4 mb-4">
-        <h2 className="text-xl font-bold text-blue-700">New Job</h2>
+        <h2 className="text-xl font-bold text-green-700">New Job</h2>
       </div>
-      
+
       <div className="flex justify-center mb-4">
-        <div className="w-24 h-24 bg-blue-100 rounded-lg flex items-center justify-center cursor-pointer border border-blue-400 rounded">
-          <span className="text-blue-600 text-sm">Image +</span>
+        <div className="w-24 h-24 bg-green-100 rounded-lg flex items-center justify-center cursor-pointer border border-green-400">
+          <span className="text-green-600 text-sm">Image +</span>
         </div>
       </div>
 
       <div className="space-y-3">
         <div>
-          <label className="block text-sm font-medium">Job Title</label>
+          <label className="block text-sm font-medium text-green-800">Job Title</label>
           <input
             type="text"
             name="jobTitle"
             placeholder="Job Title"
             value={formData.jobTitle}
             onChange={handleChange}
-            className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {errors.jobTitle && <p className="text-red-500 text-xs">{errors.jobTitle}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Location</label>
+          <label className="block text-sm font-medium text-green-800">Location</label>
           <input
             type="text"
             name="location"
             placeholder="Location"
             value={formData.location}
             onChange={handleChange}
-            className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {errors.location && <p className="text-red-500 text-xs">{errors.location}</p>}
         </div>
 
         <div className="flex space-x-2">
           <div className="flex-1">
-            <label className="block text-sm font-medium">Date From</label>
+            <label className="block text-sm font-medium text-green-800">Date From</label>
             <input
               type="date"
               name="dateFrom"
               value={formData.dateFrom}
               onChange={handleChange}
-              className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             {errors.dateFrom && <p className="text-red-500 text-xs">{errors.dateFrom}</p>}
           </div>
           <div className="flex-1">
-            <label className="block text-sm font-medium">Date To</label>
+            <label className="block text-sm font-medium text-green-800">Date To</label>
             <input
               type="date"
               name="dateTo"
               value={formData.dateTo}
               onChange={handleChange}
-              className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             {errors.dateTo && <p className="text-red-500 text-xs">{errors.dateTo}</p>}
           </div>
@@ -114,61 +139,61 @@ export default function NewJobForm() {
 
         <div className="flex space-x-2">
           <div className="flex-1">
-            <label className="block text-sm font-medium">Time From</label>
+            <label className="block text-sm font-medium text-green-800">Time From</label>
             <input
               type="time"
               name="timeFrom"
               value={formData.timeFrom}
               onChange={handleChange}
-              className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             {errors.timeFrom && <p className="text-red-500 text-xs">{errors.timeFrom}</p>}
           </div>
           <div className="flex-1">
-            <label className="block text-sm font-medium">Time To</label>
+            <label className="block text-sm font-medium text-green-800">Time To</label>
             <input
               type="time"
               name="timeTo"
               value={formData.timeTo}
               onChange={handleChange}
-              className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             {errors.timeTo && <p className="text-red-500 text-xs">{errors.timeTo}</p>}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Time Duration (Hours)</label>
+          <label className="block text-sm font-medium text-green-800">Time Duration (Hours)</label>
           <input
             type="number"
             name="duration"
             value={formData.duration}
             onChange={handleChange}
-            className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {errors.duration && <p className="text-red-500 text-xs">{errors.duration}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Payment Amount (Rs.)</label>
+          <label className="block text-sm font-medium text-green-800">Payment Amount (Rs.)</label>
           <input
             type="number"
             name="payment"
-            placeholder=" Rs.00000.00"
+            placeholder="Rs.00000.00"
             value={formData.payment}
             onChange={handleChange}
-            className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {errors.payment && <p className="text-red-500 text-xs">{errors.payment}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium">No of Vacancies</label>
+          <label className="block text-sm font-medium text-green-800">No of Vacancies</label>
           <div className="flex items-center space-x-2">
             <button
               type="button"
               onClick={decreaseVacancies}
-              className="bg-red-500 text-white px-3 py-1 rounded"
+              className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
             >
               -
             </button>
@@ -176,12 +201,12 @@ export default function NewJobForm() {
               type="number"
               value={vacancies}
               readOnly
-              className="w-20 text-center input input-bordered border border-blue-400 rounded"
+              className="w-20 text-center border border-green-400 rounded px-2 py-1"
             />
             <button
               type="button"
               onClick={increaseVacancies}
-              className="bg-blue-500 text-white px-3 py-1 rounded"
+              className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
             >
               +
             </button>
@@ -189,16 +214,41 @@ export default function NewJobForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">More Description</label>
-          <textarea placeholder=" Other Information" className="w-full textarea border border-blue-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" rows={3}></textarea>
+          <label className="block text-sm font-medium text-green-800">More Description</label>
+          <textarea
+            name="description"
+            placeholder="Other Information"
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            rows={3}
+          ></textarea>
         </div>
 
         <div className="flex justify-between mt-4">
-          <button type="button" className="bg-blue-300 px-4 py-2 rounded font-bold hover:bg-gray-300">Back</button>
-          <button type="reset" className="bg-blue-400 px-4 py-2 rounded font-bold hover:bg-gray-300">Reset</button>
-          <button type="submit" className="bg-blue-500 px-4 py-2 rounded font-bold hover:bg-gray-300">Publish</button>
+          <button
+            type="button"
+            onClick={handleBack}
+            className="bg-green-300 text-green-900 px-4 py-2 rounded font-bold hover:bg-green-400"
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="bg-green-400 text-white px-4 py-2 rounded font-bold hover:bg-green-500"
+          >
+            Reset
+          </button>
+          <button
+            type="submit"
+            className="bg-green-600 text-white px-4 py-2 rounded font-bold hover:bg-green-700"
+          >
+            Publish
+          </button>
         </div>
       </div>
     </form>
   );
 }
+

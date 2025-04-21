@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaBars, FaFilter } from "react-icons/fa"; // Hamburger and Filter icons
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -252,8 +253,9 @@ const Home = () => {
           className={`absolute left-0 top-8 w-full bg-green-800 text-white text-center mt-4 sm:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"}`}
         >
           <nav>
-            <a href="#" className="block py-2 hover:bg-green-700">All Jobs</a>
-            <a href="#" className="block py-2 hover:bg-green-700">Profile</a>
+          <Link to="/home" className="block py-2 hover:bg-green-700">All Jobs</Link>
+          <Link to="/" className="block py-2 hover:bg-green-700">Login</Link>
+            <a href="/jobseeker/profile" className="block py-2 hover:bg-green-700">Profile</a>
             <a href="#" className="block py-2 hover:bg-green-700">My Applications</a>
             <a href="#" className="block py-2 hover:bg-green-700">Settings</a>
             <a href="#" className="block py-2 hover:bg-green-700">Logout</a>

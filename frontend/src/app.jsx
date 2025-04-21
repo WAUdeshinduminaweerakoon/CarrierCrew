@@ -2,7 +2,7 @@ import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 // import Login from "./components/Login";
 // import Home from "./components/Home";
-import AddEmployerDetails from "./components/login/Employer";
+import Register from "./components/login/Register";
 import AddCompanyDetails from "./components/employer/CompanyDetails";
 import AddJobPost from "./components/jobpost/CreateJobPost";
 
@@ -20,8 +20,8 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/employer",
-    element: <AddEmployerDetails />,
+    path: "/register",
+    element: <Register />,
   },
   {
     path: "/company-details",

@@ -1,4 +1,6 @@
 import React from "react";
+import Home from "./components/employer/Home.jsx";
+
 
 const Home = () => {
   return (

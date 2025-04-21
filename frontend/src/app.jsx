@@ -8,6 +8,7 @@ import AddJobPost from "./components/jobpost/CreateJobPost";
 
 import Login from "./components/login/Login";
 import Home from "./components/jobSeeker/Home";
+import EmployerHome from "./components/employer/Home";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/employer/home",
+    element: <EmployerHome />,
   },
   {
     path: "/company-details",

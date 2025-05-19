@@ -5,7 +5,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import AddEmployerDetails from "./components/employer/Employer";
 import AddCompanyDetails from "./components/company/CompanyDetails";
 import AddJobPost from "./components/jobpost/CreateJobPost";
-
 import Login from "./components/login/Login";
 import Home from "./components/jobSeeker/Home";
 import EmployerProfile from "./components/employer/EmployerProfile";

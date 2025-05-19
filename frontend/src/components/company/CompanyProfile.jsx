@@ -1,44 +1,44 @@
 import React from "react";
 import { Star } from "lucide-react";
 
-export default function EmployerProfile() {
+export default function CompanyProfile() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-md pb-4 rounded-2xl shadow-xl border border-blue-200 bg-white">
         <div className="bg-blue-300 text-center rounded-t-2xl py-2 text-white text-lg font-semibold">
-          Employer Profile
+          Company Profile
         </div>
         <div className="p-4 border border-blue-200 mx-4 mt-4 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="w-20 h-20 rounded-full bg-blue-200 flex items-center justify-center text-white text-2xl font-bold">
               <span>👤</span>
             </div>
-            <h2 className="text-xl font-semibold mt-2">Jason Plaier.</h2>
-            <p className="text-sm text-gray-500">jason@gmail.com</p>
+            <h2 className="text-xl font-semibold mt-2">ABC Pvt Limited.</h2>
+            <p className="text-sm text-gray-500">ABC@gmail.com</p>
           </div>
 
           <div className="mt-4 space-y-2 text-sm">
-            <p><strong>Name</strong> : Jason Plaier.</p>
+            <p><strong>Name</strong> : ABC Pvt Limited.</p>
             <p><strong>Contact</strong> : +9470987654</p>
             <p><strong>Address</strong> : Raja Mawatha, Colombo 04.</p>
             <p><strong>Nearest City</strong> : Kottawa.</p>
 
             <div className="bg-gray-100 rounded-md p-3 border border-gray-300">
               <p className="text-justify text-sm">
-                <strong>Description</strong> : Dedicated and professional person.
+                <strong>Description</strong> : ABC connects customers with local restaurants through an app or website, providing convenient access to a wide variety of meals delivered directly to their doorsteps. It streamlines the ordering process, offering real-time tracking and contactless delivery options for customer satisfaction.
               </p>
             </div>
 
             <div className="flex items-center mt-2">
               <strong className="mr-2">Rating</strong> :
               <div className="flex space-x-1 text-yellow-400">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <Star key={i} size={16} fill="currentColor" stroke="currentColor" />
                 ))}
               </div>
             </div>
 
-            <p><strong>Referral Person</strong> : John Smith</p>
+            <p><strong>Authorized Person</strong> : Roy Clark</p>
           </div>
 
           <div className="flex justify-between mt-6">

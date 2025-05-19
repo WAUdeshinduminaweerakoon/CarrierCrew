@@ -3,12 +3,14 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 // import Login from "./components/Login";
 // import Home from "./components/Home";
 import AddEmployerDetails from "./components/employer/Employer";
-import AddCompanyDetails from "./components/employer/CompanyDetails";
+import AddCompanyDetails from "./components/company/CompanyDetails";
 import AddJobPost from "./components/jobpost/CreateJobPost";
 
 import Login from "./components/login/Login";
 import Home from "./components/jobSeeker/Home";
 import EmployerProfile from "./components/employer/EmployerProfile";
+import CompanyProfile from "./components/company/CompanyProfile"
+import ForgotPassword from "./components/password/ForgotPassword"
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -35,6 +37,14 @@ const router = createBrowserRouter([
   {
     path: "/employer-profile",
     element: <EmployerProfile/>
+  },
+  {
+    path: "/company-profile",
+    element: <CompanyProfile/>
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword/>
   },
 ]);
 

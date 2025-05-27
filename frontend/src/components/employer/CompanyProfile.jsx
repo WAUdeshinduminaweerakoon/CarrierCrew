@@ -2,16 +2,16 @@ import React from "react";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function EmployerProfile() {
-  const navigate = useNavigate();
-  const handleBack = () => {
-    navigate("/employer/home");
-  };
+export default function CompanyProfile() {
+    const navigate = useNavigate();
+    const handleBack = () => {
+        navigate("/employer/profile");
+    };
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-md pb-4 rounded-2xl shadow-xl border border-blue-200 bg-white">
         <div className="bg-blue-300 text-center rounded-t-2xl py-2 text-white text-lg font-semibold">
-          Employer Profile
+          Company Profile
         </div>
         <div className="p-4 border border-blue-200 mx-4 mt-4 rounded-xl">
           <div className="flex flex-col items-center">
@@ -43,17 +43,7 @@ export default function EmployerProfile() {
               </div>
             </div>
 
-            <p><strong>Authorized Person</strong> : John Smith</p>
-            <div className="mt-4 mx-4 flex justify-between items-center border-t pt-4 border-blue-200">
-               <span className="font-large text-gray-700">Show Company Profile</span>
-                 <button
-                      className="px-4 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                      onClick={() => navigate("/employer/companyprofile")}
-                 >
-                  View
-                 </button>
-            </div>
-
+            <p><strong>Authorized Person</strong> : Roy Clark</p>
           </div>
 
           <div className="flex justify-between mt-6">

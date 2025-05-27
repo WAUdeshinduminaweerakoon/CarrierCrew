@@ -7,7 +7,7 @@ import AddJobPost from "./components/employer/CreateJobPost";
 import Login from "./components/login/Login";
 import Home from "./components/jobSeeker/Home";
 import EmployerProfile from "./components/employer/EmployerProfile";
-import EmployerHome from "./components/employer/Home";
+import EmployerHome from "./components/employer/EmployerHome";
 import JobSeekerProfile from "./components/jobSeeker/JobSeekerProfile";
 
 // Create router with routes
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
     element: <AddJobPost/>
   },
   {
-    path: "/employer-profile",
+    path: "/employer/profile",
     element: <EmployerProfile/>
   },
 ]);

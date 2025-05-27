@@ -1,7 +1,12 @@
 import React from "react";
 import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function EmployerProfile() {
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate("/employer/home");
+  };
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-md pb-4 rounded-2xl shadow-xl border border-blue-200 bg-white">
@@ -42,7 +47,10 @@ export default function EmployerProfile() {
           </div>
 
           <div className="flex justify-between mt-6">
-            <button className="px-4 py-1 border rounded text-blue-600 border-blue-600 hover:bg-blue-50">Back</button>
+            <button className="px-4 py-1 border rounded text-blue-600 border-blue-600 hover:bg-blue-50"
+            type="button"
+            onClick={handleBack}
+            >Back</button>
             <button className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-600">Edit</button>
             <button className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
           </div>

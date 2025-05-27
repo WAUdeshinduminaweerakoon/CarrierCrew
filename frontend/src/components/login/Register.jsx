@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -102,12 +103,29 @@ const Registration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      navigate("/");
+      try {
+        const payload = {
+          ...formData,
+          userType,
+          ...(userType === 'Employer' && { company: companyForm })
+        };
+
+        const endpoint = userType === 'Employer' 
+          ? 'http://localhost:5000/api/auth2/register/employer' 
+          : 'http://localhost:5000/api/auth2/register/jobseeker';
+
+        const res = await axios.post(endpoint, payload);
+        alert(res.data.message);
+        navigate("/"); // Redirect on success
+      } catch (error) {
+        alert(error.response?.data?.message || "Registration failed");
+      }
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 pt-10 pb-10">
@@ -260,7 +278,3 @@ const Registration = () => {
 };
 
 export default Registration;
-
-
-
-

@@ -30,45 +30,41 @@ const Login = () => {
 
   //-- Handle form submission
 
-  const handleLogin = async (e) => {
-
+    const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMessage("");
 
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
-
     if (Object.keys(validationErrors).length === 0) {
-
       try {
-
         const response = await fetch("http://localhost:5000/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),
         });
 
-
         const data = await response.json();
 
+        console.log(data.userType)
 
         if (response.ok) {
-          navigate("/home"); // Redirect to home page on success
+          // Navigate based on role
+          if (data.userType === "JobSeeker") {
+            navigate("/jobseeker/home");
+          } else if (data.userType === "Employer") {
+            navigate("/employer/home");
+          }
         } else {
           setErrorMessage(data.message || "Login failed. Please try again.");
         }
-
-
       } catch (err) {
+        console.error(err);
         setErrorMessage("An error occurred. Please try again.");
       }
-
     }
-
-
   };
-
 
 
   return (

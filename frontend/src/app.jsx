@@ -9,6 +9,7 @@ import Home from "./components/jobSeeker/Home";
 import EmployerProfile from "./components/employer/EmployerProfile";
 import EmployerHome from "./components/employer/EmployerHome";
 import JobSeekerProfile from "./components/jobSeeker/JobSeekerProfile";
+import CompanyProfile from "./components/employer/CompanyProfile";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/employer/profile",
     element: <EmployerProfile/>
+  },
+  {
+    path: "/employer/companyprofile",
+    element: <CompanyProfile/>
   },
 ]);
 

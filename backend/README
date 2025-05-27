@@ -1,0 +1,44 @@
+Sample file structure
+
+backend/
+├── config/
+│   └── db.js
+│
+├── controllers/
+│   ├── authController.js
+│   ├── jobController.js
+│   ├── applicationController.js
+│   ├── employerController.js     # Employer-specific logic (e.g., posting, subscriptions)
+│   └── jobSeekerController.js    # Job seeker-specific logic (e.g., applying, profile updates)
+│
+├── models/
+│   ├── User.js                   # Base user schema with role: 'employer' or 'jobSeeker'
+│   ├── Job.js                    # Job post schema
+│   ├── Application.js            # Job application schema
+│   └── Subscription.js           # Optional: Employer subscription plans
+│
+├── routes/
+│   ├── authRoutes.js
+│   ├── jobs/
+│   │   ├── employerJobRoutes.js  # Routes for employers (e.g., /employer/jobs)
+│   │   └── jobSeekerRoutes.js    # Routes for job seekers (e.g., /jobseeker/jobs)
+│   ├── applications/
+│   │   ├── employerAppRoutes.js  # View received applications
+│   │   └── jobSeekerAppRoutes.js # Submit/view own applications
+│   ├── profileRoutes.js          # Shared or role-based profile management
+│   └── subscriptionRoutes.js     # Optional: Employer subscriptions
+│
+├── middlewares/
+│   ├── authMiddleware.js
+│   ├── roleMiddleware.js         # Check role: employer or jobSeeker
+│   └── errorHandler.js
+│
+├── utils/
+│   └── helpers.js
+│
+├── uploads/                      # For CVs, profile pictures, etc.
+│
+├── .env
+├── .gitignore
+├── server.js
+└── package.json

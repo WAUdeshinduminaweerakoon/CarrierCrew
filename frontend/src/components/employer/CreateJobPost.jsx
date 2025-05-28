@@ -1,7 +1,7 @@
 
-
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 
 export default function NewJobForm() {
   const navigate = useNavigate();
@@ -17,7 +17,22 @@ export default function NewJobForm() {
     duration: "",
     payment: "",
     description: "",
+
   });
+
+  const [employerId, setEmployerId] = useState("");
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    const userType = localStorage.getItem("userType");
+    if (userType === "Employer" && storedUserId) {
+      setEmployerId(storedUserId);
+    } else {
+      alert("You must be logged in as an Employer to post a job.");
+      navigate("/");
+    }
+  }, []);
+
 
   const [errors, setErrors] = useState({});
 
@@ -45,12 +60,37 @@ export default function NewJobForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form submitted", { ...formData, vacancies });
+      try {
+        const response = await fetch("http://localhost:5000/api/jobs/new", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            vacancies,
+            employerId,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("Job posted successfully!");
+          navigate("/employer/home");
+        } else {
+          alert(data.message || "Something went wrong!");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error occurred while submitting the form.");
+      }
     }
   };
+
 
   const handleReset = () => {
     setFormData({

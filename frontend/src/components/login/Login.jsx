@@ -50,10 +50,15 @@ const Login = () => {
         console.log(data.userType)
 
         if (response.ok) {
+
           // Navigate based on role
           if (data.userType === "JobSeeker") {
+            localStorage.setItem("userType", data.userType);
+            localStorage.setItem("userId", data.userId);
             navigate("/jobseeker/home");
           } else if (data.userType === "Employer") {
+            localStorage.setItem("userType", data.userType);
+            localStorage.setItem("userId", data.userId);
             navigate("/employer/home");
           }
         } else {

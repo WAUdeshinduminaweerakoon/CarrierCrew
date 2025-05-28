@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaBars,
   FaPlus,
@@ -10,31 +10,36 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-const jobData = [
-  {
-    id: 1,
-    title: "Delivery Rider",
-    location: "Colombo",
-    hours: "9am - 5pm",
-    days: "Mon - Fri",
-    salary: "Rs. 50,000",
-    image: "/images/delivery.png",
-  },
-  {
-    id: 2,
-    title: "Cashier",
-    location: "Kandy",
-    hours: "8am - 4pm",
-    days: "Tue - Sat",
-    salary: "Rs. 40,000",
-    image: "/images/cashier.png",
-  },
-  // Add more job objects as needed
-];
 
 const EmployerHome = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const [jobs, setJobs] = useState([]);
+
+    const [employerId, setEmployerId] = useState("");
+  
+    useEffect(() => {
+      const storedUserId = localStorage.getItem("userId");
+      const userType = localStorage.getItem("userType");
+
+      if (userType === "Employer" && storedUserId) {
+        setEmployerId(storedUserId);
+
+        // Fetch jobs for this employer
+        fetch(`http://localhost:5000/api/jobs/employer/${storedUserId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setJobs(data);
+          })
+          .catch((err) => {
+            console.error("Failed to fetch jobs:", err);
+          });
+      } else {
+        alert("Login first.");
+        navigate("/");
+      }
+    }, []);
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -110,25 +115,30 @@ const EmployerHome = () => {
 
       {/* Job Cards Section */}
       <div className="w-full max-w-screen-sm px-4 pt-6 pb-8 grid gap-4">
-        {jobData.map((job) => (
-          <div
-            key={job.id}
-            className="bg-white rounded-lg shadow-md p-4 flex gap-6 items-center"
-          >
-            <img
-              src={job.image}
-              alt={job.title}
-              className="w-20 h-20 object-contain"
-            />
-            <div className="text-sm text-green-900">
-              <h2 className="font-semibold text-base">{job.title}</h2>
-              <p>{job.location}</p>
-              <p>{job.hours}</p>
-              <p>{job.days}</p>
-              <p>{job.salary}</p>
+        {jobs.length === 0 ? (
+          <p className="text-center text-gray-500">No job advertisements available</p>
+        ) : (
+          jobs.map((job) => (
+            <div
+              key={job._id}
+              className="bg-white rounded-lg shadow-md p-4 flex gap-6 items-center"
+            >
+              <img
+                src={job.logoUrl || "/images/default-job.png"} // fallback image
+                alt={job.title}
+                className="w-20 h-20 object-contain"
+              />
+              <div className="text-sm text-green-900">
+                <h2 className="font-semibold text-base">{job.jobTitle}</h2>
+                <p>{job.location}</p>
+                <p>{job.hours}</p>
+                <p>{job.days}</p>
+                <p>{job.salary}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
+
       </div>
     </div>
   );

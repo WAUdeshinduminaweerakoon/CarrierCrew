@@ -49,20 +49,20 @@ const NewPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full h-screen max-w-sm p-6 border border-black rounded-2xl bg-white">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
+        <h2 className="text-2xl font-bold text-center text-green-600 mb-6">
           New Password
         </h2>
 
         <form onSubmit={handleSubmit}>
           {/* New Password Field */}
           <div className="mb-4">
-            <label className="text-sm text-blue-500 font-medium">
+            <label className="text-sm text-green-500 font-medium">
               Enter new password
             </label>
             <input
               type="password"
               className={`w-full px-3 py-2 border rounded-md mt-1 focus:outline-none ${
-                errors.newPassword ? "border-red-500" : "border-blue-400"
+                errors.newPassword ? "border-red-500" : "border-green-400"
               }`}
               placeholder="Enter your new password"
               value={newPassword}
@@ -75,14 +75,14 @@ const NewPassword = () => {
 
           {/* Confirm Password Field */}
           <div className="mb-4">
-            <label className="text-sm text-blue-500 font-medium">
+            <label className="text-sm text-green-500 font-medium">
               Confirm Password
             </label>
             <div className="relative">
               <input
                 type="password"
                 className={`w-full px-3 py-2 border rounded-md mt-1 focus:outline-none ${
-                  errors.confirmPassword ? "border-red-500" : "border-blue-400"
+                  errors.confirmPassword ? "border-red-500" : "border-green-400"
                 }`}
                 placeholder="confirm password"
                 value={confirmPassword}
@@ -103,15 +103,15 @@ const NewPassword = () => {
               type="checkbox"
               checked={rememberMe}
               onChange={() => setRememberMe(!rememberMe)}
-              className="form-checkbox text-blue-500"
+              className="form-checkbox text-green-500"
             />
-            <label className="ml-2 text-blue-400 text-sm">Remember Me</label>
+            <label className="ml-2 text-green-400 text-sm">Remember Me</label>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-300 text-blue-900 font-medium py-2 rounded-md hover:bg-blue-400 transition"
+            className="w-full bg-green-300 text-blue-900 font-medium py-2 rounded-md hover:bg-green-400 transition"
           >
             Submit
           </button>

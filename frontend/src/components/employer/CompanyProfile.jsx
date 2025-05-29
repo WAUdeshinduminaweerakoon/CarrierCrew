@@ -9,13 +9,13 @@ export default function CompanyProfile() {
     };
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="w-full max-w-md pb-4 rounded-2xl shadow-xl border border-blue-200 bg-white">
-        <div className="bg-blue-300 text-center rounded-t-2xl py-2 text-white text-lg font-semibold">
+      <div className="w-full max-w-md pb-4 rounded-2xl shadow-xl border border-green-200 bg-white">
+        <div className="bg-green-400 text-center rounded-t-2xl py-2 text-white text-lg font-semibold">
           Company Profile
         </div>
-        <div className="p-4 border border-blue-200 mx-4 mt-4 rounded-xl">
+        <div className="p-4 border border-green-300 mx-4 mt-4 rounded-xl">
           <div className="flex flex-col items-center">
-            <div className="w-20 h-20 rounded-full bg-blue-200 flex items-center justify-center text-white text-2xl font-bold">
+            <div className="w-20 h-20 rounded-full bg-green-300 flex items-center justify-center text-white text-2xl font-bold">
               <span>👤</span>
             </div>
             <h2 className="text-xl font-semibold mt-2">ABC Pvt Limited.</h2>
@@ -47,12 +47,12 @@ export default function CompanyProfile() {
           </div>
 
           <div className="flex justify-between mt-6">
-            <button className="px-4 py-1 border rounded text-blue-600 border-blue-600 hover:bg-blue-50"
+            <button className="px-4 py-1 border rounded text-green-700 border-green-600 hover:bg-green-200"
             type="button"
             onClick={handleBack}
             >Back</button>
-            <button className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-600">Edit</button>
-            <button className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+            <button className="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-700">Edit</button>
+            <button className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-700">Delete</button>
           </div>
         </div>
       </div>

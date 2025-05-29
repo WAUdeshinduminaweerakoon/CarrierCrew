@@ -1,5 +1,5 @@
 const Employer = require('../models/Employer');
-const JobSeeker = require('../models/Jobseeker');
+const JobSeeker = require('../models/JobSeeker');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -11,6 +11,10 @@ const generateToken = (id, userType) => {
 const registerEmployer = async (req, res) => {
   try {
     const { company, username, password, email } = req.body;
+
+    if (!password || password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+    }
 
     const existing = await Employer.findOne({ username });
     if (existing) {
@@ -38,6 +42,10 @@ const registerJobSeeker = async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
+    if (!password || password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+    }
+
     const existing = await JobSeeker.findOne({ username });
     if (existing) {
       return res.status(400).json({ message: 'Username already exists' });
@@ -58,16 +66,18 @@ const registerJobSeeker = async (req, res) => {
   }
 };
 
-// Unified Login (for both Employer and JobSeeker)
+// Unified Login (Employer & JobSeeker)
 const loginUser = async (req, res) => {
-  const { username, password } = req.body;
-
   try {
-    // Check in Employers
+    const { username, password } = req.body;
+
+    if (!password || password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+    }
+
     let user = await Employer.findOne({ username });
     let userType = 'Employer';
 
-    // If not found, check JobSeekers
     if (!user) {
       user = await JobSeeker.findOne({ username });
       userType = 'JobSeeker';
@@ -88,7 +98,6 @@ const loginUser = async (req, res) => {
       userType,
       token: generateToken(user._id, userType),
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });

@@ -11,6 +11,7 @@ import EmployerHome from "./components/employer/EmployerHome";
 import JobSeekerProfile from "./components/jobSeeker/JobSeekerProfile";
 import CompanyProfile from "./components/employer/CompanyProfile";
 import DeleteAccount from './components/DeleteAccount';
+import ForgotPassword from "./components/login/ForgotPassword";
 
 
 const router = createBrowserRouter([
@@ -54,7 +55,11 @@ const router = createBrowserRouter([
     path: "/jobseeker/deleteaccount",
     element: <DeleteAccount/>,
   },
-  
+  {
+    path: "/forgotpassword",
+    element: <ForgotPassword/>,
+  },
+ 
 ]);
 
 const App = () => {

@@ -35,7 +35,17 @@ const addArea = async (req, res) => {
   }
 };
 
+const getAllLocations = async (req, res) => {
+  try {
+    const locations = await District.find(); // use District, not Location
+    res.status(200).json(locations);
+  } catch (err) {
+    console.error("Error fetching locations:", err);
+    res.status(500).json({ message: "Failed to fetch locations", error: err.message || err });
+  }
+};
 
 module.exports = {
-  addArea
+  addArea,
+  getAllLocations, 
 };

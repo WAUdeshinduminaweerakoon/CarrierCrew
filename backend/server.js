@@ -1,28 +1,40 @@
 const express = require('express');
-const connectDB = require('./config/db');
-const app = express();
 const dotenv = require('dotenv');
-const cors = require('cors')
+const cors = require('cors');
+const connectDB = require('./config/db');
 
-
-// Connect to MongoDB
 dotenv.config();
+
+
+const app = express();
+
 connectDB();
 
-// Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true
+}));
 app.use(express.json());
 
-// Your routes go here...
+
+const testRoutes = require('./routes/test');
+const authRoutes = require('./routes/auth'); 
+const jobRoutes = require('./routes/jobRoutes');
+
+app.use('/api', testRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
+
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
+
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
 
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-const testRoutes = require('./routes/test');
-app.use('/api', testRoutes);
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/auth2', require('./routes/authRoutes'));
-app.use('/api/jobs', require('./routes/jobRoutes'));
-
-

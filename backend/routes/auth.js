@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Employer = require("../models/Employer");
-const JobSeeker = require("../models/Jobseeker");
+const JobSeeker = require("../models/JobSeeker");
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;

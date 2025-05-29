@@ -24,5 +24,5 @@ app.use('/api', testRoutes);
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/auth2', require('./routes/authRoutes'));
 app.use('/api/jobs', require('./routes/jobRoutes'));
-
+app.use('/api/locations', require('./routes/locationRoutes'));
 

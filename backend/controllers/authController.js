@@ -1,17 +1,32 @@
 const Employer = require('../models/Employer');
-const JobSeeker = require('../models/Jobseeker');
+const JobSeeker = require('../models/JobSeeker');
 
 const registerEmployer = async (req, res) => {
   try {
-    const { company, ...userData } = req.body;
+    const { company, username, nic, email, mobileNumber, ...userData } = req.body;
 
-    const existing = await Employer.findOne({ username: userData.username });
+    const existing = await Employer.findOne({
+      $or: [
+        { username },
+        { nic },
+        { email },
+        { mobileNumber }
+        ]
+      });
     if (existing) {
-      return res.status(400).json({ message: 'Username already exists' });
-    }
+      let conflictField = 'Username';
+      if (existing.nic === nic) conflictField = 'NIC';
+      else if (existing.email === email) conflictField = 'Email';
+      else if (existing.mobileNumber === mobileNumber) conflictField = 'Contact';
 
+      return res.status(400).json({ message: `${conflictField} already exists` });
+    }
     const newEmployer = new Employer({
       company,
+      username,
+      nic,
+      email,
+      mobileNumber,
       ...userData
     });
 
@@ -24,14 +39,33 @@ const registerEmployer = async (req, res) => {
 
 const registerJobSeeker = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username, nic, email, mobileNumber,  ...userData } = req.body;
 
-    const existing = await JobSeeker.findOne({ username });
+    // Check for existing username, nic, email, or contact
+    const existing = await JobSeeker.findOne({
+      $or: [
+        { username },
+        { nic },
+        { email },
+        { mobileNumber }
+      ]
+    });
+
     if (existing) {
-      return res.status(400).json({ message: 'Username already exists' });
-    }
+      let conflictField = 'Username';
+      if (existing.nic === nic) conflictField = 'NIC';
+      else if (existing.email === email) conflictField = 'Email';
+      else if (existing.mobileNumber === mobileNumber) conflictField = 'Contact';
 
-    const newJobSeeker = new JobSeeker(req.body);
+      return res.status(400).json({ message: `${conflictField} already exists` });
+    }
+     const newJobSeeker = new JobSeeker({
+      username,
+      nic,
+      email,
+      mobileNumber,
+      ...userData
+    });
     await newJobSeeker.save();
     res.status(201).json({ message: 'Job Seeker registered successfully' });
   } catch (err) {

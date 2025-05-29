@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -123,9 +125,10 @@ const Login = () => {
           {/* Register link */}
           <p className="mt-6 text-center text-gray-600">
             Don't have an account?{" "}
-            <a href="#" className="text-green-600 hover:underline">
+            <Link to="/register" className="text-green-600 hover:underline">
               Click here to Register
-            </a>
+            </Link>
+
           </p>
         </form>
       </div>

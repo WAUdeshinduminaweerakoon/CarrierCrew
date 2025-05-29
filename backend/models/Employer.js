@@ -11,12 +11,12 @@ const employerSchema = new mongoose.Schema({
   },
   firstName: String,
   lastName: String,
-  email: String,
-  mobileNumber: String,
-  nic: String,
+  email: { type: String, required: true, unique: true },
+  mobileNumber: { type: String, required: true, unique: true },
+  nic: { type: String, required: true, unique: true },
   address: String,
   nearestCity: String,
-  username: { type: String, unique: true },
+  username: { type: String, required: true, unique: true },
   password: String,
   userType: { type: String, default: 'Employer' }
 }, { timestamps: true });

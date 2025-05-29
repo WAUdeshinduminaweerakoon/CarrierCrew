@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const Login = () => {
@@ -131,13 +131,20 @@ const Login = () => {
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
             )}
+
+            {/* Forgot Password link */}
+            <div className="text-right mt-2">
+              <Link to="/forgotpassword" className="text-blue-600 text-sm hover:underline">
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
 
           {/* Login button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
           >
             Login
           </button>

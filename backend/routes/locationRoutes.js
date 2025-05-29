@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { addArea } = require("../controllers/locationController");
+const { addArea, getAllLocations } = require("../controllers/locationController");
 
 router.post("/add-area", addArea);
+
+router.get("/all", getAllLocations);
 
 module.exports = router;
 

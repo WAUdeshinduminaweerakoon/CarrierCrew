@@ -10,8 +10,9 @@ import EmployerProfile from "./components/employer/EmployerProfile";
 import EmployerHome from "./components/employer/EmployerHome";
 import JobSeekerProfile from "./components/jobSeeker/JobSeekerProfile";
 import CompanyProfile from "./components/employer/CompanyProfile";
+import DeleteAccount from './components/DeleteAccount';
 
-// Create router with routes
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +50,11 @@ const router = createBrowserRouter([
     path: "/employer/companyprofile",
     element: <CompanyProfile/>
   },
+  {
+    path: "/jobseeker/deleteaccount",
+    element: <DeleteAccount/>,
+  },
+  
 ]);
 
 const App = () => {

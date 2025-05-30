@@ -1,33 +1,33 @@
 const Employer = require('../models/Employer');
 const JobSeeker = require('../models/JobSeeker');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
+const generateToken = (id, userType) => {
+  return jwt.sign({ id, userType }, process.env.JWT_SECRET, { expiresIn: '30d' });
+};
+
+// Employer Registration
 const registerEmployer = async (req, res) => {
   try {
-    const { company, username, nic, email, mobileNumber, ...userData } = req.body;
+    const { company, username, password, email } = req.body;
 
-    const existing = await Employer.findOne({
-      $or: [
-        { username },
-        { nic },
-        { email },
-        { mobileNumber }
-        ]
-      });
-    if (existing) {
-      let conflictField = 'Username';
-      if (existing.nic === nic) conflictField = 'NIC';
-      else if (existing.email === email) conflictField = 'Email';
-      else if (existing.mobileNumber === mobileNumber) conflictField = 'Contact';
-
-      return res.status(400).json({ message: `${conflictField} already exists` });
+    if (!password || password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' });
     }
+
+    const existing = await Employer.findOne({ username });
+    if (existing) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newEmployer = new Employer({
       company,
       username,
-      nic,
       email,
-      mobileNumber,
-      ...userData
+      password: hashedPassword,
     });
 
     await newEmployer.save();
@@ -37,35 +37,28 @@ const registerEmployer = async (req, res) => {
   }
 };
 
+// Job Seeker Registration
 const registerJobSeeker = async (req, res) => {
   try {
-    const { username, nic, email, mobileNumber,  ...userData } = req.body;
+    const { username, password, email } = req.body;
 
-    // Check for existing username, nic, email, or contact
-    const existing = await JobSeeker.findOne({
-      $or: [
-        { username },
-        { nic },
-        { email },
-        { mobileNumber }
-      ]
-    });
-
-    if (existing) {
-      let conflictField = 'Username';
-      if (existing.nic === nic) conflictField = 'NIC';
-      else if (existing.email === email) conflictField = 'Email';
-      else if (existing.mobileNumber === mobileNumber) conflictField = 'Contact';
-
-      return res.status(400).json({ message: `${conflictField} already exists` });
+    if (!password || password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' });
     }
-     const newJobSeeker = new JobSeeker({
+
+    const existing = await JobSeeker.findOne({ username });
+    if (existing) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newJobSeeker = new JobSeeker({
       username,
-      nic,
       email,
-      mobileNumber,
-      ...userData
+      password: hashedPassword,
     });
+
     await newJobSeeker.save();
     res.status(201).json({ message: 'Job Seeker registered successfully' });
   } catch (err) {
@@ -73,7 +66,46 @@ const registerJobSeeker = async (req, res) => {
   }
 };
 
+// Unified Login (Employer & JobSeeker)
+const loginUser = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    if (!password || password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+    }
+
+    let user = await Employer.findOne({ username });
+    let userType = 'Employer';
+
+    if (!user) {
+      user = await JobSeeker.findOne({ username });
+      userType = 'JobSeeker';
+    }
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid username or password' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid username or password' });
+    }
+
+    res.json({
+      userId: user._id,
+      username: user.username,
+      userType,
+      token: generateToken(user._id, userType),
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   registerEmployer,
-  registerJobSeeker
+  registerJobSeeker,
+  loginUser,
 };

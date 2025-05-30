@@ -17,13 +17,13 @@ const Home = () => {
   const navigate = useNavigate();
 
 
-    const [jobseekerId, setEmployerId] = useState("");
+    const [jobseekerId, setJobseekerId] = useState("");
   
     useEffect(() => {
       const storedUserId = localStorage.getItem("userId");
       const userType = localStorage.getItem("userType");
       if (userType === "JobSeeker" && storedUserId) {
-        setEmployerId(storedUserId);
+        setJobseekerId(storedUserId);
       } else {
         alert("Login First.");
         navigate("/");
@@ -32,7 +32,7 @@ const Home = () => {
 
   const [jobAds, setJobAds] = useState([]);
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/jobs/all");
@@ -56,6 +56,25 @@ const Home = () => {
     fetchJobs();
   }, []);
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/locations/all");
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setLocations(data);
+        } else {
+          console.error("Unexpected location data structure", data);
+          setLocations([]);
+        }
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleLocationDropdown = () => {
     setIsLocationOpen(!isLocationOpen);
@@ -67,10 +86,43 @@ const Home = () => {
   };
   const toggleFilterModal = () => setIsFilterOpen(!isFilterOpen);
 
-  const districts = [
-    "Colombo", "Kandy", "Galle", "Jaffna", "Matara", "Anuradhapura",
-    "Trincomalee", "Kurunegala", "Negombo", "Batticaloa", "Badulla"
-  ];
+  /*const districts = [
+    "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
+    "Galle", "Gampaha", "Hambantota", "Jaffna", "Kalutara",
+    "Kandy", "Kegalle", "Kilinochchi", "Kurunegala", "Mannar",
+    "Matale", "Matara", "Moneragala", "Mullaitivu", "Nuwara Eliya",
+    "Polonnaruwa", "Puttalam", "Ratnapura", "Trincomalee", "Vavuniya"
+  ];*/
+/*
+  const locations = {
+    Ampara: [],
+    Anuradhapura: [],
+    // ...
+    Gampaha: ["Kadawatha", "Kelaniya", "Negombo"],
+    Colombo: ["Borella", "Nugegoda", "Dehiwala"],
+    // other districts
+  };*/
+
+  const [locations, setLocations] = useState([]);
+  const [expandedDistrict, setExpandedDistrict] = useState(null); // to handle dropdown toggle
+
+
+  //const [expandedDistrict, setExpandedDistrict] = useState(null);
+    useEffect(() => {
+      const fetchLocations = async () => {
+        try {
+          const response = await fetch("http://localhost:5000/api/locations/all");
+          const data = await response.json();
+          setLocations(data);
+        } catch (error) {
+          console.error("Error fetching locations:", error);
+        }
+      };
+
+      fetchLocations();
+    }, []);
+
+
 
   const categories = [
     "Waiter", "Helper", "Delivery Rider", "Cleaner", "Store Assistant",
@@ -119,21 +171,43 @@ const Home = () => {
       </header>
 
       {isLocationOpen && (
-        <div className="mt-2 bg-white rounded shadow w-full max-w-screen-sm px-4">
-          {districts.map((district) => (
-            <div
-              key={district}
-              className="py-2 cursor-pointer hover:bg-green-100"
-              onClick={() => {
-                setSelectedLocation(district);
-                setIsLocationOpen(false);
-              }}
-            >
-              {district}
+        <div className="mt-2 bg-white rounded shadow w-full max-w-screen-sm px-4 max-h-96 overflow-y-auto">
+          
+          {locations.map((location) => (
+            <div key={location._id}>
+              <div
+                className="py-2 cursor-pointer hover:bg-green-100 font-semibold"
+                onClick={() =>
+                  setExpandedDistrict(
+                    expandedDistrict === location.name ? null : location.name
+                  )
+                }
+              >
+                {location.name}
+              </div>
+              {expandedDistrict === location.name &&
+                Array.isArray(location.areas) &&
+                location.areas.map((area) => (
+                  <div
+                    key={area._id}
+                    className="pl-4 py-1 cursor-pointer hover:bg-green-50 text-sm"
+                    onClick={() => {
+                      setSelectedLocation(area.name);
+                      setIsLocationOpen(false);
+                      setExpandedDistrict(null);
+                    }}
+                  >
+                    {area.name}
+                  </div>
+                ))}
             </div>
           ))}
+
+
         </div>
       )}
+
+
 
       {isCategoryOpen && (
         <div className="mt-2 bg-white rounded shadow w-full max-w-screen-sm px-4">

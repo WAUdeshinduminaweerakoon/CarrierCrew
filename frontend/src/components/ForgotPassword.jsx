@@ -47,8 +47,8 @@ const NewPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full h-screen max-w-sm p-6 border border-black rounded-2xl bg-white">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 pt-5 pb-5">
+      <div className="w-full h-screen max-w-md p-10 border rounded-2xl bg-white">
         <h2 className="text-2xl font-bold text-center text-green-600 mb-6">
           New Password
         </h2>

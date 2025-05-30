@@ -12,7 +12,8 @@ import JobSeekerProfile from "./components/jobSeeker/JobSeekerProfile";
 import CompanyProfile from "./components/employer/CompanyProfile";
 import DeleteAccount from './components/DeleteAccount';
 import ForgotPassword from "./components/login/ForgotPassword";
-
+import OTPVerification from "./components/login/OTPVerification";
+import ManageProfile from "./components/Profile/ManageProfile";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,14 @@ const router = createBrowserRouter([
   {
     path: "/forgotpassword",
     element: <ForgotPassword/>,
+  },
+  {
+    path: "/otpverify",
+    element: <OTPVerification/>,
+  },
+  {
+    path: "/userprofile",
+    element: <ManageProfile/>,
   },
  
 ]);

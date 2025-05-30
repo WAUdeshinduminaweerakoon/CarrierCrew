@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -118,10 +120,14 @@ const Registration = () => {
           : 'http://localhost:5000/api/auth2/register/jobseeker';
 
         const res = await axios.post(endpoint, payload);
-        alert(res.data.message);
-        navigate("/"); // Redirect on success
+        toast.success(res.data.message, { position: "top-center", autoClose: 3000 });
+        setTimeout(() => navigate("/"), 3000);
       } catch (error) {
-        alert(error.response?.data?.message || "Registration failed");
+        toast.error(error.response?.data?.message || "Registration failed", {
+        position: "top-center",
+        autoClose: 3000
+        });
+
       }
     }
   };
@@ -129,6 +135,7 @@ const Registration = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 pt-10 pb-10">
+       <ToastContainer />
       <div className="w-full max-w-md mx-auto p-5 bg-white border rounded-lg shadow-md font-sans">
         {step === "selection" && (
           <>

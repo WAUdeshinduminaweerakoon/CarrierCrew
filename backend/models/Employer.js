@@ -22,7 +22,7 @@ const employerSchema = new mongoose.Schema({
   nearestCity: String,
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  userType: { type: String, enum: ['Employer'], default: 'Employer' }
+  userType: { type: String, enum: ['Employer'], default: 'Employer' },
 }, { timestamps: true });
 
 

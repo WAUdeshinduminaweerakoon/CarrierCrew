@@ -53,7 +53,7 @@ const AdminLogin = () => {
           )}
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-600">Email</label>
+            <label className="block mb-1 font-medium text-gray-600">Username </label>
             <input
               type="email"
               value={email}

@@ -8,11 +8,13 @@ import { Eye, EyeOff } from "lucide-react";
 const Registration = () => {
   const navigate = useNavigate();
 
-  const [step, setStep] = useState("selection"); // selection | company | employer | jobseeker
+  const [step, setStep] = useState("selection");
   const [userType, setUserType] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [locations, setLocations] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [nearestCityOptions, setNearestCityOptions] = useState([]);
 
   const [companyForm, setCompanyForm] = useState({
     name: "",
@@ -42,18 +44,33 @@ const Registration = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    // Reset errors whenever the step changes
     setCompanyErrors({});
     setErrors({});
   }, [step]);
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/locations/all');
+        setLocations(res.data);
+      } catch (err) {
+        console.error("Error fetching locations", err);
+      }
+    };
+    fetchLocations();
+  }, []);
+
   const handleSelection = (type) => {
     setUserType(type);
-    if (type === "Employer") {
-      setStep("company");
-    } else {
-      setStep("jobseeker");
-    }
+    setStep(type === "Employer" ? "company" : "jobseeker");
+  };
+
+  const handleDistrictChange = (e) => {
+    const districtName = e.target.value;
+    setSelectedDistrict(districtName);
+    setFormData({ ...formData, nearestCity: '' });
+    const district = locations.find(loc => loc.name === districtName);
+    setNearestCityOptions(district ? district.areas : []);
   };
 
   const handleCompanyChange = (e) => {
@@ -72,6 +89,7 @@ const Registration = () => {
     if (!phoneRegex.test(companyForm.telephone)) newErrors.telephone = "Must be 10 digits.";
     if (!companyForm.companyType.trim()) newErrors.companyType = "Company Type is required.";
     if (!companyForm.address.trim()) newErrors.address = "Address is required.";
+    if (!companyForm.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
     if (!companyForm.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
 
     setCompanyErrors(newErrors);
@@ -94,17 +112,15 @@ const Registration = () => {
     const newErrors = {};
     if (!formData.firstName.trim()) newErrors.firstName = "First Name is required.";
     if (!formData.lastName.trim()) newErrors.lastName = "Last Name is required.";
-    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
-      newErrors.email = "Enter a valid email address.";
-    if (!formData.mobileNumber.match(/^\d{10}$/))
-      newErrors.mobileNumber = "Enter a valid 10-digit mobile number.";
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = "Enter a valid email address.";
+    if (!formData.mobileNumber.match(/^\d{10}$/)) newErrors.mobileNumber = "Enter a valid 10-digit mobile number.";
     if (!formData.nic.trim()) newErrors.nic = "NIC is required.";
     if (!formData.address.trim()) newErrors.address = "Address is required.";
+    if (!formData.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
     if (!formData.username.trim()) newErrors.username = "Username is required.";
     if (!formData.password.trim()) newErrors.password = "Password is required.";
-    if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match.";
-    if (userType === "JobSeeker" && !formData.gender) newErrors.gender = "Gender is required.";
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match.";
+    if (userType === "JobSeeker" && !formData.gender) newErrors.gender = "Gender is required."; 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -126,7 +142,7 @@ const Registration = () => {
 
         const res = await axios.post(endpoint, payload);
         alert(res.data.message);
-        navigate("/"); // Redirect on success
+        navigate("/");
       } catch (error) {
         toast.error(error.response?.data?.message || "Registration failed", {
          position: "top-center",
@@ -232,35 +248,20 @@ const Registration = () => {
                 : "Add Job Seeker Details (Required)"}
             </h2>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-              {[
-                "firstName",
-                "lastName",
-                "email",
-                "mobileNumber",
-                "nic",
-                "address",
-                "nearestCity",
-                "username",
-              ].map((field) => (
+              {["firstName", "lastName", "email", "mobileNumber", "nic", "address", "username"].map((field) => (
                 <div key={field}>
                   <input
-                    type="text"
+                    type={field.includes("password") ? "password" : "text"}
                     name={field}
                     placeholder={field.replace(/([A-Z])/g, " $1")}
                     value={formData[field]}
                     onChange={handleDataChange}
-                    className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${
-                      errors[field]
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-green-400 focus:ring-green-500"
-                    }`}
+                    className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${errors[field] ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"}`}
                   />
-                  {errors[field] && (
-                    <span className="text-sm text-red-500">{errors[field]}</span>
-                  )}
+                  {errors[field] && <span className="text-sm text-red-500">{errors[field]}</span>}
                 </div>
               ))}
-            <div className="relative">
+                          <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -308,17 +309,43 @@ const Registration = () => {
                 <span className="text-sm text-red-500">{errors.confirmPassword}</span>
               )}
             </div>
+
+              <div>
+                <select
+                  name="district"
+                  value={selectedDistrict}
+                  onChange={handleDistrictChange}
+                  className="w-full p-2 border border-green-400 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  <option value="">Select District</option>
+                  {locations.map((loc) => (
+                    <option key={loc._id} value={loc.name}>{loc.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <select
+                  name="nearestCity"
+                  value={formData.nearestCity}
+                  onChange={handleDataChange}
+                  className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${errors.nearestCity ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"}`}
+                >
+                  <option value="">Select Nearest City</option>
+                  {nearestCityOptions.map((area) => (
+                    <option key={area._id} value={area.name}>{area.name}</option>
+                  ))}
+                </select>
+                {errors.nearestCity && <span className="text-sm text-red-500">{errors.nearestCity}</span>}
+              </div>
+
               {userType === "JobSeeker" && (
-                <div>
+                <div className="flex justify-center">
                   <select
                     name="gender"
                     value={formData.gender}
                     onChange={handleDataChange}
-                    className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${
-                      errors.gender
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-green-400 focus:ring-green-500"
-                    }`}
+                    className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${errors.gender ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"}`}
                   >
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>

@@ -1,4 +1,5 @@
 const Job = require("../models/Job");
+const JobSeeker = require('../models/Jobseeker');
 
 // Create a new job post
 const createJobPost = async (req, res) => {
@@ -45,7 +46,60 @@ const applyForJob = async (req, res) => {
   }
 };
 
+// ✅ STATIC METHOD: Get JobSeekers who applied to employer's jobs
+const getApplicantsByEmployer = async (req, res) => {
+  const { employerId } = req.params;
+
+  try {
+    // Step 1: Fetch all jobs posted by the employer
+    const jobs = await Job.find({ employerId });
+
+    // Step 2: Map applicant userId => [job info...]
+    const applicantJobMap = new Map();
+
+    jobs.forEach(job => {
+      job.applicants.forEach(applicant => {
+        const id = applicant.userId.toString();
+        if (!applicantJobMap.has(id)) {
+          applicantJobMap.set(id, []);
+        }
+        applicantJobMap.get(id).push({
+          jobId: job._id,
+          jobTitle: job.jobTitle,
+          appliedAt: applicant.appliedAt,
+          location: job.location,
+          dateFrom: job.dateFrom,
+          dateTo: job.dateTo,
+          timeFrom: job.timeFrom,
+          timeTo: job.timeTo,
+          payment: job.payment,
+        });
+      });
+    });
+
+    const applicantIds = Array.from(applicantJobMap.keys());
+
+    // Step 3: Fetch JobSeeker details
+    const jobSeekers = await JobSeeker.find({ _id: { $in: applicantIds } });
+
+    // Step 4: Combine job seeker info with their applied job(s)
+    const applicantsWithJobs = jobSeekers.map(js => {
+      return {
+        jobSeeker: js,
+        appliedJobs: applicantJobMap.get(js._id.toString()) || [],
+      };
+    });
+
+    res.status(200).json({ applicants: applicantsWithJobs });
+  } catch (err) {
+    console.error('Error fetching applicants with job info:', err);
+    res.status(500).json({ message: 'Server Error', error: err });
+  }
+};
+
+
 module.exports = {
   createJobPost,
-  applyForJob
+  applyForJob,
+  getApplicantsByEmployer,
 };

@@ -19,8 +19,8 @@ const Login = () => {
 
     if (!username.trim()) errors.username = "Username is required.";
     if (!password.trim()) errors.password = "Password is required.";
-    else if (password.length < 6)
-      errors.password = "Password must be at least 6 characters.";
+    else if (password.length < 8)
+      errors.password = "Password must be at least 8 characters.";
 
     return errors;
 

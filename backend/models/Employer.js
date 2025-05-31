@@ -25,6 +25,7 @@ const employerSchema = new mongoose.Schema({
   userType: { type: String, enum: ['Employer'], default: 'Employer' }
 }, { timestamps: true });
 
+
 employerSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   try {

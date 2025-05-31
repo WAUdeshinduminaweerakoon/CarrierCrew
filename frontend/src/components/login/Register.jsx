@@ -5,8 +5,11 @@ import axios from 'axios';
 const Registration = () => {
   const navigate = useNavigate();
 
-  const [step, setStep] = useState("selection"); // selection | company | employer | jobseeker
+  const [step, setStep] = useState("selection");
   const [userType, setUserType] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [nearestCityOptions, setNearestCityOptions] = useState([]);
 
   const [companyForm, setCompanyForm] = useState({
     name: "",
@@ -30,24 +33,39 @@ const Registration = () => {
     username: "",
     password: "",
     confirmPassword: "",
-    gender: "", // Add gender field
+    gender: "",
   });
 
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    // Reset errors whenever the step changes
     setCompanyErrors({});
     setErrors({});
   }, [step]);
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/locations/all');
+        setLocations(res.data);
+      } catch (err) {
+        console.error("Error fetching locations", err);
+      }
+    };
+    fetchLocations();
+  }, []);
+
   const handleSelection = (type) => {
     setUserType(type);
-    if (type === "Employer") {
-      setStep("company");
-    } else {
-      setStep("jobseeker");
-    }
+    setStep(type === "Employer" ? "company" : "jobseeker");
+  };
+
+  const handleDistrictChange = (e) => {
+    const districtName = e.target.value;
+    setSelectedDistrict(districtName);
+    setFormData({ ...formData, nearestCity: '' });
+    const district = locations.find(loc => loc.name === districtName);
+    setNearestCityOptions(district ? district.areas : []);
   };
 
   const handleCompanyChange = (e) => {
@@ -66,6 +84,7 @@ const Registration = () => {
     if (!phoneRegex.test(companyForm.telephone)) newErrors.telephone = "Must be 10 digits.";
     if (!companyForm.companyType.trim()) newErrors.companyType = "Company Type is required.";
     if (!companyForm.address.trim()) newErrors.address = "Address is required.";
+    if (!companyForm.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
     if (!companyForm.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
 
     setCompanyErrors(newErrors);
@@ -88,17 +107,15 @@ const Registration = () => {
     const newErrors = {};
     if (!formData.firstName.trim()) newErrors.firstName = "First Name is required.";
     if (!formData.lastName.trim()) newErrors.lastName = "Last Name is required.";
-    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
-      newErrors.email = "Enter a valid email address.";
-    if (!formData.mobileNumber.match(/^\d{10}$/))
-      newErrors.mobileNumber = "Enter a valid 10-digit mobile number.";
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = "Enter a valid email address.";
+    if (!formData.mobileNumber.match(/^\d{10}$/)) newErrors.mobileNumber = "Enter a valid 10-digit mobile number.";
     if (!formData.nic.trim()) newErrors.nic = "NIC is required.";
     if (!formData.address.trim()) newErrors.address = "Address is required.";
+    if (!formData.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
     if (!formData.username.trim()) newErrors.username = "Username is required.";
     if (!formData.password.trim()) newErrors.password = "Password is required.";
-    if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match.";
-    if (userType === "JobSeeker" && !formData.gender) newErrors.gender = "Gender is required."; // Gender check for Job Seekers
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match.";
+    if (userType === "JobSeeker" && !formData.gender) newErrors.gender = "Gender is required.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -119,13 +136,12 @@ const Registration = () => {
 
         const res = await axios.post(endpoint, payload);
         alert(res.data.message);
-        navigate("/"); // Redirect on success
+        navigate("/");
       } catch (error) {
         alert(error.response?.data?.message || "Registration failed");
       }
     }
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50 pt-10 pb-10">
@@ -135,18 +151,8 @@ const Registration = () => {
             <h1 className="text-2xl font-bold text-green-600 mb-6 text-center">Unlock Part-Time Jobs. Join Us</h1>
             <p className="text-center mb-6 text-gray-600">I am a:</p>
             <div className="flex justify-center gap-4">
-              <button
-                onClick={() => handleSelection("JobSeeker")}
-                className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-              >
-                Job Seeker
-              </button>
-              <button
-                onClick={() => handleSelection("Employer")}
-                className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-              >
-                Employer
-              </button>
+              <button onClick={() => handleSelection("JobSeeker")} className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Job Seeker</button>
+              <button onClick={() => handleSelection("Employer")} className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Employer</button>
             </div>
           </>
         )}
@@ -163,9 +169,7 @@ const Registration = () => {
                     placeholder={field.replace(/([A-Z])/g, " $1")}
                     value={companyForm[field]}
                     onChange={handleCompanyChange}
-                    className={`p-2 text-sm border rounded-md w-full ${
-                      companyErrors[field] ? "border-red-500" : "border-green-500"
-                    }`}
+                    className={`p-2 text-sm border rounded-md w-full ${companyErrors[field] ? "border-red-500" : "border-green-500"}`}
                   />
                   {companyErrors[field] && (
                     <p className="text-xs text-red-500 text-left mt-1">{companyErrors[field]}</p>
@@ -181,26 +185,9 @@ const Registration = () => {
                 />
               </label>
               <div className="flex justify-between mt-5">
-                <button
-                  type="button"
-                  className="px-7 py-2 text-sm bg-green-200 text-green-800 rounded-md"
-                  onClick={() => setStep("selection")}
-                >
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  className="px-7 py-2 text-sm bg-green-500 text-white rounded-md"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-2 text-sm bg-gray-600 text-white rounded-md"
-                  onClick={() => setStep("employer")}
-                >
-                  Proceed Without Company
-                </button>
+                <button type="button" className="px-7 py-2 text-sm bg-green-200 text-green-800 rounded-md" onClick={() => setStep("selection")}>Back</button>
+                <button type="submit" className="px-7 py-2 text-sm bg-green-500 text-white rounded-md">Save</button>
+                <button type="button" className="px-4 py-2 text-sm bg-gray-600 text-white rounded-md" onClick={() => setStep("employer")}>Proceed Without Company</button>
               </div>
             </form>
           </>
@@ -212,39 +199,56 @@ const Registration = () => {
               {userType === "Employer" ? "Add Employer Details (Required)" : "Add Job Seeker Details (Required)"}
             </h2>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-              {["firstName", "lastName", "email", "mobileNumber", "nic", "address", "nearestCity", "username", "password", "confirmPassword"].map(
-                (field) => (
-                  <div key={field}>
-                    <input
-                      type={field.includes("password") ? "password" : "text"}
-                      name={field}
-                      placeholder={field.replace(/([A-Z])/g, " $1")}
-                      value={formData[field]}
-                      onChange={handleDataChange}
-                      className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${
-                        errors[field]
-                          ? "border-red-500 focus:ring-red-500"
-                          : "border-green-400 focus:ring-green-500"
-                      }`}
-                    />
-                    {errors[field] && (
-                      <span className="text-red-500 text-sm">{errors[field]}</span>
-                    )}
-                  </div>
-                )
-              )}
+              {["firstName", "lastName", "email", "mobileNumber", "nic", "address", "username", "password", "confirmPassword"].map((field) => (
+                <div key={field}>
+                  <input
+                    type={field.includes("password") ? "password" : "text"}
+                    name={field}
+                    placeholder={field.replace(/([A-Z])/g, " $1")}
+                    value={formData[field]}
+                    onChange={handleDataChange}
+                    className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${errors[field] ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"}`}
+                  />
+                  {errors[field] && <span className="text-red-500 text-sm">{errors[field]}</span>}
+                </div>
+              ))}
+
+              <div>
+                <select
+                  name="district"
+                  value={selectedDistrict}
+                  onChange={handleDistrictChange}
+                  className="p-2 border rounded-md w-full focus:outline-none focus:ring-2 border-green-400 focus:ring-green-500"
+                >
+                  <option value="">Select District</option>
+                  {locations.map((loc) => (
+                    <option key={loc._id} value={loc.name}>{loc.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <select
+                  name="nearestCity"
+                  value={formData.nearestCity}
+                  onChange={handleDataChange}
+                  className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${errors.nearestCity ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"}`}
+                >
+                  <option value="">Select Nearest City</option>
+                  {nearestCityOptions.map((area) => (
+                    <option key={area._id} value={area.name}>{area.name}</option>
+                  ))}
+                </select>
+                {errors.nearestCity && <span className="text-red-500 text-sm">{errors.nearestCity}</span>}
+              </div>
 
               {userType === "JobSeeker" && (
-                <div>
+                <div className="flex justify-center">
                   <select
                     name="gender"
                     value={formData.gender}
                     onChange={handleDataChange}
-                    className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${
-                      errors.gender
-                        ? "border-red-500 focus:ring-red-500"
-                        : "border-green-400 focus:ring-green-500"
-                    }`}
+                    className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${errors.gender ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"}`}
                   >
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
@@ -255,19 +259,8 @@ const Registration = () => {
               )}
 
               <div className="flex justify-between mt-6">
-                <button
-                  type="button"
-                  onClick={() => setStep(userType === "Employer" ? "company" : "selection")}
-                  className="px-8 py-2 bg-green-200 text-green-700 rounded-md hover:bg-green-300"
-                >
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                >
-                  Continue
-                </button>
+                <button type="button" onClick={() => setStep(userType === "Employer" ? "company" : "selection")} className="px-8 py-2 bg-green-200 text-green-700 rounded-md hover:bg-green-300">Back</button>
+                <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Continue</button>
               </div>
             </form>
           </>

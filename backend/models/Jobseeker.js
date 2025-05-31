@@ -9,11 +9,16 @@ const jobSeekerSchema = new mongoose.Schema({
   mobileNumber: { type: String, required: true, unique: true },
   nic: { type: String, required: true, unique: true },
   address: String,
-  nearestCity: String,
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   gender: String,
-  userType: { type: String, enum: ['JobSeeker'], default: 'JobSeeker' }
+  userType: { type: String, enum: ['JobSeeker'], default: 'JobSeeker' },
+
+  location: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Location'
+  }
+
 }, { timestamps: true });
 
 jobSeekerSchema.pre('save', async function (next) {
@@ -28,3 +33,4 @@ jobSeekerSchema.pre('save', async function (next) {
 });
 
 module.exports = mongoose.model('JobSeeker', jobSeekerSchema);
+

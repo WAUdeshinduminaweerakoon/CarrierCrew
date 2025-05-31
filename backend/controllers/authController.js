@@ -1,5 +1,5 @@
 const Employer = require('../models/Employer');
-const JobSeeker = require('../models/JobSeeker');
+const JobSeeker = require('../models/Jobseeker');
 
 // Helper: Check strong password
 function isStrongPassword(password) {

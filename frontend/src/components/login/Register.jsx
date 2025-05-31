@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Eye, EyeOff } from "lucide-react"; 
 
 const Registration = () => {
@@ -126,13 +128,17 @@ const Registration = () => {
         alert(res.data.message);
         navigate("/"); // Redirect on success
       } catch (error) {
-        alert(error.response?.data?.message || "Registration failed");
+        toast.error(error.response?.data?.message || "Registration failed", {
+         position: "top-center",
+         autoClose: 3000
+        });
       }
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen pt-10 pb-10 bg-green-50">
+       <ToastContainer />
       <div className="w-full max-w-md p-5 mx-auto font-sans bg-white border rounded-lg shadow-md">
         {step === "selection" && (
           <>

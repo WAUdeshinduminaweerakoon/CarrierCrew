@@ -11,6 +11,7 @@ import EmployerHome from "./components/employer/EmployerHome";
 import JobSeekerProfile from "./components/jobSeeker/JobSeekerProfile";
 import CompanyProfile from "./components/employer/CompanyProfile";
 import ForgotPassword from "./components/ForgotPassword";
+import VerifyOtp from "./components/login/OtpVerfication";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
   {
     path: "/forgotpassword",
     element: <ForgotPassword/>
+  },
+    {
+    path: "/verify",
+    element: <VerifyOtp/>
   },
 ]);
 

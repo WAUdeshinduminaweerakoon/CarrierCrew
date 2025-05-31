@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createJobPost } = require("../controllers/jobController");
+const { createJobPost, applyForJob } = require("../controllers/jobController");
 const Job = require("../models/Job");
 
 router.post("/new", createJobPost);
@@ -24,6 +24,9 @@ router.get("/employer/:employerId", async (req, res) => {
     res.status(500).json({ message: "Failed to fetch employer's jobs", error: err });
   }
 });
+
+
+router.post("/:jobId/apply", applyForJob); 
 
 
 module.exports = router;

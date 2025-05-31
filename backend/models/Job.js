@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const applicantSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Jobseeker",
+      required: true,
+    },
+    appliedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: false }
+);
+
 const jobSchema = new mongoose.Schema({
   jobTitle: { type: String, required: true },
   location: { type: String, required: true },
@@ -11,9 +26,15 @@ const jobSchema = new mongoose.Schema({
   payment: { type: Number, required: true },
   description: { type: String },
   vacancies: { type: Number, required: true },
-  employerId: { type: mongoose.Schema.Types.ObjectId, ref: "Employer", required: true }, // assuming login captures this
+  employerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Employer",
+    required: true,
+  },
+  applicants: [applicantSchema],
   createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Job", jobSchema);
+
 

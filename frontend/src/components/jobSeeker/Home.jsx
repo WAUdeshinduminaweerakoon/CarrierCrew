@@ -12,7 +12,8 @@ const Home = () => {
   const [workingHours, setWorkingHours] = useState([0, 12]);
   const [selectedLocation, setSelectedLocation] = useState("Location");
   const [selectedCategory, setSelectedCategory] = useState("Category");
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [expandedJobId, setExpandedJobId] = useState(null);
+
 
   const navigate = useNavigate();
 
@@ -302,23 +303,82 @@ const Home = () => {
           {Array.isArray(jobAds) && jobAds.length > 0 ? (
             jobAds.map((job) => (
               <div
-                key={job.id}
-                onClick={() => setSelectedJob(job)}
-                className="flex bg-white shadow rounded-md p-4 items-center gap-4 cursor-pointer hover:bg-green-50 transition"
+                key={job._id}
+                className="bg-white shadow rounded-md p-4 cursor-pointer hover:bg-green-50 transition"
+                onClick={() =>
+                  setExpandedJobId(expandedJobId === job._id ? null : job._id)
+                }
               >
-                <img
-                  src={job.image}
-                  alt={job.category}
-                  className="w-16 h-16 object-cover rounded-md"
-                />
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-green-800">{job.jobTitle}</h3>
-                  <p className="text-sm text-gray-600">{job.location}</p>
-                  <p className="text-sm text-gray-600">{job.duration}</p>
-                  <p className="text-sm text-gray-600">{job.dateFrom ? job.dateFrom.slice(0, 10) : ''}</p>
-                  <p className="text-sm text-green-700 font-medium">{job.payment}</p>
+                <div className="flex items-center gap-4">
+                  <img
+                    src={job.image}
+                    alt={job.category}
+                    className="w-16 h-16 object-cover rounded-md"
+                  />
+                  <div className="flex-1 text-left">
+                    <h3 className="text-lg font-semibold text-green-800">{job.jobTitle}</h3>
+                    <p className="text-sm text-gray-600">{job.location}</p>
+                    <p className="text-sm text-gray-600">{job.duration}</p>
+                    <p className="text-sm text-gray-600">
+                      {job.dateFrom ? job.dateFrom.slice(0, 10) : ""}
+                    </p>
+                    <p className="text-sm text-green-700 font-medium">{job.payment}</p>
+                  </div>
                 </div>
+
+                {/* Expand details */}
+                {expandedJobId === job._id && (
+                  <div className="mt-4 text-left space-y-2 text-sm text-gray-700">
+                    <p>
+                      <strong>Working Hours:</strong> {job.duration}
+                    </p>
+                    <p>
+                      <strong>Working Days:</strong>{" "}
+                      {job.dateFrom ? job.dateFrom.slice(0, 10) : ""} -{" "}
+                      {job.dateTo ? job.dateTo.slice(0, 10) : ""}
+                    </p>
+                    <p>
+                      <strong>Salary:</strong> {job.payment}
+                    </p>
+                    <p>
+                      <strong>Description:</strong> {job.description}
+                    </p>
+
+            <button
+              className="mt-3 w-full bg-green-700 text-white py-2 rounded hover:bg-green-800 transition disabled:opacity-50"
+              onClick={async (e) => {
+                e.stopPropagation();
+                try {
+                  const response = await fetch("http://localhost:5000/api/jobs/"+job._id+"/apply", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      userId:jobseekerId,
+                    }),
+                  });
+
+                  const result = await response.json();
+
+                  if (response.ok) {
+                    alert("Application submitted successfully!");
+                  } else {
+                    alert(`Application failed: ${result.message || "Unknown error"}`);
+                  }
+                } catch (err) {
+                  console.error("Application error:", err);
+                  alert("Something went wrong while applying.");
+                }
+              }}
+            >
+              Apply Now
+            </button>
+
+                  </div>
+                )}
               </div>
+
             ))
           ) : (
             <p className="text-gray-600">No job advertisements available.</p>
@@ -326,38 +386,7 @@ const Home = () => {
         </div>
       </main>
 
-      {selectedJob && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md relative">
-            <button
-              onClick={() => setSelectedJob(null)}
-              className="absolute top-2 right-3 text-xl font-bold text-gray-500 hover:text-gray-700"
-            >
-              ×
-            </button>
-            <img
-              src={selectedJob.image}
-              alt={selectedJob.category}
-              className="w-20 h-20 object-cover rounded mx-auto mb-4"
-            />
-            <h2 className="text-xl font-bold text-green-800 text-center">{selectedJob.jobTitle}</h2>
-            <p className="text-sm text-gray-600 text-center mb-4">{selectedJob.location}</p>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p><strong>Working Hours:</strong> {selectedJob.duration}</p>
-              <p><strong>Working Days:</strong> {selectedJob.dateFrom ? selectedJob.dateFrom.slice(0, 10) : ''}  -- {selectedJob.dateTo ? selectedJob.dateTo.slice(0, 10) : ''}</p>
-              <p><strong>Salary:</strong> {selectedJob.payment}</p>
-              <p> {selectedJob.description}</p>
-              <p><strong>No.of Vacancies:</strong> {selectedJob.vacancies}</p>
-            </div>
-            <button
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded mt-4"
-              onClick={() => alert(`Applied for ${selectedJob.jobTitle} in ${selectedJob.location}`)}
-            >
-              Apply Now
-            </button>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 };

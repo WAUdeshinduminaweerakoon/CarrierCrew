@@ -93,7 +93,11 @@ const EmployerHome = () => {
                 icon: <FaPlus />,
                 onClick: () => navigate("/employer/create-job"),
               },
-              { label: "Applications", icon: <FaFileAlt /> },
+              { 
+                label: "Applications",
+                icon: <FaFileAlt />,
+                onClick: () => navigate("/employer/view-applications"),
+              },
               { label: "Profile", icon: <FaUser />,
                 onClick: () => navigate("/employer/profile"),
                },

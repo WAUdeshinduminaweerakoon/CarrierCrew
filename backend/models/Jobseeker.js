@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
 
 const jobSeekerSchema = new mongoose.Schema({
   firstName: String,
@@ -9,9 +11,20 @@ const jobSeekerSchema = new mongoose.Schema({
   address: String,
   nearestCity: String,
   username: { type: String, required: true, unique: true },
-  password: String,
+  password: { type: String, required: true },
   gender: String,
-  userType: { type: String, default: 'JobSeeker' }
+  userType: { type: String, enum: ['JobSeeker'], default: 'JobSeeker' }
 }, { timestamps: true });
+
+jobSeekerSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  try {
+    const hashed = await bcrypt.hash(this.password, SALT_ROUNDS);
+    this.password = hashed;
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = mongoose.model('JobSeeker', jobSeekerSchema);

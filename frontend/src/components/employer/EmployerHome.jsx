@@ -131,9 +131,9 @@ const EmployerHome = () => {
               <div className="text-sm text-green-900">
                 <h2 className="font-semibold text-base">{job.jobTitle}</h2>
                 <p>{job.location}</p>
-                <p>{job.hours}</p>
-                <p>{job.days}</p>
-                <p>{job.salary}</p>
+                <p>{job.duration}</p>
+                <p>{job.fromDate}</p>
+                <p>{job.payment}</p>
               </div>
             </div>
           ))

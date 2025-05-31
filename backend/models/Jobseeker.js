@@ -27,4 +27,6 @@ jobSeekerSchema.pre('save', async function (next) {
   }
 });
 
-module.exports = mongoose.model('JobSeeker', jobSeekerSchema);
+//module.exports = mongoose.model('JobSeeker', jobSeekerSchema);
+module.exports = mongoose.models.JobSeeker || mongoose.model('JobSeeker', jobSeekerSchema);
+

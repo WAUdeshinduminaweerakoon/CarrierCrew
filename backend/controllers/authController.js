@@ -1,10 +1,36 @@
 const Employer = require('../models/Employer');
 const JobSeeker = require('../models/JobSeeker');
 
+// Helper: Check strong password
+function isStrongPassword(password) {
+  const minLength = 8;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  return (
+    password.length >= minLength &&
+    hasUpper &&
+    hasLower &&
+    hasNumber &&
+    hasSpecial
+  );
+}
+
 const registerEmployer = async (req, res) => {
   try {
     const { company, username, nic, email, mobileNumber, password, ...userData } = req.body;
 
+    // Strong password check
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+      });
+    }
+
+    // Check for existing records
     const existing = await Employer.findOne({
       $or: [
         { username },
@@ -44,6 +70,15 @@ const registerJobSeeker = async (req, res) => {
   try {
     const { username, nic, email, mobileNumber, password, ...userData } = req.body;
 
+    // Strong password check
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+      });
+    }
+
+    // Check for existing records
     const existing = await JobSeeker.findOne({
       $or: [
         { username },

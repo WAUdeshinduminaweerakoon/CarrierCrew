@@ -75,9 +75,9 @@ const Login = () => {
   return (
 
 
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
 
-      <div className="w-full h-screen max-w-md bg-white rounded-lg shadow-md p-8">
+      <div className="w-full h-screen max-w-md p-8 bg-white rounded-lg shadow-md">
 
         <h2 className="text-2xl font-bold text-center text-gray-700">
           Welcome Back, Glad to See You Again!
@@ -87,14 +87,14 @@ const Login = () => {
 
           {/* Error message */}
           {errorMessage && (
-            <p className="text-red-500 text-sm text-center mb-4">{errorMessage}</p>
+            <p className="mb-4 text-sm text-center text-red-500">{errorMessage}</p>
           )}
 
 
           {/* Username input */}
           <div className="mb-4">
 
-            <label className="block text-gray-600 font-medium mb-1">Username</label>
+            <label className="block mb-1 font-medium text-gray-600">Username</label>
 
             <input
               type="text"
@@ -107,7 +107,7 @@ const Login = () => {
             />
 
             {errors.username && (
-              <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+              <p className="mt-1 text-sm text-red-500">{errors.username}</p>
             )}
 
 
@@ -116,7 +116,7 @@ const Login = () => {
           {/* Password input */}
           <div className="mb-4">
 
-            <label className="block text-gray-600 font-medium mb-1">Password</label>
+            <label className="block mb-1 font-medium text-gray-600">Password</label>
 
             <input
               type="password"
@@ -129,12 +129,12 @@ const Login = () => {
             />
 
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              <p className="mt-1 text-sm text-red-500">{errors.password}</p>
             )}
 
             {/* Forgot Password link */}
-            <div className="text-right mt-2">
-              <Link to="/forgotpassword" className="text-blue-600 text-sm hover:underline">
+            <div className="mt-2 text-right">
+              <Link to="/forgotpassword" className="text-sm text-blue-600 hover:underline">
                 Forgot Password?
               </Link>
             </div>
@@ -144,7 +144,7 @@ const Login = () => {
           {/* Login button */}
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+            className="w-full py-2 text-white bg-green-600 rounded-lg hover:bg-green-700"
           >
             Login
           </button>
@@ -152,7 +152,7 @@ const Login = () => {
 
 
           {/* Register link */}
-          <p className="text-center text-gray-600 mt-6">
+          <p className="mt-6 text-center text-gray-600">
             Don't have an account?{" "}
             <a href="/register" className="text-blue-600 hover:underline">
               Click here to Register

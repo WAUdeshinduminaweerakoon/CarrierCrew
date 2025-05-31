@@ -1,15 +1,16 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 
 export default function NewJobForm() {
   const navigate = useNavigate();
 
   const [vacancies, setVacancies] = useState(1);
+  const [locations, setLocations] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedArea, setSelectedArea] = useState("");
+
   const [formData, setFormData] = useState({
     jobTitle: "",
-    location: "",
     dateFrom: "",
     dateTo: "",
     timeFrom: "",
@@ -17,10 +18,10 @@ export default function NewJobForm() {
     duration: "",
     payment: "",
     description: "",
-
   });
 
   const [employerId, setEmployerId] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -33,23 +34,37 @@ export default function NewJobForm() {
     }
   }, []);
 
-
-  const [errors, setErrors] = useState({});
-
-  const increaseVacancies = () => setVacancies(vacancies + 1);
-  const decreaseVacancies = () => {
-    if (vacancies > 1) setVacancies(vacancies - 1);
-  };
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/locations/all");
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setLocations(data);
+        } else {
+          console.error("Unexpected location data structure", data);
+          setLocations([]);
+        }
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+    fetchLocations();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const increaseVacancies = () => setVacancies(vacancies + 1);
+  const decreaseVacancies = () => vacancies > 1 && setVacancies(vacancies - 1);
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.jobTitle) newErrors.jobTitle = "Job Title is required";
-    if (!formData.location) newErrors.location = "Location is required";
+    if (!selectedDistrict) newErrors.district = "District is required";
+    if (!selectedArea) newErrors.area = "Area is required";
     if (!formData.dateFrom) newErrors.dateFrom = "Start date is required";
     if (!formData.dateTo) newErrors.dateTo = "End date is required";
     if (!formData.timeFrom) newErrors.timeFrom = "Start time is required";
@@ -60,10 +75,11 @@ export default function NewJobForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       try {
+        const location = `${selectedDistrict} - ${selectedArea}`;
         const response = await fetch("http://localhost:5000/api/jobs/new", {
           method: "POST",
           headers: {
@@ -71,13 +87,13 @@ export default function NewJobForm() {
           },
           body: JSON.stringify({
             ...formData,
+            location,
             vacancies,
             employerId,
           }),
         });
 
         const data = await response.json();
-
         if (response.ok) {
           alert("Job posted successfully!");
           navigate("/employer/home");
@@ -91,11 +107,9 @@ export default function NewJobForm() {
     }
   };
 
-
   const handleReset = () => {
     setFormData({
       jobTitle: "",
-      location: "",
       dateFrom: "",
       dateTo: "",
       timeFrom: "",
@@ -105,12 +119,15 @@ export default function NewJobForm() {
       description: "",
     });
     setVacancies(1);
+    setSelectedDistrict("");
+    setSelectedArea("");
     setErrors({});
   };
 
-  const handleBack = () => {
-    navigate("/employer/home");
-  };
+  const handleBack = () => navigate("/employer/home");
+
+  const availableAreas =
+    locations.find((d) => d.name === selectedDistrict)?.areas || [];
 
   return (
     <form
@@ -142,16 +159,41 @@ export default function NewJobForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-green-800">Location</label>
-          <input
-            type="text"
-            name="location"
-            placeholder="Location"
-            value={formData.location}
-            onChange={handleChange}
-            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-          {errors.location && <p className="text-red-500 text-xs">{errors.location}</p>}
+          <label className="block text-sm font-medium text-green-800">District</label>
+          <select
+            value={selectedDistrict}
+            onChange={(e) => {
+              setSelectedDistrict(e.target.value);
+              setSelectedArea("");
+            }}
+            className="w-full border border-green-400 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            <option value="">Select a district</option>
+            {locations.map((district) => (
+              <option key={district.name} value={district.name}>
+                {district.name}
+              </option>
+            ))}
+          </select>
+          {errors.district && <p className="text-red-500 text-xs">{errors.district}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-green-800">Area</label>
+          <select
+            value={selectedArea}
+            onChange={(e) => setSelectedArea(e.target.value)}
+            disabled={!selectedDistrict}
+            className="w-full border border-green-400 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            <option value="">Select an area</option>
+            {availableAreas.map((area) => (
+              <option key={area._id} value={area.name}>
+                {area.name}
+              </option>
+            ))}
+          </select>
+          {errors.area && <p className="text-red-500 text-xs">{errors.area}</p>}
         </div>
 
         <div className="flex space-x-2">

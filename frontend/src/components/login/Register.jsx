@@ -248,7 +248,7 @@ const Registration = () => {
                 : "Add Job Seeker Details (Required)"}
             </h2>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-              {["firstName", "lastName", "email", "mobileNumber", "nic", "address", "username", "password", "confirmPassword"].map((field) => (
+              {["firstName", "lastName", "email", "mobileNumber", "nic", "address", "username"].map((field) => (
                 <div key={field}>
                   <input
                     type={field.includes("password") ? "password" : "text"}
@@ -258,16 +258,64 @@ const Registration = () => {
                     onChange={handleDataChange}
                     className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${errors[field] ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"}`}
                   />
-                  {errors[field] && <span className="text-red-500 text-sm">{errors[field]}</span>}
+                  {errors[field] && <span className="text-sm text-red-500">{errors[field]}</span>}
                 </div>
               ))}
+                          <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleDataChange}
+                className={`p-2 border rounded-md w-full pr-10 focus:outline-none focus:ring-2 ${
+                  errors.password
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-green-400 focus:ring-green-500"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 flex items-center text-gray-600 right-2"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+              {errors.password && (
+                <span className="text-sm text-red-500">{errors.password}</span>
+              )}
+            </div>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleDataChange}
+                className={`p-2 border rounded-md w-full pr-10 focus:outline-none focus:ring-2 ${
+                  errors.confirmPassword
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-green-400 focus:ring-green-500"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 flex items-center text-gray-600 right-2"
+              >
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+              {errors.confirmPassword && (
+                <span className="text-sm text-red-500">{errors.confirmPassword}</span>
+              )}
+            </div>
 
               <div>
                 <select
                   name="district"
                   value={selectedDistrict}
                   onChange={handleDistrictChange}
-                  className="p-2 border rounded-md w-full focus:outline-none focus:ring-2 border-green-400 focus:ring-green-500"
+                  className="w-full p-2 border border-green-400 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="">Select District</option>
                   {locations.map((loc) => (
@@ -288,7 +336,7 @@ const Registration = () => {
                     <option key={area._id} value={area.name}>{area.name}</option>
                   ))}
                 </select>
-                {errors.nearestCity && <span className="text-red-500 text-sm">{errors.nearestCity}</span>}
+                {errors.nearestCity && <span className="text-sm text-red-500">{errors.nearestCity}</span>}
               </div>
 
               {userType === "JobSeeker" && (

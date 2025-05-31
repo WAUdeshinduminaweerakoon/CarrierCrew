@@ -1,22 +1,26 @@
-//import React from "react";
-//import ReactDOM from "react-dom/client";
-//import "./index.css"; // Tailwind CSS
-
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import Home from "./components/admin-home";
 import GeneralSettings from "./components/GeneralSettings";
+import LoginPage from "./components/login/Login"; 
 
-// Create router with routes
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
+    path: "/login",
+    element: <LoginPage />, 
   },
-    {
+  {
+    path: "/admin",
+    element: <Home />, 
+  },
+  {
     path: "/settings",
     element: <GeneralSettings />,
+  },
+  {
+    path: "/",
+    element: <LoginPage />, 
   },
 ]);
 

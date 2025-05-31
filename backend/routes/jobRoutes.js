@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createJobPost, applyForJob } = require("../controllers/jobController");
+const { createJobPost, applyForJob, getApplicantsByEmployer } = require("../controllers/jobController");
 const Job = require("../models/Job");
 
 router.post("/new", createJobPost);
@@ -27,6 +27,18 @@ router.get("/employer/:employerId", async (req, res) => {
 
 
 router.post("/:jobId/apply", applyForJob); 
+
+// GET: All jobs by a specific employer
+router.get("/employer/:employerId", async (req, res) => {
+  try {
+    const jobs = await Job.find({ employerId: req.params.employerId });
+    res.status(200).json(jobs);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch employer's jobs", error: err });
+  }
+});
+
+router.get("/employer/:employerId/applicants", getApplicantsByEmployer);
 
 
 module.exports = router;

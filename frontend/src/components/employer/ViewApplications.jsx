@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { format } from 'date-fns';
+import API_ROUTES from '../../configs/config';
 
 const ViewApplications = () => {
   const [applicants, setApplicants] = useState([]);
@@ -8,7 +9,7 @@ const ViewApplications = () => {
   const [error, setError] = useState(null);
 
   const employerId = localStorage.getItem('userId');
-  const apiURL = `http://localhost:5000/api/jobs/employer/${employerId}/applicants`;
+  const apiURL = `${API_ROUTES.JOBS}/employer/${employerId}/applicants`;
 
   useEffect(() => {
     const fetchApplicants = async () => {

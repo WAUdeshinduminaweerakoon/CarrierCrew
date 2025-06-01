@@ -9,6 +9,7 @@ import {
   FaFileAlt,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import API_ROUTES from "../../configs/config";
 
 
 const EmployerHome = () => {
@@ -26,7 +27,7 @@ const EmployerHome = () => {
         setEmployerId(storedUserId);
 
         // Fetch jobs for this employer
-        fetch(`http://localhost:5000/api/jobs/employer/${storedUserId}`)
+        fetch(`${API_ROUTES.JOBS}/employer/${storedUserId}`)
           .then((res) => res.json())
           .then((data) => {
             setJobs(data);

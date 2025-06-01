@@ -74,11 +74,22 @@ export default function EmployerProfile() {
             <div className="flex items-center mt-2">
               <strong className="mr-2">Rating</strong>:
               <div className="flex space-x-1 text-yellow-400">
-                {[...Array(company.rating || 0)].map((_, i) => (
-                  <Star key={i} size={16} fill="currentColor" stroke="currentColor" />
-                ))}
+                {[...Array(5)].map((_, i) => {
+                  const isFilled = i < (company.rating || 0);
+                  return (
+                    <Star
+                      key={i}
+                      size={16}
+                      fill={isFilled ? "currentColor" : "none"}
+                      stroke="currentColor"
+                      strokeWidth={isFilled ? 1 : 1.5}
+                      className={isFilled ? "" : "text-gray-300"}
+                    />
+                  );
+                })}
               </div>
             </div>
+
             <p><strong>Authorized Person</strong>: {company.authorizedPerson || "N/A"}</p>
 
             <div className="flex items-center justify-between pt-4 mx-4 mt-4 border-t border-blue-200">

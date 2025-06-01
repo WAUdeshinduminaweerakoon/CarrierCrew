@@ -20,6 +20,7 @@ import FreePlanCard from "./components/SubscriptionPlans/FreePlan";
 import BasicPlanCard from "./components/SubscriptionPlans/BasicPlan";
 import PremiumPlanCard from "./components/SubscriptionPlans/PremiumPlan";
 import ProPlanCard from "./components/SubscriptionPlans/ProPlan";
+import PaymentPage from "./components/PaymentPage";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
   { 
     path: "/Pro",
     element: <ProPlanCard/>
+  },
+  { 
+    path: "/Pay",
+    element: <PaymentPage/>
   },
 ]);
 

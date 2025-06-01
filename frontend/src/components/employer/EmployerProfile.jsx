@@ -50,7 +50,7 @@ export default function EmployerProfile() {
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
       <div className="w-full max-w-md pb-4 bg-white border border-green-200 shadow-xl rounded-2xl">
         <div className="py-2 text-lg font-semibold text-center text-white bg-green-400 rounded-t-2xl">
-          Employer Profile{employer._id}
+          Employer Profile
         </div>
         <div className="p-4 mx-4 mt-4 border border-green-300 rounded-xl">
           <div className="flex flex-col items-center">

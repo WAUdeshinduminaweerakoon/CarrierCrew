@@ -17,6 +17,7 @@ import DeleteAccount from "./components/Account/DeleteAccountConfirm";
 import MyPosts from "./components/employer/MyPosts";
 import SubscriptionPlans from "./components/SubscriptionPlans/SubscriptionPlans";
 import FreePlanCard from "./components/SubscriptionPlans/FreePlan";
+import BasicPlanCard from "./components/SubscriptionPlans/BasicPlan";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
     { 
     path: "/Free",
     element: <FreePlanCard/>
+  },
+  { 
+    path: "/Basic",
+    element: <BasicPlanCard/>
   },
 ]);
 

@@ -13,6 +13,7 @@ import CompanyProfile from "./components/employer/CompanyProfile";
 import ForgotPassword from "./components/ForgotPassword";
 import VerifyOtp from "./components/login/OtpVerfication";
 import Applications from "./components/employer/ViewApplications"
+import DeleteAccount from "./components/Account/DeleteAccountConfirm";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -60,9 +61,13 @@ const router = createBrowserRouter([
     path: "/verify",
     element: <VerifyOtp/>
   },
-      {
+    {
     path: "/employer/view-applications",
     element: <Applications/>
+  },
+  {
+    path: "/deleteaccount",
+    element: <DeleteAccount/>
   },
 ]);
 

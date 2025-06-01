@@ -19,6 +19,7 @@ import SubscriptionPlans from "./components/SubscriptionPlans/SubscriptionPlans"
 import FreePlanCard from "./components/SubscriptionPlans/FreePlan";
 import BasicPlanCard from "./components/SubscriptionPlans/BasicPlan";
 import PremiumPlanCard from "./components/SubscriptionPlans/PremiumPlan";
+import ProPlanCard from "./components/SubscriptionPlans/ProPlan";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -93,6 +94,10 @@ const router = createBrowserRouter([
   { 
     path: "/Pre",
     element: <PremiumPlanCard/>
+  },
+  { 
+    path: "/Pro",
+    element: <ProPlanCard/>
   },
 ]);
 

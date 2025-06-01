@@ -11,6 +11,7 @@ const API_ROUTES = {
   ADMIN_JOBSEEKERS: `${BASE_URL}/api/admin/jobseekers`,
   ADMIN_JOBS: `${BASE_URL}/api/admin/jobs`,
   ADMIN_APPLICANTS: `${BASE_URL}/api/admin/jobs/applicants`,
+  ADMIN_USERS: `${BASE_URL}/api/admin/users`,
 };
 
 export default API_ROUTES;

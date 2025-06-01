@@ -1,8 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BarChart3, Users, Briefcase, Settings, FileText, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import API_ROUTES from "../configs/config";
 
 const AdminDashboardHome = () => {
+  const [employerCount, setEmployerCount] = useState(0);
+  const [jobSeekerCount, setJobSeekerCount] = useState(0);
+  const [jobCount, setJobCount] = useState(0);
+  const [applicantCount, setApplicantCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const [employerRes, jobSeekerRes, jobRes, applicantRes] = await Promise.all([
+          axios.get(`${API_ROUTES.ADMIN_EMPLOYERS}/count`),
+          axios.get(`${API_ROUTES.ADMIN_JOBSEEKERS}/count`),
+          axios.get(`${API_ROUTES.ADMIN_JOBS}/count`),
+          axios.get(`${API_ROUTES.ADMIN_APPLICANTS}/count`)
+        ]);
+
+        setEmployerCount(employerRes.data.totalEmployers || 0);
+        setJobSeekerCount(jobSeekerRes.data.totalJobSeekers || 0);
+        setJobCount(jobRes.data.totalJobs || 0);
+        setApplicantCount(applicantRes.data.totalApplicants || 0);
+
+      } catch (err) {
+        console.error("Failed to fetch counts:", err);
+        setEmployerCount(0);
+        setJobSeekerCount(0);
+        setJobCount(0);
+        setApplicantCount(0);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
+  const totalUsers = employerCount + jobSeekerCount;
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">CareerCrew.LK</h1>
@@ -11,15 +47,15 @@ const AdminDashboardHome = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         {[{
           title: "Total Users",
-          value: "1,234",
+          value: totalUsers.toLocaleString(),
           icon: <Users className="w-10 h-10 text-blue-500" />
         }, {
           title: "Job Listings",
-          value: "345",
+          value: jobCount.toLocaleString(),
           icon: <Briefcase className="w-10 h-10 text-green-500" />
         }, {
           title: "Applications",
-          value: "789",
+          value: applicantCount.toLocaleString(),
           icon: <BarChart3 className="w-10 h-10 text-purple-500" />
         }].map((item, index) => (
           <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
@@ -52,17 +88,15 @@ const AdminDashboardHome = () => {
           <p className="text-sm text-gray-600">Moderate and monitor job seeker applications and activity.</p>
         </div>
 
-        <Link to="/settings"> 
-            <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
-                <div className="flex items-center mb-4">
-                    <Settings className="w-6 h-6 text-rose-500 mr-2" />
-                    <h2 className="text-lg font-medium text-gray-700">General Settings</h2>
-                </div>
-                <p className="text-sm text-gray-600">Manage general settings, admin accounts, roles, and permissions.</p>
+        <Link to="/settings">
+          <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
+            <div className="flex items-center mb-4">
+              <Settings className="w-6 h-6 text-rose-500 mr-2" />
+              <h2 className="text-lg font-medium text-gray-700">General Settings</h2>
             </div>
+            <p className="text-sm text-gray-600">Manage general settings, admin accounts, roles, and permissions.</p>
+          </div>
         </Link>
-
-
       </div>
 
       {/* Recent Activity */}

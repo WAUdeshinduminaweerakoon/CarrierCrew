@@ -9,6 +9,9 @@ const companySchema = new mongoose.Schema({
   companyType: String,
   address: String,
   nearestCity: String,
+  description: String,
+  rating: { type: Number, default: 0 },
+  authorizedPerson: String,
 });
 
 const employerSchema = new mongoose.Schema({

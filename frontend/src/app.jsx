@@ -14,6 +14,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import VerifyOtp from "./components/login/OtpVerfication";
 import Applications from "./components/employer/ViewApplications"
 import DeleteAccount from "./components/Account/DeleteAccountConfirm";
+import MyPosts from "./components/employer/MyPosts";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
   {
     path: "/deleteaccount",
     element: <DeleteAccount/>
+  },
+    {
+    path: "/employer/my-posts",
+    element: <MyPosts/>
   },
 ]);
 

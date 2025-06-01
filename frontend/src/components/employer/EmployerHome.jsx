@@ -88,7 +88,11 @@ const EmployerHome = () => {
         <div className="bg-white p-4 rounded-xl shadow-md">
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: "My Posts", icon: <FaClipboardList /> },
+              { 
+                label: "My Posts", 
+                icon: <FaClipboardList />, 
+                onClick: () => navigate("/employer/my-posts")
+              },
               {
                 label: "New Job",
                 icon: <FaPlus />,

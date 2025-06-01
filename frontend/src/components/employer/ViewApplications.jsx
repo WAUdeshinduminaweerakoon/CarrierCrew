@@ -7,8 +7,7 @@ const ViewApplications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Replace with dynamic employer ID if needed
-  const employerId = '683b16a46e73b0b8789d1526';
+  const employerId = localStorage.getItem('userId');
   const apiURL = `http://localhost:5000/api/jobs/employer/${employerId}/applicants`;
 
   useEffect(() => {

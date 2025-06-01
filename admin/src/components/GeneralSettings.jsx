@@ -120,7 +120,7 @@ const GeneralSettings = () => {
         </div>
         <button
           className="text-gray-600 hover:text-blue-600 flex items-center"
-          onClick={() => window.location.href = "/"}
+          onClick={() => window.location.href = "/admin"}
         >
           <HomeIcon className="h-5 w-5 mr-1" /> Home
         </button>

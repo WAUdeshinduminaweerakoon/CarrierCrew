@@ -7,6 +7,11 @@ const API_ROUTES = {
   LOCATIONS: `${BASE_URL}/api/locations`,
   OTP: `${BASE_URL}/api/verify`,
   SUBSCRIPTIONS: `${BASE_URL}/api/subscription`,
+  ADMIN_EMPLOYERS: `${BASE_URL}/api/admin/employers`,
+  ADMIN_JOBSEEKERS: `${BASE_URL}/api/admin/jobseekers`,
+  ADMIN_JOBS: `${BASE_URL}/api/admin/jobs`,
+  ADMIN_APPLICANTS: `${BASE_URL}/api/admin/jobs/applicants`,
+  ADMIN_USERS: `${BASE_URL}/api/admin/users`,
 };
 
 export default API_ROUTES;

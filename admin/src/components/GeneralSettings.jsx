@@ -1,6 +1,7 @@
 // Enhanced GeneralSettings.js UI with left navigation and dynamic right content
 import { useEffect, useState } from "react";
 import { HomeIcon } from "lucide-react";
+import API_ROUTES from "../configs/config";
 
 const districts = [
   "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
@@ -31,7 +32,7 @@ const GeneralSettings = () => {
 
   const fetchPlans = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/subscription/subscription-plans");
+      const res = await fetch(API_ROUTES.SUBSCRIPTIONS+"/subscription-plans");
       const data = await res.json();
       setPlans(data);
     } catch (err) {
@@ -50,7 +51,7 @@ const GeneralSettings = () => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:5000/api/locations/add-area", {
+      const response = await fetch(API_ROUTES.LOCATIONS+"/add-area", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ district, area }),
@@ -87,8 +88,8 @@ const GeneralSettings = () => {
       additionalCharacteristics: additionalCharacteristics.filter((c) => c.trim() !== ""),
     };
     const url = editingPlan
-      ? `http://localhost:5000/api/subscription/subscription-plan/${editingPlan._id}`
-      : "http://localhost:5000/api/subscription/add-subscription-plans";
+      ? `${API_ROUTES.SUBSCRIPTIONS}/subscription-plan/${editingPlan._id}`
+      : (API_ROUTES.SUBSCRIPTIONS+"/add-subscription-plans");
     const method = editingPlan ? "PUT" : "POST";
     try {
       const response = await fetch(url, {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API_ROUTES from "../../configs/config";
 
 export default function NewJobForm() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function NewJobForm() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/locations/all");
+        const response = await fetch(`${API_ROUTES.LOCATIONS}/all`);
         const data = await response.json();
         if (Array.isArray(data)) {
           setLocations(data);
@@ -80,7 +81,7 @@ export default function NewJobForm() {
     if (validateForm()) {
       try {
         const location = `${selectedDistrict} - ${selectedArea}`;
-        const response = await fetch("http://localhost:5000/api/jobs/new", {
+        const response = await fetch(`${API_ROUTES.JOBS}/new`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Eye, EyeOff } from "lucide-react"; 
+import API_ROUTES from "../../configs/config";
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const Registration = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/locations/all');
+        const res = await axios.get(`${API_ROUTES.LOCATIONS}/all`);
         setLocations(res.data);
       } catch (err) {
         console.error("Error fetching locations", err);
@@ -150,8 +151,8 @@ const handleDistrictChange = (e) => {
 
         const endpoint =
           userType === "Employer"
-            ? "http://localhost:5000/api/auth2/register/employer"
-            : "http://localhost:5000/api/auth2/register/jobseeker";
+            ? (API_ROUTES.REGISTER+"/register/employer")
+            : (API_ROUTES.REGISTER+"/register/jobseeker");
 
         const res = await axios.post(endpoint, payload);
         alert(res.data.message);

@@ -1,206 +1,207 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import API_ROUTES from '../../configs/config';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const EditEmployerProfiles = () => {
-  const { employerId } = useParams();
+export default function EditEmployerProfile() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [employerForm, setEmployerForm] = useState({
+  const employerId = location.state?.employerId || localStorage.getItem("userId");
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email: '',
     mobileNumber: '',
     address: '',
     nearestCity: '',
+    company: {
+      name: '',
+      email: '',
+      description: '',
+      rating: 0,
+      authorizedPerson: '',
+    },
   });
-
-  const [companyForm, setCompanyForm] = useState({
-    name: '',
-    email: '',
-    telephone: '',
-    companyType: '',
-    address: '',
-    nearestCity: '',
-    description: '',
-    authorizedPerson: '',
-    rating: 0,
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (!employerId) {
-      toast.error('No employer ID found');
-      navigate('/employer/home');
+      setError('No employer ID found. Please log in.');
+      setLoading(false);
       return;
     }
 
-    const fetchEmployerData = async () => {
-  try {
-    const res = await axios.get(`${API_ROUTES.EMPLOYER}/${employerId}`);
-    //console.log('API response:', res.data);
-    const emp = res.data.data.employer;
-    const company = res.data.data.company;
+    fetch(`http://localhost:5000/api/employers/${employerId}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch employer');
+        return res.json();
+      })
+      .then((data) => {
+        setFormData({
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          mobileNumber: data.mobileNumber || '',
+          address: data.address || '',
+          nearestCity: data.nearestCity || '',
+          company: {
+            name: data.company?.name || '',
+            email: data.company?.email || '',
+            description: data.company?.description || '',
+            rating: data.company?.rating || 0,
+            authorizedPerson: data.company?.authorizedPerson || '',
+          },
+        });
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Failed to load employer data');
+        setLoading(false);
+      });
+  }, [employerId]);
 
-
-    //const emp = res.data.data || res.data;
-    console.log('emp.company:', emp.company);
-
-    setEmployerForm({
-      firstName: emp.firstName || '',
-      lastName: emp.lastName || '',
-      email: emp.email || '',
-      mobileNumber: emp.mobileNumber || '',
-      address: emp.address || '',
-      nearestCity: emp.nearestCity || '',
-    });
-
-    setCompanyForm({
-      name: emp.company?.name || '',
-      email: emp.company?.email || '',
-      telephone: emp.company?.telephone || '',
-      companyType: emp.company?.companyType || '',
-      address: emp.company?.address || '',
-      nearestCity: emp.company?.nearestCity || '',
-      description: emp.company?.description || '',
-      authorizedPerson: emp.company?.authorizedPerson || '',
-      rating: emp.company?.rating || 0,
-    });
-
-  } catch (error) {
-    console.error('Error fetching employer data:', error);
-    toast.error('Failed to load employer data');
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-    fetchEmployerData();
-  }, [employerId, navigate]);
-
-  const handleEmployerChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmployerForm((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: '' }));
-  };
 
-  const handleCompanyChange = (e) => {
-    const { name, value } = e.target;
-    setCompanyForm((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: '' }));
-  };
-
-  const validate = () => {
-    const newErrors = {};
-
-    if (!employerForm.firstName.trim()) newErrors.firstName = 'First name is required.';
-    if (!employerForm.lastName.trim()) newErrors.lastName = 'Last name is required.';
-    if (!employerForm.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = 'Invalid email address.';
-    if (!employerForm.mobileNumber.match(/^\d{10}$/)) newErrors.mobileNumber = 'Enter a valid 10-digit mobile number.';
-    if (!employerForm.address.trim()) newErrors.address = 'Address is required.';
-    if (!employerForm.nearestCity.trim()) newErrors.nearestCity = 'Nearest city is required.';
-
-    if (!companyForm.name.trim()) newErrors.name = 'Company name is required.';
-    if (!companyForm.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = 'Invalid company email address.';
-    if (!companyForm.telephone.match(/^\d{10}$/)) newErrors.telephone = 'Enter a valid 10-digit telephone number.';
-    if (!companyForm.companyType.trim()) newErrors.companyType = 'Company type is required.';
-    if (!companyForm.address.trim()) newErrors.address = 'Company address is required.';
-    if (!companyForm.nearestCity.trim()) newErrors.nearestCity = 'Company nearest city is required.';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    try {
-      const updatePayload = {
-        ...employerForm,
-        company: companyForm,
-      };
-
-      await axios.put(`${API_ROUTES.EMPLOYER}/${employerId}`, updatePayload);
-      toast.success('Profile updated successfully');
-      navigate('/employer/profile');
-    } catch (error) {
-      console.error('Update error:', error);
-      toast.error('Failed to update profile');
+    if (name.startsWith('company.')) {
+      const field = name.split('.')[1];
+      setFormData((prev) => ({
+        ...prev,
+        company: {
+          ...prev.company,
+          [field]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    fetch(`http://localhost:5000/api/employers/${employerId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Update failed');
+        return res.json();
+      })
+      .then((updated) => {
+        alert('Profile updated successfully!');
+        navigate(`/employer/profile`, { state: { employerId: updated._id } });
+      })
+      .catch((err) => {
+        console.error(err);
+        alert('Error updating profile');
+      });
+  };
+
   if (loading) return <p className="mt-8 text-center">Loading...</p>;
+  if (error) return <p className="mt-8 text-center text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-lg p-6 mx-auto bg-white rounded shadow">
-      <ToastContainer />
-      <h2 className="mb-4 text-xl font-bold text-green-600">Edit Employer Profile</h2>
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
+      <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-xl">
+        <h2 className="mb-4 text-2xl font-bold text-center text-green-600">Edit Employer Profile</h2>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            placeholder="First Name"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            placeholder="Last Name"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="mobileNumber"
+            value={formData.mobileNumber}
+            onChange={handleChange}
+            placeholder="Mobile Number"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            placeholder="Address"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="nearestCity"
+            value={formData.nearestCity}
+            onChange={handleChange}
+            placeholder="Nearest City"
+            className="w-full p-2 border rounded"
+          />
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <h3 className="mt-4 font-semibold">Company Info</h3>
+          <input
+            type="text"
+            name="company.name"
+            value={formData.company.name}
+            onChange={handleChange}
+            placeholder="Company Name"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="email"
+            name="company.email"
+            value={formData.company.email}
+            onChange={handleChange}
+            placeholder="Company Email"
+            className="w-full p-2 border rounded"
+          />
+          <textarea
+            name="company.description"
+            value={formData.company.description}
+            onChange={handleChange}
+            placeholder="Company Description"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="number"
+            name="company.rating"
+            value={formData.company.rating}
+            onChange={handleChange}
+            placeholder="Rating (0-5)"
+            min="0"
+            max="5"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="company.authorizedPerson"
+            value={formData.company.authorizedPerson}
+            onChange={handleChange}
+            placeholder="Authorized Person"
+            className="w-full p-2 border rounded"
+          />
 
-        <h3 className="font-semibold">Personal Info</h3>
-        {['firstName', 'lastName', 'email', 'mobileNumber', 'address', 'nearestCity'].map((field) => (
-          <div key={field}>
-            <input
-              type="text"
-              name={field}
-              value={employerForm[field]}
-              onChange={handleEmployerChange}
-              placeholder={field.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())}
-              className={`p-2 border rounded w-full ${
-                errors[field] ? 'border-red-500' : 'border-green-400'
-              }`}
-            />
-            {errors[field] && <p className="mt-1 text-sm text-red-500">{errors[field]}</p>}
-          </div>
-        ))}
-
-        <h3 className="mt-6 font-semibold">Company Info</h3>
-        {[
-          { name: 'name', label: 'Company Name' },
-          { name: 'email', label: 'Company Email' },
-          { name: 'telephone', label: 'Telephone' },
-          { name: 'companyType', label: 'Company Type' },
-          { name: 'address', label: 'Company Address' },
-          { name: 'nearestCity', label: 'Company Nearest City' },
-          { name: 'description', label: 'Description' },
-          { name: 'authorizedPerson', label: 'Authorized Person' },
-          { name: 'rating', label: 'Rating', type: 'number' },
-        ].map(({ name, label, type = 'text' }) => (
-          <div key={name}>
-            <input
-              type={type}
-              name={name}
-              value={companyForm[name]}
-              onChange={handleCompanyChange}
-              placeholder={label}
-              className={`p-2 border rounded w-full ${
-                errors[name] ? 'border-red-500' : 'border-green-400'
-              }`}
-              min={name === 'rating' ? 0 : undefined}
-              max={name === 'rating' ? 5 : undefined}
-            />
-            {errors[name] && <p className="mt-1 text-sm text-red-500">{errors[name]}</p>}
-          </div>
-          
-        ))}
-
-        <button
-          type="submit"
-          className="px-4 py-2 mt-4 text-white bg-green-500 rounded hover:bg-green-600"
-        >
-          Save Changes
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full py-2 text-white bg-green-600 rounded hover:bg-green-700"
+          >
+            Save Changes
+          </button>
+        </form>
+      </div>
     </div>
   );
-};
-
-export default EditEmployerProfiles;
+}

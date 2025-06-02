@@ -23,7 +23,7 @@ app.use('/api/locations', require('./routes/locationRoutes'));
 app.use('/api/verify', require('./routes/otpRoutes.js'));
 app.use('/api/subscription', require('./routes/subscriptionRoutes.js'));
 app.use('/api/admin', require('./routes/adminRoutes.js'));
-app.use('/api/employers', require('./routes/employerRoutes'));
+app.use('/api/employers', require('./routes/employerRoutes.js'));
 
 // Serve React static files
 if (process.env.NODE_ENV === 'production') {

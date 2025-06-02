@@ -107,7 +107,12 @@ export default function CompanyProfile() {
                         >
                             Back
                         </button>
-                        <button className="px-4 py-1 text-white bg-green-500 rounded hover:bg-green-700">Edit</button>
+                        <button
+                          className="px-4 py-1 text-white bg-green-500 rounded hover:bg-green-700"
+                          onClick={() => navigate('/employer/edit-companyprofile', { state: { employerId } })}
+                        >
+                          Edit
+                        </button>
                         <button className="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-700">Delete</button>
                     </div>
                 </div>

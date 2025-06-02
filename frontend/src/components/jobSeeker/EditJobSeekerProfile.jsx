@@ -22,13 +22,13 @@ export default function JobSeekerProfileEdit() {
 
   const validate = () => {
     const errors = {};
-    if (!profile.name.trim()) errors.name = "Name is required.";
-    if (!/^\+94\d{9}$/.test(profile.contact)) errors.contact = "Enter valid Sri Lankan contact number.";
-    if (!profile.address.trim()) errors.address = "Address is required.";
-    if (!profile.city.trim()) errors.city = "Nearest city is required.";
+    if (!profile.firstName?.trim()) errors.firstName = "Name is required.";
+    if (!/^(\+94\s?\d{9}|0\d{9})$/.test(profile.mobileNumber)) {errors.mobileNumber = "Enter valid Sri Lankan contact number.";}
+    if (!profile.address?.trim()) errors.address = "Address is required.";
+    if (!profile.nearestCity?.trim()) errors.nearestCity = "Nearest city is required.";
     if (!/^\d{9}[VvXx]$/.test(profile.nic)) errors.nic = "NIC format is invalid.";
-    if (!profile.gender.trim()) errors.gender = "Gender is required.";
-    if (!profile.description.trim()) errors.description = "Description is required.";
+    if (!profile.gender?.trim()) errors.gender = "Gender is required.";
+    // if (!profile.description?.trim()) errors.description = "Description is required.";
     return errors;
   };
 
@@ -55,26 +55,26 @@ export default function JobSeekerProfileEdit() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-      <div className="w-full max-w-md p-4 bg-white border border-green-200 shadow-xl rounded-2xl">
-        <div className="py-2 text-lg font-semibold text-center text-white bg-green-400 rounded-t-2xl">
+      <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-xl">
+        <h2 className="mb-4 text-2xl font-bold text-center text-green-600">
           Edit Job Seeker Profile
-        </div>
+        </h2>
         <div className="p-4 space-y-2 text-sm">
-          {["name", "contact", "address", "city", "nic", "gender", "description"].map((field) => (
+          {["firstName", "lastName", "mobileNumber", "address", "nearestCity", "nic", "district", "gender", "description"].map((field) => (
             <div key={field}>
               <label className="font-semibold capitalize">{field}:</label>
               {field !== "description" ? (
                 <input
                   className="w-full p-1 mt-1 border rounded"
                   name={field}
-                  value={profile[field]}
+                  value={profile[field] || ""}
                   onChange={handleChange}
                 />
               ) : (
                 <textarea
                   className="w-full p-1 mt-1 border rounded"
                   name={field}
-                  value={profile[field]}
+                  value={profile[field] || ""}
                   onChange={handleChange}
                 />
               )}
@@ -85,15 +85,20 @@ export default function JobSeekerProfileEdit() {
           <div className="flex justify-between mt-4">
             <button
               className="px-4 py-1 text-green-700 border border-green-600 rounded hover:bg-green-200"
-              onClick={() => navigate("/jobseeker/profile", { state: { jobSeekerId } })}
+              onClick={() => {
+                if (window.confirm("Discard changes?")) {
+                  navigate("/jobseeker/profile", { state: { jobSeekerId } });
+                }
+              }}
             >
               Cancel
             </button>
             <button
-              className="px-4 py-1 text-white bg-green-500 rounded hover:bg-green-700"
+              type="button"
+              className="w-full py-2 text-white bg-green-600 rounded hover:bg-green-700"
               onClick={handleSave}
             >
-              Save
+              Save Changes
             </button>
           </div>
         </div>

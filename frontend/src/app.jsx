@@ -81,7 +81,7 @@ const router = createBrowserRouter([
     element: <MyPosts/>
   },
     {
-    path: "/Subs-Plans",
+    path: "/employer/subs-plans",
     element: <SubscriptionPlans/>
   },
     { 

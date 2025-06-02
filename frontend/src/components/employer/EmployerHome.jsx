@@ -107,7 +107,10 @@ const EmployerHome = () => {
                 onClick: () => navigate("/employer/profile"),
                },
               { label: "Chat", icon: <FaComments /> },
-              { label: "Subscriptions", icon: <FaRegStar /> },
+              { label: "Subscriptions",
+                 icon: <FaRegStar />,
+                 onClick: () => navigate("/employer/subs-plans")
+                },
             ].map(({ label, icon, onClick }) => (
               <button
                 key={label}

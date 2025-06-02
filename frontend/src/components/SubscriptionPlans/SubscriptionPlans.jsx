@@ -38,7 +38,9 @@ const SubscriptionPlans = () => {
     <div className="max-w-sm mx-auto bg-green-100 p-4 rounded-xl shadow-lg">
       {/* Header */}
       <div className="flex justify-between items-center bg-green-300 p-3 rounded-lg mb-4">
-        <ArrowLeft className="text-green-700 cursor-pointer" />
+         <Link to="/employer/home">
+          <ArrowLeft className="text-green-700 cursor-pointer" />
+         </Link>
         <h2 className="text-green-900 font-bold text-lg">Choose Your Plan</h2>
         <Bell className="text-green-700 cursor-pointer" />
       </div>

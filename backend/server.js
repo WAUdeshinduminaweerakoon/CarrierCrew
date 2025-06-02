@@ -24,6 +24,8 @@ app.use('/api/verify', require('./routes/otpRoutes.js'));
 app.use('/api/subscription', require('./routes/subscriptionRoutes.js'));
 app.use('/api/admin', require('./routes/adminRoutes.js'));
 app.use('/api/employers', require('./routes/employerRoutes.js'));
+app.use('/api/company', require('./routes/companyRoutes'));
+
 
 // Serve React static files
 if (process.env.NODE_ENV === 'production') {

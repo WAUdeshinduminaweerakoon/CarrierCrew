@@ -49,13 +49,51 @@ const EmployerHome = () => {
     <div className="min-h-screen bg-green-100 flex flex-col items-center overflow-x-hidden">
       {/* Header */}
       <header className="bg-green-800 text-white w-full py-4 shadow-md">
-        <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
-          <button className="text-white" onClick={toggleMenu}>
-            <FaBars className="text-2xl" />
-          </button>
-          <h1 className="font-semibold truncate">CareerCrew.LK</h1>
-        </div>
-      </header>
+  <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
+    {/* Hamburger (mobile only) */}
+    <button className="text-white sm:hidden" onClick={toggleMenu}>
+      <FaBars className="text-2xl" />
+    </button>
+
+    {/* Brand Name */}
+    <h1 className="font-semibold truncate">CareerCrew.LK</h1>
+
+    {/* Desktop Menu */}
+    <nav className="hidden sm:flex gap-4 text-sm">
+      <Link to="/employer/home" className="hover:underline">Home</Link>
+      <Link to="/" className="hover:underline">Login</Link>
+      <Link to="/employer/profile" className="hover:underline">Profile</Link>
+      <a href="#" className="hover:underline">Settings</a>
+      <a href="/" className="hover:underline">Logout</a>
+    </nav>
+  </div>
+
+  {/* Mobile Dropdown Menu */}
+  <div
+    className={`sm:hidden transition-all duration-300 ease-in-out ${
+      isMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"
+    }`}
+  >
+    <nav className="bg-green-800 text-white text-center">
+      <Link to="/employer/home" className="block py-2 hover:bg-green-700">
+        Home
+      </Link>
+      <Link to="/" className="block py-2 hover:bg-green-700">
+        Login
+      </Link>
+      <Link to="/employer/profile" className="block py-2 hover:bg-green-700">
+        Profile
+      </Link>
+      <a href="#" className="block py-2 hover:bg-green-700">
+        Settings
+      </a>
+      <a href="/" className="block py-2 hover:bg-green-700">
+        Logout
+      </a>
+    </nav>
+  </div>
+</header>
+
 
       {/* Menu */}
       <div

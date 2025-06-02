@@ -15,6 +15,7 @@ export default function EditEmployerProfile() {
     mobileNumber: '',
     address: '',
     nearestCity: '',
+    district: '', 
     company: {
       name: '',
       email: '',
@@ -43,6 +44,7 @@ export default function EditEmployerProfile() {
           mobileNumber: data.mobileNumber || '',
           address: data.address || '',
           nearestCity: data.nearestCity || '',
+          district: data.district || '', 
           company: {
             name: data.company?.name || '',
             email: data.company?.email || '',
@@ -148,6 +150,14 @@ export default function EditEmployerProfile() {
             value={formData.nearestCity}
             onChange={handleChange}
             placeholder="Nearest City"
+            className="w-full p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="district"
+            value={formData.district}
+            onChange={handleChange}
+            placeholder="District"
             className="w-full p-2 border rounded"
           />
 

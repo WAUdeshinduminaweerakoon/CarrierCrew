@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff } from 'lucide-react'; // <-- if you use lucide-react icons (or replace with any other)
+import { Eye, EyeOff } from 'lucide-react';
+import API_ROUTES from "../../configs/config";
 
 const Login = () => {
 
@@ -29,7 +30,7 @@ const Login = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await fetch("http://localhost:5000/api/auth/login", {
+        const response = await fetch(API_ROUTES.AUTH+"/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password }),

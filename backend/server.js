@@ -18,13 +18,12 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-const testRoutes = require('./routes/test');
-app.use('/api', testRoutes);
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/auth2', require('./routes/authRoutes'));
 app.use('/api/jobs', require('./routes/jobRoutes'));
 app.use('/api/locations', require('./routes/locationRoutes'));
 app.use('/api/verify', require('./routes/otpRoutes.js'));
 app.use('/api/subscription', require('./routes/subscriptionRoutes.js'));
+
+app.use('/api/admin', require('./routes/adminRoutes.js'));
 

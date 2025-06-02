@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Eye, EyeOff } from "lucide-react"; 
+import API_ROUTES from "../../configs/config";
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -34,11 +35,13 @@ const Registration = () => {
     mobileNumber: "",
     nic: "",
     address: "",
+    district:"",
     nearestCity: "",
     username: "",
     password: "",
     confirmPassword: "",
     gender: "",
+    education: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -51,7 +54,7 @@ const Registration = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/locations/all');
+        const res = await axios.get(`${API_ROUTES.LOCATIONS}/all`);
         setLocations(res.data);
       } catch (err) {
         console.error("Error fetching locations", err);
@@ -65,13 +68,20 @@ const Registration = () => {
     setStep(type === "Employer" ? "company" : "jobseeker");
   };
 
-  const handleDistrictChange = (e) => {
-    const districtName = e.target.value;
-    setSelectedDistrict(districtName);
-    setFormData({ ...formData, nearestCity: '' });
-    const district = locations.find(loc => loc.name === districtName);
-    setNearestCityOptions(district ? district.areas : []);
-  };
+const handleDistrictChange = (e) => {
+  const districtName = e.target.value;
+  setSelectedDistrict(districtName);
+
+  // Update formData with district and clear nearestCity
+  setFormData((prevData) => ({
+    ...prevData,
+    district: districtName,
+    nearestCity: ''
+  }));
+
+  const district = locations.find(loc => loc.name === districtName);
+  setNearestCityOptions(district ? district.areas : []);
+};
 
   const handleCompanyChange = (e) => {
     const { name, value } = e.target;
@@ -89,7 +99,6 @@ const Registration = () => {
     if (!phoneRegex.test(companyForm.telephone)) newErrors.telephone = "Must be 10 digits.";
     if (!companyForm.companyType.trim()) newErrors.companyType = "Company Type is required.";
     if (!companyForm.address.trim()) newErrors.address = "Address is required.";
-    if (!companyForm.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
     if (!companyForm.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
 
     setCompanyErrors(newErrors);
@@ -116,11 +125,14 @@ const Registration = () => {
     if (!formData.mobileNumber.match(/^\d{10}$/)) newErrors.mobileNumber = "Enter a valid 10-digit mobile number.";
     if (!formData.nic.trim()) newErrors.nic = "NIC is required.";
     if (!formData.address.trim()) newErrors.address = "Address is required.";
+    if (!formData.district.trim()) newErrors.district = "District is required.";
     if (!formData.nearestCity.trim()) newErrors.nearestCity = "Nearest City is required.";
     if (!formData.username.trim()) newErrors.username = "Username is required.";
     if (!formData.password.trim()) newErrors.password = "Password is required.";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match.";
     if (userType === "JobSeeker" && !formData.gender) newErrors.gender = "Gender is required."; 
+    if (userType === "JobSeeker" && !formData.education) newErrors.education = "Educational qualification is required.";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -135,20 +147,24 @@ const Registration = () => {
           ...(userType === "Employer" && { company: companyForm }),
         };
 
+        console.log('Payload:', formData);
+
         const endpoint =
           userType === "Employer"
-            ? "http://localhost:5000/api/auth2/register/employer"
-            : "http://localhost:5000/api/auth2/register/jobseeker";
+            ? (API_ROUTES.REGISTER+"/register/employer")
+            : (API_ROUTES.REGISTER+"/register/jobseeker");
 
         const res = await axios.post(endpoint, payload);
         alert(res.data.message);
+        console.log("Submitting payload:", payload);
         navigate("/");
       } catch (error) {
-        toast.error(error.response?.data?.message || "Registration failed", {
-         position: "top-center",
-         autoClose: 3000
-        });
-      }
+          console.error("Registration error:", error); // <-- Add this
+          toast.error(error.response?.data?.message || "Registration failed", {
+            position: "top-center",
+            autoClose: 3000
+          });
+        }
     }
   };
 
@@ -340,22 +356,51 @@ const Registration = () => {
               </div>
 
               {userType === "JobSeeker" && (
-                <div className="flex justify-center">
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleDataChange}
-                    className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${errors.gender ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"}`}
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </select>
-                  {errors.gender && (
-                    <span className="text-sm text-red-500">{errors.gender}</span>
-                  )}
-                </div>
+                <>
+                  <div className="flex justify-center">
+                    <select
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleDataChange}
+                      className={`p-2 border rounded-md w-full focus:outline-none focus:ring-2 ${
+                        errors.gender ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"
+                      }`}
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                    {errors.gender && (
+                      <span className="text-sm text-red-500">{errors.gender}</span>
+                    )}
+                  </div>
+
+                  <div className="mb-4">
+                    <label htmlFor="education" className="block text-sm font-medium text-gray-700">
+                      Educational Qualification
+                    </label>
+                    <select
+                      id="education"
+                      name="education"
+                      value={formData.education}
+                      onChange={handleDataChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    >
+                      <option value="">Select your qualification</option>
+                      <option value="Grade 8 or above">Grade 8 or above</option>
+                      <option value="After O/Ls">After O/Ls</option>
+                      <option value="After A/Ls">After A/Ls</option>
+                      <option value="Diploma">Diploma</option>
+                      <option value="Undergraduate">Undergraduate</option>
+                      <option value="Graduate">Graduate</option>
+                    </select>
+                    {errors.education && (
+                      <span className="text-sm text-red-500">{errors.education}</span>
+                    )}
+                  </div>
+                </>
               )}
+
 
               <div className="flex justify-between mt-6">
                 <button

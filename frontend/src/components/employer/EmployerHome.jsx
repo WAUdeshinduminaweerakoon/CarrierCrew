@@ -9,6 +9,7 @@ import {
   FaFileAlt,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import API_ROUTES from "../../configs/config";
 
 
 const EmployerHome = () => {
@@ -26,7 +27,7 @@ const EmployerHome = () => {
         setEmployerId(storedUserId);
 
         // Fetch jobs for this employer
-        fetch(`http://localhost:5000/api/jobs/employer/${storedUserId}`)
+        fetch(`${API_ROUTES.JOBS}/employer/${storedUserId}`)
           .then((res) => res.json())
           .then((data) => {
             setJobs(data);
@@ -125,13 +126,21 @@ const EmployerHome = () => {
         <div className="bg-white p-4 rounded-xl shadow-md">
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: "My Posts", icon: <FaClipboardList /> },
+              { 
+                label: "My Posts", 
+                icon: <FaClipboardList />, 
+                onClick: () => navigate("/employer/my-posts")
+              },
               {
                 label: "New Job",
                 icon: <FaPlus />,
                 onClick: () => navigate("/employer/create-job"),
               },
-              { label: "Applications", icon: <FaFileAlt /> },
+              { 
+                label: "Applications",
+                icon: <FaFileAlt />,
+                onClick: () => navigate("/employer/view-applications"),
+              },
               { label: "Profile", icon: <FaUser />,
                 onClick: () => navigate("/employer/profile"),
                },

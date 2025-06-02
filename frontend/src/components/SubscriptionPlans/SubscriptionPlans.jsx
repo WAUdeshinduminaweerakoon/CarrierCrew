@@ -71,7 +71,7 @@ const SubscriptionPlans = () => {
           <div className="text-right">
             <Link
               to={plan.path}
-              className="text-green-600 text-md font-semibold hover:underline"
+              className="text-green-600 text-md font-semibold hover:nounderline"
             >
               Choose plan →
             </Link>

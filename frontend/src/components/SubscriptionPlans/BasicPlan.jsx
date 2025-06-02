@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const BasicPlanCard = () => {
+   const navigate = useNavigate(); // initialize navigator
+   const handlePayNow = () => { navigate("/Pay");}
   return (
     <div className="w-[360px] mx-auto min-h-screen bg-green-50 border border-green-300 rounded-xl shadow p-10 text-center space-y-4">
       {/* Image */}
@@ -39,7 +42,7 @@ const BasicPlanCard = () => {
       </ul>
 
       {/* Pay Now Button */}
-      <button className="bg-green-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-700 transition w-full">
+      <button onClick={handlePayNow} className="bg-green-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-700 transition w-full">
         PAY Now
       </button>
     </div>

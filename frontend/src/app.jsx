@@ -85,19 +85,19 @@ const router = createBrowserRouter([
     element: <SubscriptionPlans/>
   },
     { 
-    path: "/Free",
+    path: "/plan/free",
     element: <FreePlanCard/>
   },
   { 
-    path: "/Basic",
+    path: "/plan/basic",
     element: <BasicPlanCard/>
   },
   { 
-    path: "/Pre",
+    path: "/plan/premium",
     element: <PremiumPlanCard/>
   },
   { 
-    path: "/Pro",
+    path: "/plan/pro",
     element: <ProPlanCard/>
   },
   { 

@@ -60,7 +60,7 @@ export default function JobSeekerProfileEdit() {
           Edit Job Seeker Profile
         </h2>
         <div className="p-4 space-y-2 text-sm">
-          {["firstName", "lastName", "mobileNumber", "address", "nearestCity", "nic", "district", "gender", "description"].map((field) => (
+          {["firstName", "lastName", "mobileNumber", "address", "nearestCity", "nic", "district", "gender", "education"].map((field) => (
             <div key={field}>
               <label className="font-semibold capitalize">{field}:</label>
               {field !== "description" ? (

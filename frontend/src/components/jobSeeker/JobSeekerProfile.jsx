@@ -59,11 +59,7 @@ export default function JobSeekerProfileView() {
             <p><strong>Nearest City</strong>: {profile.nearestCity || "N/A"}</p>
             <p><strong>NIC</strong>: {profile.nic || "N/A"}</p>
             <p><strong>Gender</strong>: {profile.gender || "N/A"}</p>
-            <div className="p-3 bg-gray-100 border border-gray-300 rounded-md">
-              <p className="text-sm text-justify">
-                <strong>Description</strong>: {profile.description || "No description provided"}
-              </p>
-            </div>
+            <p><strong>Education</strong>:{profile.education || ''} </p>
 
             <div className="flex items-center mt-2">
               <strong className="mr-2">Rating</strong>:

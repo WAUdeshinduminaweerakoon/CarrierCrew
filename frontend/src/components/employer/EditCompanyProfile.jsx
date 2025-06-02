@@ -28,11 +28,14 @@ export default function EditCompanyProfile() {
     }
 
     fetch(`http://localhost:5000/api/employers/${employerId}`)
-      .then((res) => res.json())
+      .then((res) =>{
+        if (!res.ok) throw new Error('Failed to fetch Company');
+        return res.json()
+       })
       .then((data) => {
         setCompanyData({
-          name: data.company?.name || '',
-          email: data.company?.email || '',
+          name: data.name || '',
+          email: data.email || '',
           description: data.company?.description || '',
           telephone: data.company?.telephone || '',
           address: data.company?.address || '',

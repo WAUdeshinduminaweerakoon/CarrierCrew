@@ -18,7 +18,7 @@ export default function JobSeekerProfileView() {
       return;
     }
 
-    fetch(`http://localhost:5000/api/jobseeker/${jobSeekerId}`)
+    fetch(`http://localhost:5000/api/jobSeeker/${jobSeekerId}`)
       .then((res) => res.json())
       .then((data) => {
         setProfile(data);
@@ -32,7 +32,7 @@ export default function JobSeekerProfileView() {
   }, [jobSeekerId, navigate]);
 
   const handleBack = () => navigate("/jobseeker/home");
-  const handleEdit = () => navigate("/jobseeker/profile/edit", { state: { jobSeekerId } });
+  // const handleEdit = () => navigate("/jobseeker/profile/edit", { state: { jobSeekerId } });
 
   if (loading) return <p className="mt-8 text-center">Loading profile...</p>;
   if (error) return <p className="mt-8 text-center text-red-500">{error}</p>;
@@ -89,11 +89,12 @@ export default function JobSeekerProfileView() {
                 Back
               </button>
               <button
-                className="px-4 py-1 text-white bg-green-500 rounded hover:bg-green-700"
-                onClick={handleEdit}
-              >
-                Edit
-              </button>
+              className="px-4 py-1 text-white bg-green-500 rounded hover:bg-green-700"
+              type="button"
+              onClick={() => navigate(`/jobseeker/edit-profile/${jobSeekerId._id}`)}
+            >
+              Edit
+            </button>
               <button
                 className="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-700"
                 onClick={() => alert("Delete function not implemented yet")}

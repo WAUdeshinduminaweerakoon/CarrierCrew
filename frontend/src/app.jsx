@@ -15,6 +15,8 @@ import VerifyOtp from "./components/login/OtpVerfication";
 import Applications from "./components/employer/ViewApplications"
 import DeleteAccount from "./components/Account/DeleteAccountConfirm";
 import MyPosts from "./components/employer/MyPosts";
+import EditEmployerProfiles from "./components/employer/EditEmployerProfiles";
+
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -73,6 +75,10 @@ const router = createBrowserRouter([
     {
     path: "/employer/my-posts",
     element: <MyPosts/>
+  },
+  {
+    path: "/employer/edit-profile/:employerId",
+    element: <EditEmployerProfiles/>
   },
 ]);
 

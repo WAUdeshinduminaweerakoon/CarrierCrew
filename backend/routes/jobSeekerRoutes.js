@@ -2,7 +2,18 @@ const express = require('express');
 const router = express.Router();
 const JobSeeker = require('../models/Jobseeker');
 
-// GET job seeker by ID
+// FIRST: Get education options (specific route)
+router.get('/education-options', (req, res) => {
+  try {
+    const educationEnum = JobSeeker.schema.path('education').enumValues;
+    res.json(educationEnum);
+  } catch (err) {
+    console.error('Error fetching education options:', err);
+    res.status(500).json({ message: 'Failed to get education options' });
+  }
+});
+
+// GET job seeker by ID (dynamic route)
 router.get('/:id', async (req, res) => {
   try {
     const jobSeeker = await JobSeeker.findById(req.params.id).lean();

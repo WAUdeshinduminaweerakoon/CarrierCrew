@@ -114,7 +114,7 @@ export default function EmployerProfile() {
             <button
               className="px-4 py-1 text-white bg-green-500 rounded hover:bg-green-700"
               type="button"
-              onClick={() => alert("Edit function not implemented yet")}
+              onClick={() => navigate(`/employer/edit-profile/${employer._id}`)}
             >
               Edit
             </button>

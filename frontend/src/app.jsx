@@ -15,11 +15,10 @@ import VerifyOtp from "./components/login/OtpVerfication";
 import Applications from "./components/employer/ViewApplications"
 import DeleteAccount from "./components/Account/DeleteAccountConfirm";
 import MyPosts from "./components/employer/MyPosts";
-
 import EditEmployerProfiles from "./components/employer/EditEmployerProfiles";
 import EditCompanyProfile from "./components/employer/EditCompanyProfile";
-
 import ManageProfile from "./components/Account/ManageProfile";
+import EditJobSeekerProfile from "./components/jobSeeker/EditJobSeekerProfile";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -90,6 +89,10 @@ const router = createBrowserRouter([
   {
     path: "/manageprofile",
     element: <ManageProfile/>
+  },
+  {
+    path:"/jobseeker/edit-profile/:jobSeekerId",
+    element: <EditJobSeekerProfile/>
   },
 ]);
 

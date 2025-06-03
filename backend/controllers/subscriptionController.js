@@ -2,6 +2,7 @@ const SubscriptionPlan = require('../models/subscriptionPlan');
 const Employer = require('../models/Employer');
 
 
+
 // Create a new subscription plan (Admin)
 const createSubscriptionPlan = async (req, res) => {
   try {
@@ -102,6 +103,17 @@ const assignSubscriptionPlan = async (req, res) => {
   }
 };
 
+// Get subscription plan by name
+const getSubscriptionPlanByName = async (req, res) => {
+  try {
+    const { planName } = req.params;
+    const plan = await SubscriptionPlan.findOne({ planName: { $regex: new RegExp(`^${planName}$`, "i") } });
+    if (!plan) return res.status(404).json({ message: "Plan not found" });
+    res.status(200).json(plan);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
 
 
 
@@ -111,4 +123,5 @@ module.exports = {
     getAllSubscriptionPlans,
     updateSubscriptionPlan,
     assignSubscriptionPlan,
+    getSubscriptionPlanByName,
 };

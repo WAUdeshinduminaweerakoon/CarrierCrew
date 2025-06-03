@@ -7,29 +7,25 @@ const plans = [
     title: "Free",
     price: "RS.0/7 Days",
     description: "Free access for a week\n5 job post sharing",
-    icon: "🚴",
-    path: "/plan/free",
+     icon: "🚴",
   },
   {
     title: "Basic",
     price: "RS.2500/1 Mon",
     description: "Valid for one month\n50 job post sharing",
     icon: "🏍️",
-    path: "/plan/basic",
   },
   {
     title: "Premium",
     price: "RS.5000/3 Mon",
     description: "Valid for 3 month\n100 job post sharing",
     icon: "🚗",
-    path: "/plan/premium",
   },
   {
     title: "PRO",
     price: "RS.10000/6 Mon",
     description: "Valid for 6 month\n200 job post sharing",
     icon: "✈️",
-    path: "/plan/pro",
   },
 ];
 
@@ -38,9 +34,9 @@ const SubscriptionPlans = () => {
     <div className="max-w-sm mx-auto bg-green-100 p-4 rounded-xl shadow-lg">
       {/* Header */}
       <div className="flex justify-between items-center bg-green-300 p-3 rounded-lg mb-4">
-         <Link to="/employer/home">
+        <Link to="/employer/home">
           <ArrowLeft className="text-green-700 cursor-pointer" />
-         </Link>
+        </Link>
         <h2 className="text-green-900 font-bold text-lg">Choose Your Plan</h2>
         <Bell className="text-green-700 cursor-pointer" />
       </div>
@@ -70,8 +66,8 @@ const SubscriptionPlans = () => {
           {/* Right-aligned Link */}
           <div className="text-right">
             <Link
-              to={plan.path}
-              className="text-green-600 text-md font-semibold hover:nounderline"
+              to={`/plan/${plan.title.toLowerCase()}`}
+              className="text-green-600 text-md font-semibold hover:no-underline"
             >
               Choose plan →
             </Link>

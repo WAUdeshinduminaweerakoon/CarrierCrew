@@ -1,6 +1,7 @@
 const Employer = require('../models/Employer');
 const JobSeeker = require('../models/Jobseeker');
 const Job = require('../models/Job');
+const Category = require('../models/Category')
 const moment = require('moment'); 
 
 // Get total employer count
@@ -165,6 +166,27 @@ const getUserRegistrationsLast4Months = async (req, res) => {
   }
 };
 
+const addNewCategory = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    // Check if the category already exists
+    const existingCategory = await Category.findOne({ name });
+    if (existingCategory) {
+      return res.status(400).json({ message: 'Category already exists' });
+    }
+
+    // Create and save the new category
+    const newCategory = new Category({ name });
+    await newCategory.save();
+
+    res.status(201).json({ message: 'Category created successfully', category: newCategory });
+  } catch (error) {
+    console.error('Error creating category:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 
 
 
@@ -175,4 +197,5 @@ module.exports = {
   getTotalApplicantCount,
   getJobsLastFourMonths,
   getUserRegistrationsLast4Months,
+  addNewCategory,
 };

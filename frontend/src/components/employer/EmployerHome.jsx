@@ -40,14 +40,36 @@ const EmployerHome = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
-      <header className="w-full py-4 text-white bg-green-800 shadow-md">
-        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
-          <button className="text-white" onClick={toggleMenu}>
-            <FaBars className="text-2xl" />
-          </button>
-          <h1 className="font-semibold truncate">CareerCrew.LK</h1>
-        </div>
-      </header>
+      <header className="bg-green-800 text-white w-full py-4 shadow-md relative">
+  <div className="w-full max-w-screen-sm px-4 flex items-center text-sm">
+    {/* Hamburger (mobile only) */}
+    <button className="text-white sm:hidden mr-4" onClick={toggleMenu}>
+      <FaBars className="text-2xl" />
+    </button>
+
+    
+    <h1 className="font-semibold truncate">CareerCrew.LK</h1>
+  </div>
+
+  {/* Desktop Menu: Top-right */}
+  <nav className="hidden sm:flex gap-4 text-sm absolute top-4 right-4">
+    <a href="#" className="hover:underline">Settings</a>
+    <a href="/" className="hover:underline">Logout</a>
+  </nav>
+
+  {/* Mobile Dropdown Menu */}
+  <div
+    className={`sm:hidden transition-all duration-300 ease-in-out ${
+      isMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"
+    }`}
+  >
+    <nav className="bg-green-800 text-white text-center">
+      <a href="#" className="block py-2 hover:bg-green-700">Settings</a>
+      <a href="/" className="block py-2 hover:bg-green-700">Logout</a>
+    </nav>
+  </div>
+</header>
+
 
       <div
         className={`absolute left-0 top-16 w-full bg-green-800 text-white text-center sm:hidden transition-all duration-300 ease-in-out ${
@@ -55,19 +77,6 @@ const EmployerHome = () => {
         }`}
       >
         <nav>
-          <Link to="/employer/home" className="block py-2 hover:bg-green-700">
-            Home
-          </Link>
-          <Link to="/" className="block py-2 hover:bg-green-700">
-            Login
-          </Link>
-          <Link
-            to="/employer/profile"
-            state={{ employerId }}
-            className="block py-2 hover:bg-green-700"
-          >
-            Profile
-          </Link>
           <a href="#" className="block py-2 hover:bg-green-700">
             Settings
           </a>

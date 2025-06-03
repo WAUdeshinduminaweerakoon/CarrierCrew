@@ -380,33 +380,39 @@ const Home = () => {
         )}
 
         {/* Pagination Buttons */}
-        {jobAds.length > ADS_PER_PAGE && (
-          <div className="flex items-center justify-between mt-6 text-sm">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              disabled={currentPage === 1}
-              className={`px-4 py-2 rounded ${
-                currentPage === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-600'
-              }`}
-            >
-              Previous
-            </button>
+        
+          {jobAds.length > ADS_PER_PAGE && (
+            <div className="flex items-center justify-between w-full max-w-screen-sm px-4 pb-8 text-sm">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded ${
+                  currentPage === 1
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-green-500 text-white hover:bg-green-600"
+                }`}
+              >
+                Previous
+              </button>
 
-            <span className="font-medium text-green-900">
-              Page {currentPage} of {totalPages}
-            </span>
+              <span className="font-medium text-green-900">
+                Page {currentPage} of {totalPages}
+              </span>
 
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded ${
-                currentPage === totalPages ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-600'
-              }`}
-            >
-              Next
-            </button>
-          </div>
-        )}
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded ${
+                  currentPage === totalPages
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-green-500 text-white hover:bg-green-600"
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          )}
+
 
       </div>
     </main>

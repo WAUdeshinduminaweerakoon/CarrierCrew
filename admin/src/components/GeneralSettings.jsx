@@ -26,9 +26,20 @@ const GeneralSettings = () => {
   const [numberOfAddsPerMonth, setNumberOfAddsPerMonth] = useState("");
   const [additionalCharacteristics, setAdditionalCharacteristics] = useState([""]);
 
+  const [categoryName, setCategoryName] = useState("");
+  const [categories, setCategories] = useState([]);
+
+
+
   useEffect(() => {
     fetchPlans();
   }, []);
+
+  useEffect(() => {
+  if (activeTab === "categories") {
+    fetchCategories();
+  }
+}, [activeTab]);
 
   const fetchPlans = async () => {
     try {
@@ -111,6 +122,42 @@ const GeneralSettings = () => {
     }
   };
 
+  const handleAddCategory = async () => {
+    if (!categoryName.trim()) {
+      alert("Please enter a category name");
+      return;
+    }
+    try {
+      const response = await fetch(API_ROUTES.ADMIN_CATEGORY + "/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: categoryName }),
+      });
+      const data = await response.json();
+      if (!response.ok) alert(`Error: ${data.message || "Unknown error"}`);
+      else {
+        alert("Category added successfully!");
+        setCategoryName("");
+        fetchCategories(); 
+      }
+    } catch (error) {
+      alert("Something went wrong while adding the category");
+      console.error(error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch(API_ROUTES.ADMIN_CATEGORY + "/view");
+      const data = await res.json();
+      setCategories(data);
+    } catch (err) {
+      console.error("Error fetching categories", err);
+    }
+  };
+
+
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="flex items-center justify-between p-4 bg-white shadow">
@@ -133,6 +180,8 @@ const GeneralSettings = () => {
             <li><button className={`block w-full text-left ${activeTab === 'adminAccounts' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`} onClick={() => setActiveTab('adminAccounts')}>Manage Admin Accounts</button></li>
             <li><button className={`block w-full text-left ${activeTab === 'subscriptionPlans' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`} onClick={() => setActiveTab('subscriptionPlans')}>Manage Subscription Plans</button></li>
             <li><button className={`block w-full text-left ${activeTab === 'locations' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`} onClick={() => setActiveTab('locations')}>Manage Locations</button></li>
+            <li><button className={`block w-full text-left ${activeTab === 'categories' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`} onClick={() => setActiveTab('categories')}>Manage Categories</button></li>
+
           </ul>
         </aside>
 
@@ -210,6 +259,44 @@ const GeneralSettings = () => {
               )}
             </div>
           )}
+
+          {activeTab === 'categories' && (
+            <div className="bg-white p-6 rounded shadow">
+              <h2 className="text-2xl font-bold mb-4">Add New Category</h2>
+              <label className="block mb-4">
+                Category Name
+                <input
+                  type="text"
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
+                  className="block w-full p-2 border rounded"
+                  placeholder="Enter category name"
+                />
+              </label>
+              <div className="flex gap-4 mb-6">
+                <button onClick={handleAddCategory} className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
+                <button onClick={() => setCategoryName("")} className="bg-gray-300 text-gray-800 px-4 py-2 rounded">Reset</button>
+              </div>
+
+              <br></br>
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">Existing Categories</h3>
+              {categories.length === 0 ? (
+                <p className="text-gray-500">No categories found.</p>
+              ) : (
+                <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                  {categories.map((cat) => (
+                    <li key={cat._id} className="border-b pb-1">{cat.name}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+
+
+
+
+
         </main>
       </div>
     </div>

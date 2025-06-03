@@ -381,26 +381,33 @@ const Home = () => {
 
         {/* Pagination Buttons */}
         {jobAds.length > ADS_PER_PAGE && (
-          <div className="flex justify-between mt-6">
+          <div className="flex items-center justify-between mt-6 text-sm">
             <button
-              className="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50"
-              onClick={() => setCurrentPage((p) => p - 1)}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
+              className={`px-4 py-2 rounded ${
+                currentPage === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-600'
+              }`}
             >
               Previous
             </button>
-            <span className="self-center text-sm text-gray-600">
+
+            <span className="font-medium text-green-900">
               Page {currentPage} of {totalPages}
             </span>
+
             <button
-              className="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50"
-              onClick={() => setCurrentPage((p) => p + 1)}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded ${
+                currentPage === totalPages ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-green-500 text-white hover:bg-green-600'
+              }`}
             >
               Next
             </button>
           </div>
         )}
+
       </div>
     </main>
 

@@ -129,7 +129,7 @@ const ViewApplications = () => {
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
                 className={`px-4 py-2 rounded ${
-                  currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white'
+                  currentPage === 1 ? 'bg-gray-300' : 'bg-green-500 text-white'
                 }`}
               >
                 Previous
@@ -143,7 +143,7 @@ const ViewApplications = () => {
                 }
                 disabled={currentPage === totalPages}
                 className={`px-4 py-2 rounded ${
-                  currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white'
+                  currentPage === totalPages ? 'bg-gray-300' : 'bg-green-500 text-white'
                 }`}
               >
                 Next

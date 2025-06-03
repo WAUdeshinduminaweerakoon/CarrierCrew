@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
+import Header from "./Header";
 
 const MyPosts = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,14 +36,7 @@ const MyPosts = () => {
   return (
     <div className="min-h-screen bg-green-100 flex flex-col items-center overflow-x-hidden">
       {/* Header */}
-      <header className="bg-green-800 text-white w-full py-4 shadow-md">
-        <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
-          <button className="text-white" onClick={toggleMenu}>
-            <FaBars className="text-2xl" />
-          </button>
-          <h1 className="font-semibold truncate">CareerCrew.LK</h1>
-        </div>
-      </header>
+      <Header />
 
       {/* Menu */}
       <div

@@ -26,6 +26,7 @@ app.use('/api/admin', require('./routes/adminRoutes.js'));
 app.use('/api/employers', require('./routes/employerRoutes.js'));
 app.use('/api/company', require('./routes/companyRoutes'));
 app.use('/api/jobSeeker', require('./routes/jobSeekerRoutes.js'));
+app.use('/api/category', require('./routes/categoryRoutes.js'));
 
 
 // Serve React static files

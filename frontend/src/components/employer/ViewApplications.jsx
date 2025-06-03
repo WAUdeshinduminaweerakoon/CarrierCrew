@@ -10,6 +10,8 @@ const ViewApplications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const applicationsPerPage = 5;
 
   const employerId = localStorage.getItem('userId');
   const apiURL = `${API_ROUTES.JOBS}/employer/${employerId}/applicants`;
@@ -20,7 +22,6 @@ const ViewApplications = () => {
         const response = await axios.get(apiURL);
         const rawApplicants = response.data.applicants;
 
-        // Flatten applications
         const flatApplications = rawApplicants.flatMap(applicant =>
           applicant.appliedJobs.map(job => ({
             ...job,
@@ -44,11 +45,17 @@ const ViewApplications = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(applications.length / applicationsPerPage);
+  const indexOfLast = currentPage * applicationsPerPage;
+  const indexOfFirst = indexOfLast - applicationsPerPage;
+  const currentApps = applications.slice(indexOfFirst, indexOfLast);
+
   return (
-    <div className="min-h-screen bg-green-100 flex flex-col items-center overflow-x-hidden">
+    <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
       {/* Header */}
-      <header className="bg-green-800 text-white w-full py-4 shadow-md">
-        <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
+      <header className="w-full py-4 text-white bg-green-800 shadow-md">
+        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
           <button className="text-white" onClick={toggleMenu}>
             <FaBars className="text-2xl" />
           </button>
@@ -56,7 +63,7 @@ const ViewApplications = () => {
         </div>
       </header>
 
-      {/* Menu */}
+      {/* Mobile Menu */}
       <div
         className={`absolute left-0 top-16 w-full bg-green-800 text-white text-center sm:hidden transition-all duration-300 ease-in-out ${
           isMenuOpen ? 'max-h-screen' : 'max-h-0 overflow-hidden'
@@ -76,7 +83,7 @@ const ViewApplications = () => {
         Job Applications
       </div>
 
-      {/* Applications */}
+      {/* Application List */}
       <div className="w-full max-w-screen-sm px-4 pt-4 pb-8">
         {loading ? (
           <p className="text-center text-gray-600">Loading applications...</p>
@@ -85,32 +92,64 @@ const ViewApplications = () => {
         ) : applications.length === 0 ? (
           <p className="text-center text-gray-500">No applications found.</p>
         ) : (
-          applications.map((app, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-2xl shadow-md p-4 mb-4 text-green-900"
-            >
-              <h3 className="text-base font-semibold">
-                {app.jobSeeker.firstName} {app.jobSeeker.lastName}
-              </h3>
-              <p className="text-sm text-gray-700">
-                📧 {app.jobSeeker.email} | 📞 {app.jobSeeker.mobileNumber}
-              </p>
-              <p className="text-sm">NIC: {app.jobSeeker.nic}</p>
-              <p className="text-sm mb-2">City: {app.jobSeeker.nearestCity}</p>
-
-              <div className="bg-gray-100 rounded-xl p-3 text-sm">
-                <p className="font-medium">🧑‍🎤 {app.jobTitle}</p>
-                <p>📍 {app.location}</p>
-                <p>📅 {format(new Date(app.dateFrom), 'MMM dd')} to {format(new Date(app.dateTo), 'MMM dd')}</p>
-                <p>⏰ {app.timeFrom} - {app.timeTo}</p>
-                <p>💰 {app.payment} LKR</p>
-                <p className="text-xs text-gray-500">
-                  Applied on: {format(new Date(app.appliedAt), 'PPpp')}
+          <>
+            {currentApps.map((app, index) => (
+              <div
+                key={index}
+                className="p-4 mb-4 text-green-900 bg-white shadow-md rounded-2xl"
+              >
+                <h3 className="text-base font-semibold">
+                  {app.jobSeeker.firstName} {app.jobSeeker.lastName}
+                </h3>
+                <p className="text-sm text-gray-700">
+                  📧 {app.jobSeeker.email} | 📞 {app.jobSeeker.mobileNumber}
                 </p>
+                <p className="text-sm">NIC: {app.jobSeeker.nic}</p>
+                <p className="mb-2 text-sm">City: {app.jobSeeker.nearestCity}</p>
+
+                <div className="p-3 text-sm bg-gray-100 rounded-xl">
+                  <p className="font-medium">🧑‍🎤 {app.jobTitle}</p>
+                  <p>📍 {app.location}</p>
+                  <p>
+                    📅 {format(new Date(app.dateFrom), 'MMM dd')} to{' '}
+                    {format(new Date(app.dateTo), 'MMM dd')}
+                  </p>
+                  <p>⏰ {app.timeFrom} - {app.timeTo}</p>
+                  <p>💰 {app.payment} LKR</p>
+                  <p className="text-xs text-gray-500">
+                    Applied on: {format(new Date(app.appliedAt), 'PPpp')}
+                  </p>
+                </div>
               </div>
+            ))}
+
+            {/* Pagination Controls */}
+            <div className="flex items-center justify-between mt-4 text-sm">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded ${
+                  currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white'
+                }`}
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded ${
+                  currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white'
+                }`}
+              >
+                Next
+              </button>
             </div>
-          ))
+          </>
         )}
       </div>
     </div>
@@ -118,4 +157,3 @@ const ViewApplications = () => {
 };
 
 export default ViewApplications;
-

@@ -14,6 +14,8 @@ export default function NewJobForm() {
   const [locations, setLocations] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
+  const [categories, setCategories] = useState([]);
+
   
   const [formData, setFormData] = useState({
     jobTitle: "",
@@ -59,6 +61,25 @@ export default function NewJobForm() {
     fetchLocations();
   }, []);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(API_ROUTES.CATEGORY+"/all");
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.error("Unexpected category data structure", data);
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -78,6 +99,7 @@ export default function NewJobForm() {
     if (!formData.timeTo) newErrors.timeTo = "End time is required";
     if (!formData.duration) newErrors.duration = "Duration is required";
     if (!formData.payment) newErrors.payment = "Payment is required";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -191,14 +213,20 @@ return (
       <div className="space-y-3">
         <div>
           <label className="block text-sm font-medium text-green-800">Job Title</label>
-          <input
-            type="text"
-            name="jobTitle"
-            placeholder="Job Title"
-            value={formData.jobTitle}
-            onChange={handleChange}
-            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+            <select
+              name="jobTitle"
+              value={formData.jobTitle}
+              onChange={handleChange}
+              className="w-full border border-green-400 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+
           {errors.jobTitle && <p className="text-red-500 text-xs">{errors.jobTitle}</p>}
         </div>
 

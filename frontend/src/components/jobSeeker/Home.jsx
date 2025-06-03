@@ -13,9 +13,9 @@ const Home = () => {
   const [salaryRange, setSalaryRange] = useState([0, 100000]);
   const [workingHours, setWorkingHours] = useState([0, 12]);
   const [selectedLocation, setSelectedLocation] = useState("Location");
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Category");
   const [expandedJobId, setExpandedJobId] = useState(null);
-
 
   const navigate = useNavigate();
 
@@ -78,6 +78,26 @@ const Home = () => {
     fetchLocations();
   }, []);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_ROUTES.CATEGORY}/all`);
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.error("Unexpected category data structure", data);
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleLocationDropdown = () => {
     setIsLocationOpen(!isLocationOpen);
@@ -107,11 +127,6 @@ const Home = () => {
     }, []);
 
 
-
-  const categories = [
-    "Waiter", "Helper", "Delivery Rider", "Cleaner", "Store Assistant",
-    "Tutor", "Security Guard", "Driver"
-  ];
 
   return (
     <div className="min-h-screen bg-green-100 flex flex-col items-center overflow-x-hidden">
@@ -197,18 +212,19 @@ const Home = () => {
         <div className="mt-2 bg-white rounded shadow w-full max-w-screen-sm px-4">
           {categories.map((category) => (
             <div
-              key={category}
+              key={category._id}
               className="py-2 cursor-pointer hover:bg-green-100"
               onClick={() => {
-                setSelectedCategory(category);
+                setSelectedCategory(category.name);
                 setIsCategoryOpen(false);
               }}
             >
-              {category}
+              {category.name}
             </div>
           ))}
         </div>
       )}
+
 
       {isFilterOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">

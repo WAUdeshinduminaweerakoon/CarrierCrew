@@ -7,6 +7,7 @@ const API_ROUTES = {
   LOCATIONS: `${BASE_URL}/api/locations`,
   OTP: `${BASE_URL}/api/verify`,
   SUBSCRIPTIONS: `${BASE_URL}/api/subscription`,
+  CATEGORY : `${BASE_URL}/api/category`,
 };
 
 export default API_ROUTES;

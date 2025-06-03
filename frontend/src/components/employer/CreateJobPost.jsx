@@ -130,11 +130,27 @@ export default function NewJobForm() {
   const handleBack = () => navigate("/employer/home");
 
   const availableAreas =
-    locations.find((d) => d.name === selectedDistrict)?.areas || [];
-const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-  return (
+  locations.find((d) => d.name === selectedDistrict)?.areas || [];
+  const toggleMenu = () => {
+  setIsMenuOpen(!isMenuOpen);};
+   
+  useEffect(() => {
+    const checkPlanValidity = async () => {
+    const res = await fetch(`/api/employer/${employerId}`); // get employer data
+    const data = await res.json();
+    const { planEndDate, postsUsed, planId } = data.subscriptionPlan;
+
+    const today = new Date();
+    if (new Date(planEndDate) < today || postsUsed >= planId.numberOfAddsPerMonth) {
+      alert('Your plan is invalid. Please check your subscription.');
+      navigate('/employer/subs-plans');
+    }
+   };
+    checkPlanValidity();
+  }, []);
+
+  
+return (
     <div>
       <header className="bg-green-800 text-white w-full py-4 shadow-md">
               <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">

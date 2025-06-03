@@ -27,8 +27,13 @@ const employerSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   userType: { type: String, enum: ['Employer'], default: 'Employer' },
+  subscriptionPlan: {
+  planId: { type: mongoose.Schema.Types.ObjectId, ref: 'SubscriptionPlan' },
+  planStartDate: Date,
+  planEndDate: Date,
+  postsUsed: { type: Number, default: 0 },
+}
 }, { timestamps: true });
-
 
 employerSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

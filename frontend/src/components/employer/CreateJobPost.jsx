@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 import API_ROUTES from "../../configs/config";
+
 
 export default function NewJobForm() {
   const navigate = useNavigate();
@@ -32,8 +35,8 @@ export default function NewJobForm() {
     if (userType === "Employer" && storedUserId) {
       setEmployerId(storedUserId);
     } else {
-      alert("You must be logged in as an Employer to post a job.");
-      navigate("/");
+      toast.warn("You must be logged in as an Employer to post a job.");
+      setTimeout(() => { navigate("/");}, 3000);
     }
   }, []);
 
@@ -50,6 +53,7 @@ export default function NewJobForm() {
         }
       } catch (error) {
         console.error("Error fetching locations:", error);
+        toast.error("Failed to load location data.");
       }
     };
     fetchLocations();
@@ -98,14 +102,14 @@ export default function NewJobForm() {
 
         const data = await response.json();
         if (response.ok) {
-          alert("Job posted successfully!");
-          navigate("/employer/home");
+          toast.success("Job posted successfully!");
+          setTimeout(() => { navigate("/employer/home");}, 3000); // wait 3 seconds
         } else {
-          alert(data.message || "Something went wrong!");
+          toast.error(data.message || "Something went wrong!");
         }
       } catch (err) {
         console.error(err);
-        alert("Error occurred while submitting the form.");
+        toast.error("Error occurred while submitting the form.");
       }
     }
   };
@@ -133,25 +137,35 @@ export default function NewJobForm() {
   locations.find((d) => d.name === selectedDistrict)?.areas || [];
   const toggleMenu = () => {
   setIsMenuOpen(!isMenuOpen);};
-   
-  useEffect(() => {
-    const checkPlanValidity = async () => {
-    const res = await fetch(`/api/employer/${employerId}`); // get employer data
-    const data = await res.json();
-    const { planEndDate, postsUsed, planId } = data.subscriptionPlan;
+  // check validity of subscription plan
+  // useEffect(() => {
+  //   const checkPlanValidity = async () => {
+  //     try {
+  //       const res = await fetch(`/api/employer/${employerId}`);
+  //       const data = await res.json();
+  //       const { planEndDate, postsUsed, planId } = data.subscriptionPlan;
 
-    const today = new Date();
-    if (new Date(planEndDate) < today || postsUsed >= planId.numberOfAddsPerMonth) {
-      alert('Your plan is invalid. Please check your subscription.');
-      navigate('/employer/subs-plans');
-    }
-   };
-    checkPlanValidity();
-  }, []);
+  //       const today = new Date();
+  //       if (
+  //         new Date(planEndDate) < today ||
+  //         postsUsed >= planId.numberOfAddsPerMonth
+  //       ) {
+  //         toast.error("Your plan is invalid. Please check your subscription.");
+  //         navigate("/employer/subs-plans");
+  //       }
+  //     } catch (err) {
+  //       console.error("Plan validation failed", err);
+  //       toast.error("Unable to verify subscription plan.");
+  //     }
+  //   };
+
+  //   if (employerId) checkPlanValidity();
+  // }, [employerId]);
 
   
 return (
     <div>
+       <ToastContainer position="top-center" autoClose={3000} />
       <header className="bg-green-800 text-white w-full py-4 shadow-md">
               <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
                 <button className="text-white" onClick={toggleMenu}>

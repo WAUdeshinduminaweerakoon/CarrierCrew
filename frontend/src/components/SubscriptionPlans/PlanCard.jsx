@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getPlanByName } from "../SubscriptionAPI";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const PlanCard = () => {
   const { planName } = useParams(); // dynamic route param
@@ -13,8 +15,8 @@ const PlanCard = () => {
         const data = await getPlanByName(planName);
         setPlan(data);
       } catch (err) {
-        alert("Plan not found.");
-        navigate("/"); // or redirect to plans page
+        toast.error("Plan not found.");
+        setTimeout(()=> {navigate("/");},1500); // or redirect to plans page
       }
     }
     fetchPlan();
@@ -35,6 +37,7 @@ const PlanCard = () => {
  
   return (
     <div className="w-[360px] mx-auto min-h-screen bg-green-50 border border-green-300 rounded-xl shadow p-10 text-center space-y-4">
+      <ToastContainer position="top-center" autoClose={3000}/>
       <div className="flex justify-center text-5xl">{getIcon(plan.planName)}</div>
 
       <div className="relative">

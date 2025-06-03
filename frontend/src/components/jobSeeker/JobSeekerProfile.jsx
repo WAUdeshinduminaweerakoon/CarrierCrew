@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Star } from "lucide-react";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function JobSeekerProfileView() {
   const navigate = useNavigate();
@@ -13,8 +15,8 @@ export default function JobSeekerProfileView() {
 
   useEffect(() => {
     if (!jobSeekerId) {
-      alert("Please login first.");
-      navigate("/");
+      toast.error("Please login first.");
+      setTimeout(()=> {navigate("/");},1500);
       return;
     }
 
@@ -40,6 +42,7 @@ export default function JobSeekerProfileView() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
+      <ToastContainer position="top-center" autoClose={3000}/>
       <div className="w-full max-w-md pb-4 bg-white border border-green-200 shadow-xl rounded-2xl">
         <div className="py-2 text-lg font-semibold text-center text-white bg-green-400 rounded-t-2xl">
           Job Seeker Profile

@@ -17,7 +17,7 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("Category");
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const ADS_PER_PAGE = 6;
+  const ADS_PER_PAGE = 5;
  
   const startIndex = (currentPage - 1) * ADS_PER_PAGE;
   const [jobAds, setJobAds] = useState([]);
@@ -371,15 +371,13 @@ const Home = () => {
                         const result = await response.json();
 
                         if (response.ok) {
-                          alert("Application submitted successfully!");
+                          toast.success("Application submitted successfully!");
                         } else {
-                          alert(
-                            `Application failed: ${result.message || "Unknown error"}`
-                          );
+                          toast.error(`Application failed: ${result.message || "Unknown error"}`);
                         }
                       } catch (err) {
                         console.error("Application error:", err);
-                        alert("Something went wrong while applying.");
+                        toast.error("Something went wrong while applying.");
                       }
                     }}
                   >
@@ -397,7 +395,7 @@ const Home = () => {
         {jobAds.length > ADS_PER_PAGE && (
           <div className="flex justify-between mt-6">
             <button
-              className="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-green-700 rounded disabled:opacity-50"
               onClick={() => setCurrentPage((p) => p - 1)}
               disabled={currentPage === 1}
             >
@@ -407,7 +405,7 @@ const Home = () => {
               Page {currentPage} of {totalPages}
             </span>
             <button
-              className="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-green-700 rounded disabled:opacity-50"
               onClick={() => setCurrentPage((p) => p + 1)}
               disabled={currentPage === totalPages}
             >

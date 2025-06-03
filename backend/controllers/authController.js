@@ -1,6 +1,7 @@
 const Employer = require('../models/Employer');
 const JobSeeker = require('../models/Jobseeker');
 
+
 // Helper: Check strong password
 function isStrongPassword(password) {
   const minLength = 8;
@@ -115,5 +116,5 @@ const registerJobSeeker = async (req, res) => {
 
 module.exports = {
   registerEmployer,
-  registerJobSeeker
+  registerJobSeeker,
 };

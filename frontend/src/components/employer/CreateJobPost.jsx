@@ -130,6 +130,22 @@ export default function NewJobForm() {
   const availableAreas =
     locations.find((d) => d.name === selectedDistrict)?.areas || [];
 
+  useEffect(() => {
+    const checkPlanValidity = async () => {
+    const res = await fetch(`/api/employer/${employerId}`); // get employer data
+    const data = await res.json();
+    const { planEndDate, postsUsed, planId } = data.subscriptionPlan;
+
+    const today = new Date();
+    if (new Date(planEndDate) < today || postsUsed >= planId.numberOfAddsPerMonth) {
+      alert('Your plan is invalid. Please check your subscription.');
+      navigate('/employer/subs-plans');
+    }
+   };
+    checkPlanValidity();
+  }, []);
+
+
   return (
     <form
       onSubmit={handleSubmit}

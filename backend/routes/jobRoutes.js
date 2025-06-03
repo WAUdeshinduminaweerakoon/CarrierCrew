@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { createJobPost, applyForJob, getApplicantsByEmployer } = require("../controllers/jobController");
 const Job = require("../models/Job");
+const validatePlan = require('../middleware/validatePlan'); 
 
 router.post("/new", createJobPost);
 
@@ -39,6 +40,9 @@ router.get("/employer/:employerId", async (req, res) => {
 });
 
 router.get("/employer/:employerId/applicants", getApplicantsByEmployer);
+
+router.post('/employer/create-job', validatePlan, createJobPost);
+
 
 
 module.exports = router;

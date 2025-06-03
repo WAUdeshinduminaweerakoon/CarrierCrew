@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaBars, FaFilter } from "react-icons/fa"; 
+import { FaBars, FaFilter } from "react-icons/fa"; // Hamburger and Filter icons
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from '../../configs/config';
 import "react-toastify/dist/ReactToastify.css";
@@ -16,6 +16,13 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Category");
   const [expandedJobId, setExpandedJobId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ADS_PER_PAGE = 6;
+ 
+  const startIndex = (currentPage - 1) * ADS_PER_PAGE;
+  const [jobAds, setJobAds] = useState([]);
+  const currentJobs = jobAds?.slice(startIndex, startIndex + ADS_PER_PAGE);
+  const totalPages = Math.ceil(jobAds?.length / ADS_PER_PAGE);
 
   const navigate = useNavigate();
 
@@ -32,8 +39,6 @@ const Home = () => {
         navigate("/");
       }
     }, []);
-
-  const [jobAds, setJobAds] = useState([]);
 
     useEffect(() => {
     const fetchJobs = async () => {
@@ -130,7 +135,6 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
-      {/* Header */}
       <header className="w-full py-4 text-white bg-green-800 shadow-md">
         <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
           <button className="text-white" onClick={toggleMenu}>
@@ -297,92 +301,121 @@ const Home = () => {
         </nav>
       </div>
 
-      <main className="flex items-center justify-center flex-1 w-full max-w-screen-sm px-4 text-center">
-        <div className="w-full mt-6 space-y-4">
-          {Array.isArray(jobAds) && jobAds.length > 0 ? (
-            jobAds.map((job) => (
-              <div
-                key={job._id}
-                className="p-4 transition bg-white rounded-md shadow cursor-pointer hover:bg-green-50"
-                onClick={() =>
-                  setExpandedJobId(expandedJobId === job._id ? null : job._id)
-                }
-              >
-                <div className="flex items-center gap-4">
-                  <img
-                    src={job.image}
-                    alt={job.category}
-                    className="object-cover w-16 h-16 rounded-md"
-                  />
-                  <div className="flex-1 text-left">
-                    <h3 className="text-lg font-semibold text-green-800">{job.jobTitle}</h3>
-                    <p className="text-sm text-gray-600">{job.location}</p>
-                    <p className="text-sm text-gray-600">{job.duration}</p>
-                    <p className="text-sm text-gray-600">
-                      {job.dateFrom ? job.dateFrom.slice(0, 10) : ""}
-                    </p>
-                    <p className="text-sm font-medium text-green-700">{job.payment}</p>
-                  </div>
-                </div>
-
-                {/* Expand details */}
-                {expandedJobId === job._id && (
-                  <div className="mt-4 space-y-2 text-sm text-left text-gray-700">
-                    <p>
-                      <strong>Working Hours:</strong> {job.duration}
-                    </p>
-                    <p>
-                      <strong>Working Days:</strong>{" "}
-                      {job.dateFrom ? job.dateFrom.slice(0, 10) : ""} -{" "}
-                      {job.dateTo ? job.dateTo.slice(0, 10) : ""}
-                    </p>
-                    <p>
-                      <strong>Salary:</strong> {job.payment}
-                    </p>
-                    <p>
-                      <strong>Description:</strong> {job.description}
-                    </p>
-
-            <button
-              className="w-full py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800 disabled:opacity-50"
-              onClick={async (e) => {
-                e.stopPropagation();
-                try {
-                  const response = await fetch(API_ROUTES.JOBS+"/"+job._id+"/apply", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      userId:jobseekerId,
-                    }),
-                  });
-
-                  const result = await response.json();
-
-                  if (response.ok) {
-                    toast.success("Application submitted successfully!");
-                  } else {
-                    toast.error(`Application failed: ${result.message || "Unknown error"}`);
-                  }
-                } catch (err) {
-                  console.error("Application error:", err);
-                  toast.error("Something went wrong while applying.");
-                }
-              }}
+        <main className="flex items-center justify-center flex-1 w-full max-w-screen-sm px-4 text-center">
+      <div className="w-full mt-6 space-y-4">
+        {Array.isArray(currentJobs) && currentJobs.length > 0 ? (
+          currentJobs.map((job) => (
+            <div
+              key={job._id}
+              className="p-4 transition bg-white rounded-md shadow cursor-pointer hover:bg-green-50"
+              onClick={() =>
+                setExpandedJobId(expandedJobId === job._id ? null : job._id)
+              }
             >
-              Apply Now
-            </button>
-
-                  </div>
-                )}
+              <div className="flex items-center gap-4">
+                <img
+                  src={job.image}
+                  alt={job.category}
+                  className="object-cover w-16 h-16 rounded-md"
+                />
+                <div className="flex-1 text-left">
+                  <h3 className="text-lg font-semibold text-green-800">
+                    {job.jobTitle}
+                  </h3>
+                  <p className="text-sm text-gray-600">{job.location}</p>
+                  <p className="text-sm text-gray-600">{job.duration}</p>
+                  <p className="text-sm text-gray-600">
+                    {job.dateFrom ? job.dateFrom.slice(0, 10) : ""}
+                  </p>
+                  <p className="text-sm font-medium text-green-700">
+                    {job.payment}
+                  </p>
+                </div>
               </div>
 
-            ))
-          ) : (
-            <p className="text-gray-600">No job advertisements available.</p>
-          )}
-        </div>
+              {expandedJobId === job._id && (
+                <div className="mt-4 space-y-2 text-sm text-left text-gray-700">
+                  <p>
+                    <strong>Working Hours:</strong> {job.duration}
+                  </p>
+                  <p>
+                    <strong>Working Days:</strong>{" "}
+                    {job.dateFrom ? job.dateFrom.slice(0, 10) : ""} -{" "}
+                    {job.dateTo ? job.dateTo.slice(0, 10) : ""}
+                  </p>
+                  <p>
+                    <strong>Salary:</strong> {job.payment}
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {job.description}
+                  </p>
+
+                  <button
+                    className="w-full py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800 disabled:opacity-50"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      try {
+                        const response = await fetch(
+                          API_ROUTES.JOBS + "/" + job._id + "/apply",
+                          {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              userId: jobseekerId,
+                            }),
+                          }
+                        );
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                          alert("Application submitted successfully!");
+                        } else {
+                          alert(
+                            `Application failed: ${result.message || "Unknown error"}`
+                          );
+                        }
+                      } catch (err) {
+                        console.error("Application error:", err);
+                        alert("Something went wrong while applying.");
+                      }
+                    }}
+                  >
+                    Apply Now
+                  </button>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-600">No job advertisements available.</p>
+        )}
+
+        {/* Pagination Buttons */}
+        {jobAds.length > ADS_PER_PAGE && (
+          <div className="flex justify-between mt-6">
+            <button
+              className="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50"
+              onClick={() => setCurrentPage((p) => p - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span className="self-center text-sm text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              className="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50"
+              onClick={() => setCurrentPage((p) => p + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
       </main>
 
       <ToastContainer position="top-center" autoClose={3000} />

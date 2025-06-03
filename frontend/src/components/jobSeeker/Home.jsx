@@ -135,43 +135,69 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
-      <header className="w-full py-4 text-white bg-green-800 shadow-md">
-        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
-          <button className="text-white" onClick={toggleMenu}>
-            <FaBars className="text-2xl" />
-          </button>
-          <h1 className="font-semibold truncate">CareerCrew.LK</h1>
-        </div>
+        <header className="w-full text-white bg-green-800 shadow-md">
+            <div className="flex items-center justify-between max-w-screen-lg px-4 py-4 mx-auto">
+              <h1 className="text-lg font-semibold sm:text-xl">CareerCrew.LK</h1>
+              <button className="text-white md:hidden" onClick={toggleMenu}>
+                <FaBars className="text-2xl" />
+              </button>
+              <nav className="hidden space-x-4 text-base md:flex">
+                <Link to="/home" className="py-2 hover:underline">All Jobs</Link>
+                <Link to="/" className="py-2 hover:underline">Login</Link>
+                <a href="/jobseeker/profile" className="py-2 hover:underline">Profile</a>
+                {/* <a href="#" className="py-2 hover:underline">My Applications</a>
+                <a href="#" className="py-2 hover:underline">Settings</a>
+                <a href="#" className="py-2 hover:underline">Logout</a> */}
+              </nav>
+            </div>
 
-        <div className="w-full max-w-screen-sm px-4 mt-2">
-          <input
-            type="text"
-            placeholder="Search for jobs..."
-            className="w-full p-2 border border-green-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-800"
-          />
-        </div>
+            {/* Mobile nav */}
+            <div
+              className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+                isMenuOpen ? "max-h-screen" : "max-h-0"
+              }`}
+            >
+              <nav className="flex flex-col text-center text-white bg-green-700">
+                <Link to="/home" className="py-2 hover:bg-green-600">All Jobs</Link>
+                <Link to="/" className="py-2 hover:bg-green-600">Login</Link>
+                <a href="/jobseeker/profile" className="py-2 hover:bg-green-600">Profile</a>
+                {/* <a href="#" className="py-2 hover:bg-green-600">My Applications</a>
+                <a href="#" className="py-2 hover:bg-green-600">Settings</a>
+                <a href="#" className="py-2 hover:bg-green-600">Logout</a> */}
+              </nav>
+            </div>
 
-        <div className="flex items-center w-full max-w-screen-sm gap-2 px-4 mt-4">
-          <button
-            className="flex-1 py-2 text-sm text-white bg-green-700 rounded-md hover:bg-green-600"
-            onClick={toggleLocationDropdown}
-          >
-            {selectedLocation}
-          </button>
-          <button
-            className="flex-1 py-2 text-sm text-white bg-green-700 rounded-md hover:bg-green-600"
-            onClick={toggleCategoryDropdown}
-          >
-            {selectedCategory}
-          </button>
-          <button
-            className="p-2 text-green-800 bg-white rounded-full shadow hover:bg-green-200"
-            onClick={toggleFilterModal}
-          >
-            <FaFilter className="text-xl" />
-          </button>
-        </div>
-      </header>
+
+            <div className="max-w-screen-lg px-4 py-4 mx-auto mb-3 space-y-4 bg-green-300 border-4 border-green-900 rounded-2xl md:flex md:items-center md:space-y-0 md:space-x-4">
+            
+              <input
+                type="text"
+                placeholder="Search for jobs..."
+                className="flex-1 w-full p-2 text-black bg-white border border-green-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-700"
+              />
+
+              <div className="flex items-center justify-between w-full gap-2 md:w-auto md:flex-1">
+                <button
+                  onClick={toggleLocationDropdown}
+                  className="flex-1 py-2 text-sm text-white bg-green-700 rounded-md hover:bg-green-600"
+                >
+                  {selectedLocation}
+                </button>
+                <button
+                  onClick={toggleCategoryDropdown}
+                  className="flex-1 py-2 text-sm text-white bg-green-700 rounded-md hover:bg-green-600"
+                >
+                  {selectedCategory}
+                </button>
+                <button
+                  onClick={toggleFilterModal}
+                  className="p-2 text-green-800 bg-white rounded-full shadow hover:bg-green-200"
+                >
+                  <FaFilter className="text-xl" />
+                </button>
+              </div>
+            </div>
+          </header>
 
       {isLocationOpen && (
         <div className="w-full max-w-screen-sm px-4 mt-2 overflow-y-auto bg-white rounded shadow max-h-96">
@@ -290,7 +316,7 @@ const Home = () => {
         </div>
       )}
 
-      <div className={`absolute left-0 top-8 w-full bg-green-800 text-white text-center mt-4 sm:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"}`}>
+      {/* <div className={`absolute left-0 top-8 w-full bg-green-800 text-white text-center mt-4 sm:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"}`}>
         <nav>
           <Link to="/home" className="block py-2 hover:bg-green-700">All Jobs</Link>
           <Link to="/" className="block py-2 hover:bg-green-700">Login</Link>
@@ -299,7 +325,7 @@ const Home = () => {
           <a href="#" className="block py-2 hover:bg-green-700">Settings</a>
           <a href="#" className="block py-2 hover:bg-green-700">Logout</a>
         </nav>
-      </div>
+      </div> */}
 
         <main className="flex items-center justify-center flex-1 w-full max-w-screen-sm px-4 text-center">
       <div className="w-full mt-6 space-y-4">

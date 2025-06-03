@@ -111,7 +111,7 @@ export default function EditEmployerProfile() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-      <ToastContainer />
+      <ToastContainer position="top-center" autoClose={3000} />
       <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-xl">
         <h2 className="mb-4 text-2xl font-bold text-center text-green-600">Edit Employer Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-3">

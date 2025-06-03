@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaBars, FaFilter } from "react-icons/fa"; // Hamburger and Filter icons
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from '../../configs/config';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -343,13 +345,13 @@ const Home = () => {
                   const result = await response.json();
 
                   if (response.ok) {
-                    alert("Application submitted successfully!");
+                    toast.success("Application submitted successfully!");
                   } else {
-                    alert(`Application failed: ${result.message || "Unknown error"}`);
+                    toast.error(`Application failed: ${result.message || "Unknown error"}`);
                   }
                 } catch (err) {
                   console.error("Application error:", err);
-                  alert("Something went wrong while applying.");
+                  toast.error("Something went wrong while applying.");
                 }
               }}
             >
@@ -367,7 +369,8 @@ const Home = () => {
         </div>
       </main>
 
-      
+      <ToastContainer position="top-center" autoClose={3000} />
+
     </div>
   );
 };

@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
 import API_ROUTES from "../../configs/config";
 
 export default function NewJobForm() {
   const navigate = useNavigate();
-
+  
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
   const [vacancies, setVacancies] = useState(1);
   const [locations, setLocations] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
-
+  
   const [formData, setFormData] = useState({
     jobTitle: "",
     dateFrom: "",
@@ -128,8 +130,10 @@ export default function NewJobForm() {
   const handleBack = () => navigate("/employer/home");
 
   const availableAreas =
-    locations.find((d) => d.name === selectedDistrict)?.areas || [];
-
+  locations.find((d) => d.name === selectedDistrict)?.areas || [];
+  const toggleMenu = () => {
+  setIsMenuOpen(!isMenuOpen);};
+   
   useEffect(() => {
     const checkPlanValidity = async () => {
     const res = await fetch(`/api/employer/${employerId}`); // get employer data
@@ -145,8 +149,17 @@ export default function NewJobForm() {
     checkPlanValidity();
   }, []);
 
-
-  return (
+  
+return (
+    <div>
+      <header className="bg-green-800 text-white w-full py-4 shadow-md">
+              <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
+                <button className="text-white" onClick={toggleMenu}>
+                  <FaBars className="text-2xl" />
+                </button>
+                <h1 className="font-semibold truncate">CareerCrew.LK</h1>
+              </div>
+            </header>
     <form
       onSubmit={handleSubmit}
       className="max-w-md mx-auto p-4 rounded-2xl shadow-lg bg-white border border-green-200"
@@ -350,5 +363,6 @@ export default function NewJobForm() {
         </div>
       </div>
     </form>
+    </div>
   );
 }

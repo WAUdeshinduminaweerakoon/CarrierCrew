@@ -11,46 +11,37 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
 
-
 const EmployerHome = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
+  const [employerId, setEmployerId] = useState("");
+  const navigate = useNavigate();
 
-    const [employerId, setEmployerId] = useState("");
-  
-    useEffect(() => {
-      const storedUserId = localStorage.getItem("userId");
-      const userType = localStorage.getItem("userType");
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    const userType = localStorage.getItem("userType");
 
-      if (userType === "Employer" && storedUserId) {
-        setEmployerId(storedUserId);
+    if (userType === "Employer" && storedUserId) {
+      setEmployerId(storedUserId);
 
-        // Fetch jobs for this employer
-        fetch(`${API_ROUTES.JOBS}/employer/${storedUserId}`)
-          .then((res) => res.json())
-          .then((data) => {
-            setJobs(data);
-          })
-          .catch((err) => {
-            console.error("Failed to fetch jobs:", err);
-          });
-      } else {
-        alert("Login first.");
-        navigate("/");
-      }
-    }, []);
-
+      fetch(`${API_ROUTES.JOBS}/employer/${storedUserId}`)
+        .then((res) => res.json())
+        .then((data) => setJobs(data))
+        .catch((err) => console.error("Failed to fetch jobs:", err));
+    } else {
+      alert("Login first.");
+      navigate("/");
+    }
+  }, [navigate]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <div className="min-h-screen bg-green-100 flex flex-col items-center overflow-x-hidden">
-      {/* Header */}
-      <header className="bg-green-800 text-white w-full py-4 shadow-md">
-        <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
+    <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
+      <header className="w-full py-4 text-white bg-green-800 shadow-md">
+        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
           <button className="text-white" onClick={toggleMenu}>
             <FaBars className="text-2xl" />
           </button>
@@ -58,7 +49,6 @@ const EmployerHome = () => {
         </div>
       </header>
 
-      {/* Menu */}
       <div
         className={`absolute left-0 top-16 w-full bg-green-800 text-white text-center sm:hidden transition-all duration-300 ease-in-out ${
           isMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"
@@ -71,7 +61,11 @@ const EmployerHome = () => {
           <Link to="/" className="block py-2 hover:bg-green-700">
             Login
           </Link>
-          <Link to="/employer/profile" className="block py-2 hover:bg-green-700">
+          <Link
+            to="/employer/profile"
+            state={{ employerId }}
+            className="block py-2 hover:bg-green-700"
+          >
             Profile
           </Link>
           <a href="#" className="block py-2 hover:bg-green-700">
@@ -83,29 +77,31 @@ const EmployerHome = () => {
         </nav>
       </div>
 
-      {/* Action Buttons */}
       <div className="w-full max-w-screen-sm px-4 pt-4">
-        <div className="bg-white p-4 rounded-xl shadow-md">
+        <div className="p-4 bg-white shadow-md rounded-xl">
           <div className="grid grid-cols-3 gap-4">
             {[
-              { 
-                label: "My Posts", 
-                icon: <FaClipboardList />, 
-                onClick: () => navigate("/employer/my-posts")
+              {
+                label: "My Posts",
+                icon: <FaClipboardList />,
+                onClick: () => navigate("/employer/my-posts"),
               },
               {
                 label: "New Job",
                 icon: <FaPlus />,
                 onClick: () => navigate("/employer/create-job"),
               },
-              { 
+              {
                 label: "Applications",
                 icon: <FaFileAlt />,
                 onClick: () => navigate("/employer/view-applications"),
               },
-              { label: "Profile", icon: <FaUser />,
-                onClick: () => navigate("/employer/profile"),
-               },
+              {
+                label: "Profile",
+                icon: <FaUser />,
+                onClick: () =>
+                  navigate("/employer/profile", { state: { employerId } }),
+              },
               { label: "Chat", icon: <FaComments /> },
               { label: "Subscriptions",
                  icon: <FaRegStar />,
@@ -115,7 +111,7 @@ const EmployerHome = () => {
               <button
                 key={label}
                 onClick={onClick}
-                className="bg-green-50 text-green-800 font-semibold py-6 rounded-lg shadow hover:bg-green-200 transition text-sm flex flex-col items-center"
+                className="flex flex-col items-center py-6 text-sm font-semibold text-green-800 transition rounded-lg shadow bg-green-50 hover:bg-green-200"
               >
                 <div className="text-2xl">{icon}</div>
                 <span>{label}</span>
@@ -125,23 +121,24 @@ const EmployerHome = () => {
         </div>
       </div>
 
-      {/* Job Cards Section */}
-      <div className="w-full max-w-screen-sm px-4 pt-6 pb-8 grid gap-4">
+      <div className="grid w-full max-w-screen-sm gap-4 px-4 pt-6 pb-8">
         {jobs.length === 0 ? (
-          <p className="text-center text-gray-500">No job advertisements available</p>
+          <p className="text-center text-gray-500">
+            No job advertisements available
+          </p>
         ) : (
           jobs.map((job) => (
             <div
               key={job._id}
-              className="bg-white rounded-lg shadow-md p-4 flex gap-6 items-center"
+              className="flex items-center gap-6 p-4 bg-white rounded-lg shadow-md"
             >
               <img
-                src={job.logoUrl || "/images/default-job.png"} // fallback image
+                src={job.logoUrl || "/images/default-job.png"}
                 alt={job.title}
-                className="w-20 h-20 object-contain"
+                className="object-contain w-20 h-20"
               />
               <div className="text-sm text-green-900">
-                <h2 className="font-semibold text-base">{job.jobTitle}</h2>
+                <h2 className="text-base font-semibold">{job.jobTitle}</h2>
                 <p>{job.location}</p>
                 <p>{job.duration}</p>
                 <p>{job.fromDate}</p>
@@ -150,12 +147,9 @@ const EmployerHome = () => {
             </div>
           ))
         )}
-
       </div>
     </div>
   );
 };
 
 export default EmployerHome;
-
-

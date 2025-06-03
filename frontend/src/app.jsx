@@ -15,12 +15,10 @@ import VerifyOtp from "./components/login/OtpVerfication";
 import Applications from "./components/employer/ViewApplications"
 import DeleteAccount from "./components/Account/DeleteAccountConfirm";
 import MyPosts from "./components/employer/MyPosts";
-import SubscriptionPlans from "./components/SubscriptionPlans/SubscriptionPlans";
-import FreePlanCard from "./components/SubscriptionPlans/FreePlan";
-import BasicPlanCard from "./components/SubscriptionPlans/BasicPlan";
-import PremiumPlanCard from "./components/SubscriptionPlans/PremiumPlan";
-import ProPlanCard from "./components/SubscriptionPlans/ProPlan";
-import PaymentPage from "./components/PaymentPage";
+import EditEmployerProfiles from "./components/employer/EditEmployerProfiles";
+import EditCompanyProfile from "./components/employer/EditCompanyProfile";
+import ManageProfile from "./components/Account/ManageProfile";
+import EditJobSeekerProfile from "./components/jobSeeker/EditJobSeekerProfile";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -80,29 +78,21 @@ const router = createBrowserRouter([
     path: "/employer/my-posts",
     element: <MyPosts/>
   },
-    {
-    path: "/employer/subs-plans",
-    element: <SubscriptionPlans/>
+  {
+    path: "/employer/edit-profile/:employerId",
+    element: <EditEmployerProfiles/>
   },
-    { 
-    path: "/plan/free",
-    element: <FreePlanCard/>
+  {
+    path: "/employer/edit-companyprofile/:employerId",
+    element: <EditCompanyProfile/>
   },
-  { 
-    path: "/plan/basic",
-    element: <BasicPlanCard/>
+  {
+    path: "/manageprofile",
+    element: <ManageProfile/>
   },
-  { 
-    path: "/plan/premium",
-    element: <PremiumPlanCard/>
-  },
-  { 
-    path: "/plan/pro",
-    element: <ProPlanCard/>
-  },
-  { 
-    path: "/Pay",
-    element: <PaymentPage/>
+  {
+    path:"/jobseeker/edit-profile/:jobSeekerId",
+    element: <EditJobSeekerProfile/>
   },
 ]);
 
@@ -111,3 +101,4 @@ const App = () => {
 };
 
 export default App;
+

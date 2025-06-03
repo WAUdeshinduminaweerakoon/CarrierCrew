@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const PaymentForm = ({ plan }) => {
   const navigate = useNavigate();
@@ -14,18 +16,20 @@ const PaymentForm = ({ plan }) => {
       });
 
       if (res.ok) {
-        navigate('/employer/home');
+        toast.success('Your subscription plan has activated sucessfully!');
+        setTimeout(()=> {navigate('/employer/home');},1500);
       } else {
-        alert('Failed to assign plan');
+        toast.error('Failed to assign plan');
       }
     } catch (err) {
       console.error(err);
-      alert('Error while subscribing');
+      toast.error('Error while subscribing');
     }
   };
 
   return (
     <div className="max-w-md mx-auto min-h-screen mt-4 bg-white border border-gray-300 rounded-xl shadow-lg p-10 space-y-4">
+      <ToastContainer position="top-center" autoClose={3000}/>
       <h2 className="text-center text-green-600 font-bold text-xl">Pay For Service</h2>
 
       <div className="text-center">

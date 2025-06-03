@@ -61,7 +61,7 @@ const PlanCard = () => {
       </ul>
 
       <button
-        onClick={() => navigate("/Pay")}
+        onClick={() => navigate("/plans/pay")}
         className="bg-green-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-700 transition w-full"
       >
         PAY Now

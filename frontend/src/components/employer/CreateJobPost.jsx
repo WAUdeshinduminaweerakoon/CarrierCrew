@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 import API_ROUTES from "../../configs/config";
+
 
 export default function NewJobForm() {
   const navigate = useNavigate();
@@ -11,6 +14,8 @@ export default function NewJobForm() {
   const [locations, setLocations] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
+  const [categories, setCategories] = useState([]);
+
   
   const [formData, setFormData] = useState({
     jobTitle: "",
@@ -32,8 +37,8 @@ export default function NewJobForm() {
     if (userType === "Employer" && storedUserId) {
       setEmployerId(storedUserId);
     } else {
-      alert("You must be logged in as an Employer to post a job.");
-      navigate("/");
+      toast.warn("You must be logged in as an Employer to post a job.");
+      setTimeout(() => { navigate("/");}, 3000);
     }
   }, []);
 
@@ -50,10 +55,30 @@ export default function NewJobForm() {
         }
       } catch (error) {
         console.error("Error fetching locations:", error);
+        toast.error("Failed to load location data.");
       }
     };
     fetchLocations();
   }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(API_ROUTES.CATEGORY+"/all");
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.error("Unexpected category data structure", data);
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,6 +99,7 @@ export default function NewJobForm() {
     if (!formData.timeTo) newErrors.timeTo = "End time is required";
     if (!formData.duration) newErrors.duration = "Duration is required";
     if (!formData.payment) newErrors.payment = "Payment is required";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -98,14 +124,14 @@ export default function NewJobForm() {
 
         const data = await response.json();
         if (response.ok) {
-          alert("Job posted successfully!");
-          navigate("/employer/home");
+          toast.success("Job posted successfully!");
+          setTimeout(() => { navigate("/employer/home");}, 1500); // wait 1.5 seconds
         } else {
-          alert(data.message || "Something went wrong!");
+          toast.error(data.message || "Something went wrong!");
         }
       } catch (err) {
         console.error(err);
-        alert("Error occurred while submitting the form.");
+        toast.error("Error occurred while submitting the form.");
       }
     }
   };
@@ -133,25 +159,35 @@ export default function NewJobForm() {
   locations.find((d) => d.name === selectedDistrict)?.areas || [];
   const toggleMenu = () => {
   setIsMenuOpen(!isMenuOpen);};
-   
-  useEffect(() => {
-    const checkPlanValidity = async () => {
-    const res = await fetch(`/api/employer/${employerId}`); // get employer data
-    const data = await res.json();
-    const { planEndDate, postsUsed, planId } = data.subscriptionPlan;
+  // check validity of subscription plan
+  // useEffect(() => {
+  //   const checkPlanValidity = async () => {
+  //     try {
+  //       const res = await fetch(`/api/employer/${employerId}`);
+  //       const data = await res.json();
+  //       const { planEndDate, postsUsed, planId } = data.subscriptionPlan;
 
-    const today = new Date();
-    if (new Date(planEndDate) < today || postsUsed >= planId.numberOfAddsPerMonth) {
-      alert('Your plan is invalid. Please check your subscription.');
-      navigate('/employer/subs-plans');
-    }
-   };
-    checkPlanValidity();
-  }, []);
+  //       const today = new Date();
+  //       if (
+  //         new Date(planEndDate) < today ||
+  //         postsUsed >= planId.numberOfAddsPerMonth
+  //       ) {
+  //         toast.error("Your plan is invalid. Please check your subscription.");
+  //         navigate("/employer/subs-plans");
+  //       }
+  //     } catch (err) {
+  //       console.error("Plan validation failed", err);
+  //       toast.error("Unable to verify subscription plan.");
+  //     }
+  //   };
+
+  //   if (employerId) checkPlanValidity();
+  // }, [employerId]);
 
   
 return (
     <div>
+       <ToastContainer position="top-center" autoClose={3000} />
       <header className="bg-green-800 text-white w-full py-4 shadow-md">
               <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
                 <button className="text-white" onClick={toggleMenu}>
@@ -177,14 +213,20 @@ return (
       <div className="space-y-3">
         <div>
           <label className="block text-sm font-medium text-green-800">Job Title</label>
-          <input
-            type="text"
-            name="jobTitle"
-            placeholder="Job Title"
-            value={formData.jobTitle}
-            onChange={handleChange}
-            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+            <select
+              name="jobTitle"
+              value={formData.jobTitle}
+              onChange={handleChange}
+              className="w-full border border-green-400 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+
           {errors.jobTitle && <p className="text-red-500 text-xs">{errors.jobTitle}</p>}
         </div>
 

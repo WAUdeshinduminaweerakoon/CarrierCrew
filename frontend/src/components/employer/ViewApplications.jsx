@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import API_ROUTES from '../../configs/config';
 import { FaBars } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import Header from "./Header";
 
 const ViewApplications = () => {
   const [applications, setApplications] = useState([]);

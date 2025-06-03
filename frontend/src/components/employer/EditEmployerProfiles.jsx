@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function EditEmployerProfile() {
   const navigate = useNavigate();
@@ -95,12 +97,12 @@ export default function EditEmployerProfile() {
         return res.json();
       })
       .then((updated) => {
-        alert('Profile updated successfully!');
-        navigate(`/employer/profile`, { state: { employerId: updated._id } });
+        toast.success('Profile updated successfully!');
+        setTimeout( ()=> {navigate(`/employer/profile`, { state: { employerId: updated._id } });},1500);//1.5second delay to show popup
       })
       .catch((err) => {
         console.error(err);
-        alert('Error updating profile');
+        toast.error('Error updating profile');
       });
   };
 
@@ -109,6 +111,7 @@ export default function EditEmployerProfile() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
+      <ToastContainer position="top-center" autoClose={3000} />
       <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-xl">
         <h2 className="mb-4 text-2xl font-bold text-center text-green-600">Edit Employer Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-3">

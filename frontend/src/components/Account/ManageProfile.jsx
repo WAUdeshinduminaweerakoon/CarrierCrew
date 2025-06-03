@@ -1,5 +1,7 @@
 import React from 'react';
 import { FaHome, FaBriefcase, FaUser, FaCog } from 'react-icons/fa';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const ManageProfile = () => {
   const user = {
@@ -9,21 +11,22 @@ const ManageProfile = () => {
   };
 
   const handleView = () => {
-    alert('View Profile');
+    toast.success('View Profile');
   };
 
   const handleUpdate = () => {
-    alert('Update Profile');
+    toast.success('Update Profile');
   };
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete your profile?')) {
-      alert('Profile deleted');
+      toast.error('Profile deleted');
     }
   };
 
   return (
     <div className="flex h-screen bg-green-100">
+      <ToastContainer position="top-center" autoClose={3000}/>
       {/* Sidebar */}
       <div className="w-16 bg-white shadow-lg flex flex-col items-center py-6 space-y-6">
         <FaHome size={24} className="text-gray-700 cursor-pointer" />

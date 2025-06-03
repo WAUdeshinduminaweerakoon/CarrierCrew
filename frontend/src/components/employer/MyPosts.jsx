@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
+import Header from "./Header";
 
 const MyPosts = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,6 +42,7 @@ const MyPosts = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
+      {/* Header */}
       <header className="w-full py-4 text-white bg-green-800 shadow-md">
         <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
           <button className="text-white" onClick={toggleMenu}>
@@ -49,6 +51,8 @@ const MyPosts = () => {
           <h1 className="font-semibold truncate">CareerCrew.LK</h1>
         </div>
       </header>
+
+      {/* Menu */}
       <div
         className={`absolute left-0 top-16 w-full bg-green-800 text-white text-center sm:hidden transition-all duration-300 ease-in-out ${
           isMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"

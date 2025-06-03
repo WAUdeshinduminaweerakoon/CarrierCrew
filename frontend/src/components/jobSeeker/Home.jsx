@@ -3,7 +3,6 @@ import { FaBars, FaFilter } from "react-icons/fa"; // Hamburger and Filter icons
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from '../../configs/config';
 
-
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
@@ -12,15 +11,9 @@ const Home = () => {
   const [salaryRange, setSalaryRange] = useState([0, 100000]);
   const [workingHours, setWorkingHours] = useState([0, 12]);
   const [selectedLocation, setSelectedLocation] = useState("Location");
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Category");
   const [expandedJobId, setExpandedJobId] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const ADS_PER_PAGE = 6;
- 
-  const startIndex = (currentPage - 1) * ADS_PER_PAGE;
-  const [jobAds, setJobAds] = useState([]);
-  const currentJobs = jobAds?.slice(startIndex, startIndex + ADS_PER_PAGE);
-  const totalPages = Math.ceil(jobAds?.length / ADS_PER_PAGE);
 
 
   const navigate = useNavigate();
@@ -83,7 +76,6 @@ const Home = () => {
     fetchLocations();
   }, []);
 
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleLocationDropdown = () => {
     setIsLocationOpen(!isLocationOpen);
@@ -113,11 +105,6 @@ const Home = () => {
     }, []);
 
 
-
-  const categories = [
-    "Waiter", "Helper", "Delivery Rider", "Cleaner", "Store Assistant",
-    "Tutor", "Security Guard", "Driver"
-  ];
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
@@ -203,18 +190,19 @@ const Home = () => {
         <div className="w-full max-w-screen-sm px-4 mt-2 bg-white rounded shadow">
           {categories.map((category) => (
             <div
-              key={category}
+              key={category._id}
               className="py-2 cursor-pointer hover:bg-green-100"
               onClick={() => {
-                setSelectedCategory(category);
+                setSelectedCategory(category.name);
                 setIsCategoryOpen(false);
               }}
             >
-              {category}
+              {category.name}
             </div>
           ))}
         </div>
       )}
+
 
       {isFilterOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-600 bg-opacity-50">
@@ -356,68 +344,33 @@ const Home = () => {
 
                         const result = await response.json();
 
-                        if (response.ok) {
-                          alert("Application submitted successfully!");
-                        } else {
-                          alert(
-                            `Application failed: ${result.message || "Unknown error"}`
-                          );
-                        }
-                      } catch (err) {
-                        console.error("Application error:", err);
-                        alert("Something went wrong while applying.");
-                      }
-                    }}
-                  >
-                    Apply Now
-                  </button>
-                </div>
-              )}
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-600">No job advertisements available.</p>
-        )}
+                  if (response.ok) {
+                    alert("Application submitted successfully!");
+                  } else {
+                    alert(`Application failed: ${result.message || "Unknown error"}`);
+                  }
+                } catch (err) {
+                  console.error("Application error:", err);
+                  alert("Something went wrong while applying.");
+                }
+              }}
+            >
+              Apply Now
+            </button>
 
-        {/* Pagination Buttons */}
-        
-          {jobAds.length > ADS_PER_PAGE && (
-            <div className="flex items-center justify-between w-full max-w-screen-sm px-4 pb-8 text-sm">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                disabled={currentPage === 1}
-                className={`px-4 py-2 rounded ${
-                  currentPage === 1
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-green-500 text-white hover:bg-green-600"
-                }`}
-              >
-                Previous
-              </button>
+                  </div>
+                )}
+              </div>
 
-              <span className="font-medium text-green-900">
-                Page {currentPage} of {totalPages}
-              </span>
-
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                className={`px-4 py-2 rounded ${
-                  currentPage === totalPages
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-green-500 text-white hover:bg-green-600"
-                }`}
-              >
-                Next
-              </button>
-            </div>
+            ))
+          ) : (
+            <p className="text-gray-600">No job advertisements available.</p>
           )}
+        </div>
+      </main>
 
+      <ToastContainer position="top-center" autoClose={3000} />
 
-      </div>
-    </main>
-
-      
     </div>
   );
 };

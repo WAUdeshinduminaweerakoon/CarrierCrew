@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { FaBars, FaFilter } from "react-icons/fa"; // Hamburger and Filter icons
+import { FaBars, FaFilter } from "react-icons/fa"; 
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from '../../configs/config';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +16,6 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Category");
   const [expandedJobId, setExpandedJobId] = useState(null);
-
 
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ const Home = () => {
       }
     }, []);
 
-  
+  const [jobAds, setJobAds] = useState([]);
 
     useEffect(() => {
     const fetchJobs = async () => {
@@ -73,8 +74,29 @@ const Home = () => {
         console.error("Error fetching locations:", error);
       }
     };
+
     fetchLocations();
   }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_ROUTES.CATEGORY}/all`);
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.error("Unexpected category data structure", data);
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleLocationDropdown = () => {
@@ -276,82 +298,76 @@ const Home = () => {
       </div>
 
       <main className="flex items-center justify-center flex-1 w-full max-w-screen-sm px-4 text-center">
-      <div className="w-full mt-6 space-y-4">
-        {Array.isArray(currentJobs) && currentJobs.length > 0 ? (
-          currentJobs.map((job) => (
-            <div
-              key={job._id}
-              className="p-4 transition bg-white rounded-md shadow cursor-pointer hover:bg-green-50"
-              onClick={() =>
-                setExpandedJobId(expandedJobId === job._id ? null : job._id)
-              }
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={job.image}
-                  alt={job.category}
-                  className="object-cover w-16 h-16 rounded-md"
-                />
-                <div className="flex-1 text-left">
-                  <h3 className="text-lg font-semibold text-green-800">
-                    {job.jobTitle}
-                  </h3>
-                  <p className="text-sm text-gray-600">{job.location}</p>
-                  <p className="text-sm text-gray-600">{job.duration}</p>
-                  <p className="text-sm text-gray-600">
-                    {job.dateFrom ? job.dateFrom.slice(0, 10) : ""}
-                  </p>
-                  <p className="text-sm font-medium text-green-700">
-                    {job.payment}
-                  </p>
+        <div className="w-full mt-6 space-y-4">
+          {Array.isArray(jobAds) && jobAds.length > 0 ? (
+            jobAds.map((job) => (
+              <div
+                key={job._id}
+                className="p-4 transition bg-white rounded-md shadow cursor-pointer hover:bg-green-50"
+                onClick={() =>
+                  setExpandedJobId(expandedJobId === job._id ? null : job._id)
+                }
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    src={job.image}
+                    alt={job.category}
+                    className="object-cover w-16 h-16 rounded-md"
+                  />
+                  <div className="flex-1 text-left">
+                    <h3 className="text-lg font-semibold text-green-800">{job.jobTitle}</h3>
+                    <p className="text-sm text-gray-600">{job.location}</p>
+                    <p className="text-sm text-gray-600">{job.duration}</p>
+                    <p className="text-sm text-gray-600">
+                      {job.dateFrom ? job.dateFrom.slice(0, 10) : ""}
+                    </p>
+                    <p className="text-sm font-medium text-green-700">{job.payment}</p>
+                  </div>
                 </div>
-              </div>
 
-              {expandedJobId === job._id && (
-                <div className="mt-4 space-y-2 text-sm text-left text-gray-700">
-                  <p>
-                    <strong>Working Hours:</strong> {job.duration}
-                  </p>
-                  <p>
-                    <strong>Working Days:</strong>{" "}
-                    {job.dateFrom ? job.dateFrom.slice(0, 10) : ""} -{" "}
-                    {job.dateTo ? job.dateTo.slice(0, 10) : ""}
-                  </p>
-                  <p>
-                    <strong>Salary:</strong> {job.payment}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {job.description}
-                  </p>
+                {/* Expand details */}
+                {expandedJobId === job._id && (
+                  <div className="mt-4 space-y-2 text-sm text-left text-gray-700">
+                    <p>
+                      <strong>Working Hours:</strong> {job.duration}
+                    </p>
+                    <p>
+                      <strong>Working Days:</strong>{" "}
+                      {job.dateFrom ? job.dateFrom.slice(0, 10) : ""} -{" "}
+                      {job.dateTo ? job.dateTo.slice(0, 10) : ""}
+                    </p>
+                    <p>
+                      <strong>Salary:</strong> {job.payment}
+                    </p>
+                    <p>
+                      <strong>Description:</strong> {job.description}
+                    </p>
 
-                  <button
-                    className="w-full py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800 disabled:opacity-50"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      try {
-                        const response = await fetch(
-                          API_ROUTES.JOBS + "/" + job._id + "/apply",
-                          {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                              userId: jobseekerId,
-                            }),
-                          }
-                        );
+            <button
+              className="w-full py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800 disabled:opacity-50"
+              onClick={async (e) => {
+                e.stopPropagation();
+                try {
+                  const response = await fetch(API_ROUTES.JOBS+"/"+job._id+"/apply", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      userId:jobseekerId,
+                    }),
+                  });
 
-                        const result = await response.json();
+                  const result = await response.json();
 
                   if (response.ok) {
-                    alert("Application submitted successfully!");
+                    toast.success("Application submitted successfully!");
                   } else {
-                    alert(`Application failed: ${result.message || "Unknown error"}`);
+                    toast.error(`Application failed: ${result.message || "Unknown error"}`);
                   }
                 } catch (err) {
                   console.error("Application error:", err);
-                  alert("Something went wrong while applying.");
+                  toast.error("Something went wrong while applying.");
                 }
               }}
             >

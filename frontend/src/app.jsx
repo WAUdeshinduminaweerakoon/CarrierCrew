@@ -12,6 +12,14 @@ import JobSeekerProfile from "./components/jobSeeker/JobSeekerProfile";
 import CompanyProfile from "./components/employer/CompanyProfile";
 import ForgotPassword from "./components/ForgotPassword";
 import VerifyOtp from "./components/login/OtpVerfication";
+import Applications from "./components/employer/ViewApplications"
+import DeleteAccount from "./components/Account/DeleteAccountConfirm";
+import MyPosts from "./components/employer/MyPosts";
+
+import EditEmployerProfiles from "./components/employer/EditEmployerProfiles";
+import EditCompanyProfile from "./components/employer/EditCompanyProfile";
+
+import ManageProfile from "./components/Account/ManageProfile";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -59,6 +67,30 @@ const router = createBrowserRouter([
     path: "/verify",
     element: <VerifyOtp/>
   },
+    {
+    path: "/employer/view-applications",
+    element: <Applications/>
+  },
+  {
+    path: "/deleteaccount",
+    element: <DeleteAccount/>
+  },
+    {
+    path: "/employer/my-posts",
+    element: <MyPosts/>
+  },
+  {
+    path: "/employer/edit-profile/:employerId",
+    element: <EditEmployerProfiles/>
+  },
+  {
+    path: "/employer/edit-companyprofile/:employerId",
+    element: <EditCompanyProfile/>
+  },
+  {
+    path: "/manageprofile",
+    element: <ManageProfile/>
+  },
 ]);
 
 const App = () => {
@@ -66,3 +98,4 @@ const App = () => {
 };
 
 export default App;
+

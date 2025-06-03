@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import API_ROUTES from "../../configs/config";
 
 const OtpVerification = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ const OtpVerification = () => {
 
   const handleSendOtp = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/verify/send-otp", { email });
+      const res = await axios.post(API_ROUTES.OTP+"/send-otp", { email });
       setMessage(res.data.message);
       setOtpSent(true);
     } catch (err) {

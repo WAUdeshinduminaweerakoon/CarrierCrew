@@ -11,14 +11,22 @@ const jobSeekerSchema = new mongoose.Schema({
   address: String,
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  district: {type:String, required:true},
+  nearestCity: {type:String, required:true},
   gender: String,
+  education: {
+  type: String,
+  enum: [
+    "Grade 8 or above",
+    "After O/Ls",
+    "After A/Ls",
+    "Diploma",
+    "Undergraduate",
+    "Graduate",
+  ],
+  required: true,
+},
   userType: { type: String, enum: ['JobSeeker'], default: 'JobSeeker' },
-
-  location: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Location'
-  }
-
 }, { timestamps: true });
 
 jobSeekerSchema.pre('save', async function (next) {

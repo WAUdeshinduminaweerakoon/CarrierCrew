@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaBars, FaFilter } from "react-icons/fa"; // Hamburger and Filter icons
 import { Link, useNavigate } from "react-router-dom";
-
+import API_ROUTES from '../../configs/config';
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,7 +36,7 @@ const Home = () => {
     useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/jobs/all");
+        const response = await fetch(`${API_ROUTES.JOBS}/all`);
         const data = await response.json();
         console.log("Fetched job data:", data);
 
@@ -60,7 +60,7 @@ const Home = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/locations/all");
+        const response = await fetch(`${API_ROUTES.LOCATIONS}/all`);
         const data = await response.json();
         if (Array.isArray(data)) {
           setLocations(data);
@@ -87,32 +87,13 @@ const Home = () => {
   };
   const toggleFilterModal = () => setIsFilterOpen(!isFilterOpen);
 
-  /*const districts = [
-    "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
-    "Galle", "Gampaha", "Hambantota", "Jaffna", "Kalutara",
-    "Kandy", "Kegalle", "Kilinochchi", "Kurunegala", "Mannar",
-    "Matale", "Matara", "Moneragala", "Mullaitivu", "Nuwara Eliya",
-    "Polonnaruwa", "Puttalam", "Ratnapura", "Trincomalee", "Vavuniya"
-  ];*/
-/*
-  const locations = {
-    Ampara: [],
-    Anuradhapura: [],
-    // ...
-    Gampaha: ["Kadawatha", "Kelaniya", "Negombo"],
-    Colombo: ["Borella", "Nugegoda", "Dehiwala"],
-    // other districts
-  };*/
-
   const [locations, setLocations] = useState([]);
   const [expandedDistrict, setExpandedDistrict] = useState(null); // to handle dropdown toggle
 
-
-  //const [expandedDistrict, setExpandedDistrict] = useState(null);
     useEffect(() => {
       const fetchLocations = async () => {
         try {
-          const response = await fetch("http://localhost:5000/api/locations/all");
+          const response = await fetch(`${API_ROUTES.LOCATIONS}/all`);
           const data = await response.json();
           setLocations(data);
         } catch (error) {
@@ -349,7 +330,7 @@ const Home = () => {
               onClick={async (e) => {
                 e.stopPropagation();
                 try {
-                  const response = await fetch("http://localhost:5000/api/jobs/"+job._id+"/apply", {
+                  const response = await fetch(API_ROUTES.JOBS+"/"+job._id+"/apply", {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",

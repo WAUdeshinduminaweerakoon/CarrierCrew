@@ -9,6 +9,9 @@ const companySchema = new mongoose.Schema({
   companyType: String,
   address: String,
   nearestCity: String,
+  description: String,
+  rating: { type: Number, default: 0 },
+  authorizedPerson: String,
 });
 
 const employerSchema = new mongoose.Schema({
@@ -19,7 +22,8 @@ const employerSchema = new mongoose.Schema({
   mobileNumber: { type: String, required: true, unique: true },
   nic: { type: String, required: true, unique: true },
   address: String,
-  nearestCity: String,
+  district : {type:String, required:true},
+  nearestCity: {type:String, required:true},
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   userType: { type: String, enum: ['Employer'], default: 'Employer' },

@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const Employer = require("../models/Employer");
-const JobSeeker = require("../models/JobSeeker");
+const JobSeeker = require("../models/Jobseeker");
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;

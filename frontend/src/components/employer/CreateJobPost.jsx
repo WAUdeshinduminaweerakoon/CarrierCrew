@@ -103,7 +103,7 @@ export default function NewJobForm() {
         const data = await response.json();
         if (response.ok) {
           toast.success("Job posted successfully!");
-          setTimeout(() => { navigate("/employer/home");}, 3000); // wait 3 seconds
+          setTimeout(() => { navigate("/employer/home");}, 1500); // wait 1.5 seconds
         } else {
           toast.error(data.message || "Something went wrong!");
         }

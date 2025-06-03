@@ -2,6 +2,7 @@ const Employer = require('../models/Employer');
 const JobSeeker = require('../models/Jobseeker');
 const Job = require('../models/Job');
 const Category = require('../models/Category')
+const JobBackup = require('../models/JobBackup')
 const moment = require('moment'); 
 
 // Get total employer count
@@ -188,6 +189,81 @@ const addNewCategory = async (req, res) => {
 };
 
 
+const getAllJobsWithEmployerDetails = async (req, res) => {
+  try {
+
+    const jobs = await Job.find()
+      .populate({
+        path: 'employerId',
+        select: 'firstName lastName email mobileNumber company',
+      })
+      .lean(); 
+
+    // Format response
+    const formattedJobs = jobs.map((job) => {
+      const employer = job.employerId;
+      return {
+        jobId: job._id,
+        jobTitle: job.jobTitle,
+        location: job.location,
+        dateFrom: job.dateFrom,
+        dateTo: job.dateTo,
+        timeFrom: job.timeFrom,
+        timeTo: job.timeTo,
+        duration: job.duration,
+        payment: job.payment,
+        description: job.description,
+        vacancies: job.vacancies,
+        createdAt: job.createdAt,
+        numberOfApplicants: Array.isArray(job.applicants) ? job.applicants.length : 0,
+        employer: {
+          employerId: employer?._id,
+          firstName: employer?.firstName,
+          lastName: employer?.lastName,
+          email: employer?.email,
+          mobileNumber: employer?.mobileNumber,
+          company: employer?.company?.name ? {
+            name: employer.company.name,
+            email: employer.company.email,
+            telephone: employer.company.telephone,
+          } : null,
+        },
+      };
+    });
+
+    return res.status(200).json(formattedJobs);
+  } catch (error) {
+    console.error('Error fetching job listings:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const deleteJobByAdmin = async (req, res) => {
+  const jobId = req.params.id;
+
+  try {
+
+    const job = await Job.findById(jobId).lean();
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    job.status = "admin-delete";
+
+    await JobBackup.create(job);
+
+    await Job.findByIdAndDelete(jobId);
+
+    return res.status(200).json({ message: "Job deleted and backed up successfully" });
+  } catch (error) {
+    console.error("Error deleting job by admin:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+
 
 
 module.exports = {
@@ -198,4 +274,6 @@ module.exports = {
   getJobsLastFourMonths,
   getUserRegistrationsLast4Months,
   addNewCategory,
+  getAllJobsWithEmployerDetails,
+  deleteJobByAdmin,
 };

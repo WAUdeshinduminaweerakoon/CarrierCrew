@@ -118,13 +118,15 @@ const AdminDashboardHome = () => {
 
       {/* Actions Panel */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-        <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
-          <div className="flex items-center mb-4">
-            <FileText className="w-6 h-6 text-indigo-500 mr-2" />
-            <h2 className="text-lg font-medium text-gray-700">Manage Job Posts</h2>
+        <Link to="/jobs">
+          <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
+            <div className="flex items-center mb-4">
+              <FileText className="w-6 h-6 text-indigo-500 mr-2" />
+              <h2 className="text-lg font-medium text-gray-700">Manage Job Posts</h2>
+            </div>
+            <p className="text-sm text-gray-600">View, approve, or remove job listings submitted by employers.</p>
           </div>
-          <p className="text-sm text-gray-600">View, approve, or remove job listings submitted by employers.</p>
-        </div>
+        </Link>
 
         <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
           <div className="flex items-center mb-4">

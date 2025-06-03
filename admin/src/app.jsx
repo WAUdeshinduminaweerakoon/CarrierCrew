@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./components/admin-home";
 import GeneralSettings from "./components/GeneralSettings";
 import LoginPage from "./components/login/Login"; 
+import AllJobs from "./components/ViewAllJobs";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />, 
+  },
+    {
+    path: "/jobs",
+    element: <AllJobs />, 
   },
 ]);
 

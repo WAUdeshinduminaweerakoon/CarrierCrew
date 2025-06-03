@@ -19,6 +19,9 @@ import EditEmployerProfiles from "./components/employer/EditEmployerProfiles";
 import EditCompanyProfile from "./components/employer/EditCompanyProfile";
 import ManageProfile from "./components/Account/ManageProfile";
 import EditJobSeekerProfile from "./components/jobSeeker/EditJobSeekerProfile";
+import SubscriptionPlans from "./components/SubscriptionPlans/SubscriptionPlans";
+import PaymentForm from "./components/PaymentPage";
+import PlanCard from "./components/SubscriptionPlans/PlanCard";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -93,6 +96,18 @@ const router = createBrowserRouter([
   {
     path:"/jobseeker/edit-profile/:jobSeekerId",
     element: <EditJobSeekerProfile/>
+  },
+  {
+    path:"/employer/subs-plans",
+    element: <SubscriptionPlans/>
+  },
+  {
+    path:"/plans/pay",
+    element: <PaymentForm/>
+  },
+  {
+    path:"/plan/:planName",
+    element: <PlanCard/>
   },
 ]);
 

@@ -39,7 +39,7 @@ const ViewApplications = () => {
     };
 
     fetchApplicants();
-  }, []);
+  }, [apiURL]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -123,32 +123,36 @@ const ViewApplications = () => {
               </div>
             ))}
 
-            {/* Pagination Controls */}
-            <div className="flex items-center justify-between mt-4 text-sm">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className={`px-4 py-2 rounded ${
-                  currentPage === 1 ? 'bg-gray-300' : 'bg-green-500 text-white'
-                }`}
-              >
-                Previous
-              </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className={`px-4 py-2 rounded ${
-                  currentPage === totalPages ? 'bg-gray-300' : 'bg-green-500 text-white'
-                }`}
-              >
-                Next
-              </button>
-            </div>
+            {/* Pagination Controls (only if more than one page) */}
+            {applications.length > applicationsPerPage && (
+              <div className="flex items-center justify-between max-w-screen-sm mx-auto mt-4 text-sm">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded ${
+                    currentPage === 1
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-green-500 text-white hover:bg-green-600'
+                  }`}
+                >
+                  Previous
+                </button>
+                <span className="font-medium text-green-900">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 rounded ${
+                    currentPage === totalPages
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-green-500 text-white hover:bg-green-600'
+                  }`}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>

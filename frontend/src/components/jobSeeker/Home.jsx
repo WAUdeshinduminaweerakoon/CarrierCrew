@@ -117,22 +117,6 @@ const Home = () => {
   const [locations, setLocations] = useState([]);
   const [expandedDistrict, setExpandedDistrict] = useState(null); // to handle dropdown toggle
 
-    useEffect(() => {
-      const fetchLocations = async () => {
-        try {
-          const response = await fetch(`${API_ROUTES.LOCATIONS}/all`);
-          const data = await response.json();
-          setLocations(data);
-        } catch (error) {
-          console.error("Error fetching locations:", error);
-        }
-      };
-
-      fetchLocations();
-    }, []);
-
-
-
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
         <header className="w-full text-white bg-green-800 shadow-md">
@@ -235,7 +219,6 @@ const Home = () => {
 
         </div>
       )}
-
 
 
       {isCategoryOpen && (

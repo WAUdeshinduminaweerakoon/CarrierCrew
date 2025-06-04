@@ -18,6 +18,7 @@ const applicantSchema = new mongoose.Schema(
 const jobSchema = new mongoose.Schema({
   jobTitle: { type: String, required: true },
   location: { type: String, required: true },
+  district: { type: String, required: true },
   dateFrom: { type: Date, required: true },
   dateTo: { type: Date, required: true },
   timeFrom: { type: String, required: true },

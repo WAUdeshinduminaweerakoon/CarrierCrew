@@ -108,7 +108,8 @@ export default function NewJobForm() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const location = `${selectedDistrict} - ${selectedArea}`;
+        const location = `${selectedArea}`;
+        const district = `${selectedDistrict}`;
         const response = await fetch(`${API_ROUTES.JOBS}/new`, {
           method: "POST",
           headers: {
@@ -117,6 +118,7 @@ export default function NewJobForm() {
           body: JSON.stringify({
             ...formData,
             location,
+            district,
             vacancies,
             employerId,
           }),

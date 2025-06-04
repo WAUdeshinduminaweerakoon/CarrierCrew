@@ -16,6 +16,13 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Category");
   const [expandedJobId, setExpandedJobId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ADS_PER_PAGE = 5;
+ 
+  const startIndex = (currentPage - 1) * ADS_PER_PAGE;
+  const [jobAds, setJobAds] = useState([]);
+  const currentJobs = jobAds?.slice(startIndex, startIndex + ADS_PER_PAGE);
+  const totalPages = Math.ceil(jobAds?.length / ADS_PER_PAGE);
 
   const navigate = useNavigate();
 
@@ -32,8 +39,6 @@ const Home = () => {
         navigate("/");
       }
     }, []);
-
-  const [jobAds, setJobAds] = useState([]);
 
     useEffect(() => {
     const fetchJobs = async () => {
@@ -129,10 +134,9 @@ const Home = () => {
 
 
   return (
-    <div className="min-h-screen bg-green-100 flex flex-col items-center overflow-x-hidden">
-      {/* Header */}
-      <header className="bg-green-800 text-white w-full py-4 shadow-md">
-        <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
+    <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
+      <header className="w-full py-4 text-white bg-green-800 shadow-md">
+        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
           <button className="text-white" onClick={toggleMenu}>
             <FaBars className="text-2xl" />
           </button>
@@ -143,19 +147,19 @@ const Home = () => {
           <input
             type="text"
             placeholder="Search for jobs..."
-            className="w-full p-2 rounded-lg border border-green-800 focus:outline-none focus:ring-2 focus:ring-green-800"
+            className="w-full p-2 border border-green-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-800"
           />
         </div>
 
-        <div className="w-full max-w-screen-sm px-4 mt-4 flex items-center gap-2">
+        <div className="flex items-center w-full max-w-screen-sm gap-2 px-4 mt-4">
           <button
-            className="flex-1 bg-green-700 text-white text-sm py-2 rounded-md hover:bg-green-600"
+            className="flex-1 py-2 text-sm text-white bg-green-700 rounded-md hover:bg-green-600"
             onClick={toggleLocationDropdown}
           >
             {selectedLocation}
           </button>
           <button
-            className="flex-1 bg-green-700 text-white text-sm py-2 rounded-md hover:bg-green-600"
+            className="flex-1 py-2 text-sm text-white bg-green-700 rounded-md hover:bg-green-600"
             onClick={toggleCategoryDropdown}
           >
             {selectedCategory}
@@ -170,12 +174,12 @@ const Home = () => {
       </header>
 
       {isLocationOpen && (
-        <div className="mt-2 bg-white rounded shadow w-full max-w-screen-sm px-4 max-h-96 overflow-y-auto">
+        <div className="w-full max-w-screen-sm px-4 mt-2 overflow-y-auto bg-white rounded shadow max-h-96">
           
           {locations.map((location) => (
             <div key={location._id}>
               <div
-                className="py-2 cursor-pointer hover:bg-green-100 font-semibold"
+                className="py-2 font-semibold cursor-pointer hover:bg-green-100"
                 onClick={() =>
                   setExpandedDistrict(
                     expandedDistrict === location.name ? null : location.name
@@ -189,7 +193,7 @@ const Home = () => {
                 location.areas.map((area) => (
                   <div
                     key={area._id}
-                    className="pl-4 py-1 cursor-pointer hover:bg-green-50 text-sm"
+                    className="py-1 pl-4 text-sm cursor-pointer hover:bg-green-50"
                     onClick={() => {
                       setSelectedLocation(area.name);
                       setIsLocationOpen(false);
@@ -209,7 +213,7 @@ const Home = () => {
 
 
       {isCategoryOpen && (
-        <div className="mt-2 bg-white rounded shadow w-full max-w-screen-sm px-4">
+        <div className="w-full max-w-screen-sm px-4 mt-2 bg-white rounded shadow">
           {categories.map((category) => (
             <div
               key={category._id}
@@ -227,12 +231,12 @@ const Home = () => {
 
 
       {isFilterOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white w-full max-w-screen-sm px-6 py-4 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold text-green-800 mb-4">Filter Jobs</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-600 bg-opacity-50">
+          <div className="w-full max-w-screen-sm px-6 py-4 bg-white rounded-lg shadow-md">
+            <h3 className="mb-4 text-xl font-semibold text-green-800">Filter Jobs</h3>
 
             <div className="mb-4">
-              <label htmlFor="salary" className="block text-sm text-green-800 mb-2">Salary Range</label>
+              <label htmlFor="salary" className="block mb-2 text-sm text-green-800">Salary Range</label>
               <input
                 type="range"
                 id="salary"
@@ -249,7 +253,7 @@ const Home = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="working-hours" className="block text-sm text-green-800 mb-2">Working Hours</label>
+              <label htmlFor="working-hours" className="block mb-2 text-sm text-green-800">Working Hours</label>
               <input
                 type="range"
                 id="working-hours"
@@ -267,13 +271,13 @@ const Home = () => {
 
             <div className="flex justify-between">
               <button
-                className="px-4 py-2 bg-green-800 text-white rounded-lg hover:bg-green-700"
+                className="px-4 py-2 text-white bg-green-800 rounded-lg hover:bg-green-700"
                 onClick={toggleFilterModal}
               >
                 Close
               </button>
               <button
-                className="px-4 py-2 bg-green-800 text-white rounded-lg hover:bg-green-700"
+                className="px-4 py-2 text-white bg-green-800 rounded-lg hover:bg-green-700"
                 onClick={() => {
                   console.log("Applied Filters:", { salaryRange, workingHours });
                   toggleFilterModal();
@@ -297,92 +301,119 @@ const Home = () => {
         </nav>
       </div>
 
-      <main className="flex-1 w-full max-w-screen-sm flex items-center justify-center px-4 text-center">
-        <div className="mt-6 space-y-4 w-full">
-          {Array.isArray(jobAds) && jobAds.length > 0 ? (
-            jobAds.map((job) => (
-              <div
-                key={job._id}
-                className="bg-white shadow rounded-md p-4 cursor-pointer hover:bg-green-50 transition"
-                onClick={() =>
-                  setExpandedJobId(expandedJobId === job._id ? null : job._id)
-                }
-              >
-                <div className="flex items-center gap-4">
-                  <img
-                    src={job.image}
-                    alt={job.category}
-                    className="w-16 h-16 object-cover rounded-md"
-                  />
-                  <div className="flex-1 text-left">
-                    <h3 className="text-lg font-semibold text-green-800">{job.jobTitle}</h3>
-                    <p className="text-sm text-gray-600">{job.location}</p>
-                    <p className="text-sm text-gray-600">{job.duration}</p>
-                    <p className="text-sm text-gray-600">
-                      {job.dateFrom ? job.dateFrom.slice(0, 10) : ""}
-                    </p>
-                    <p className="text-sm text-green-700 font-medium">{job.payment}</p>
-                  </div>
-                </div>
-
-                {/* Expand details */}
-                {expandedJobId === job._id && (
-                  <div className="mt-4 text-left space-y-2 text-sm text-gray-700">
-                    <p>
-                      <strong>Working Hours:</strong> {job.duration}
-                    </p>
-                    <p>
-                      <strong>Working Days:</strong>{" "}
-                      {job.dateFrom ? job.dateFrom.slice(0, 10) : ""} -{" "}
-                      {job.dateTo ? job.dateTo.slice(0, 10) : ""}
-                    </p>
-                    <p>
-                      <strong>Salary:</strong> {job.payment}
-                    </p>
-                    <p>
-                      <strong>Description:</strong> {job.description}
-                    </p>
-
-            <button
-              className="mt-3 w-full bg-green-700 text-white py-2 rounded hover:bg-green-800 transition disabled:opacity-50"
-              onClick={async (e) => {
-                e.stopPropagation();
-                try {
-                  const response = await fetch(API_ROUTES.JOBS+"/"+job._id+"/apply", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      userId:jobseekerId,
-                    }),
-                  });
-
-                  const result = await response.json();
-
-                  if (response.ok) {
-                    toast.success("Application submitted successfully!");
-                  } else {
-                    toast.error(`Application failed: ${result.message || "Unknown error"}`);
-                  }
-                } catch (err) {
-                  console.error("Application error:", err);
-                  toast.error("Something went wrong while applying.");
-                }
-              }}
+        <main className="flex items-center justify-center flex-1 w-full max-w-screen-sm px-4 text-center">
+      <div className="w-full mt-6 space-y-4">
+        {Array.isArray(currentJobs) && currentJobs.length > 0 ? (
+          currentJobs.map((job) => (
+            <div
+              key={job._id}
+              className="p-4 transition bg-white rounded-md shadow cursor-pointer hover:bg-green-50"
+              onClick={() =>
+                setExpandedJobId(expandedJobId === job._id ? null : job._id)
+              }
             >
-              Apply Now
-            </button>
-
-                  </div>
-                )}
+              <div className="flex items-center gap-4">
+                <img
+                  src={job.image}
+                  alt={job.category}
+                  className="object-cover w-16 h-16 rounded-md"
+                />
+                <div className="flex-1 text-left">
+                  <h3 className="text-lg font-semibold text-green-800">
+                    {job.jobTitle}
+                  </h3>
+                  <p className="text-sm text-gray-600">{job.location}</p>
+                  <p className="text-sm text-gray-600">{job.duration}</p>
+                  <p className="text-sm text-gray-600">
+                    {job.dateFrom ? job.dateFrom.slice(0, 10) : ""}
+                  </p>
+                  <p className="text-sm font-medium text-green-700">
+                    {job.payment}
+                  </p>
+                </div>
               </div>
 
-            ))
-          ) : (
-            <p className="text-gray-600">No job advertisements available.</p>
-          )}
-        </div>
+              {expandedJobId === job._id && (
+                <div className="mt-4 space-y-2 text-sm text-left text-gray-700">
+                  <p>
+                    <strong>Working Hours:</strong> {job.duration}
+                  </p>
+                  <p>
+                    <strong>Working Days:</strong>{" "}
+                    {job.dateFrom ? job.dateFrom.slice(0, 10) : ""} -{" "}
+                    {job.dateTo ? job.dateTo.slice(0, 10) : ""}
+                  </p>
+                  <p>
+                    <strong>Salary:</strong> {job.payment}
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {job.description}
+                  </p>
+
+                  <button
+                    className="w-full py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800 disabled:opacity-50"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      try {
+                        const response = await fetch(
+                          API_ROUTES.JOBS + "/" + job._id + "/apply",
+                          {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              userId: jobseekerId,
+                            }),
+                          }
+                        );
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                          toast.success("Application submitted successfully!");
+                        } else {
+                          toast.error(`Application failed: ${result.message || "Unknown error"}`);
+                        }
+                      } catch (err) {
+                        console.error("Application error:", err);
+                        toast.error("Something went wrong while applying.");
+                      }
+                    }}
+                  >
+                    Apply Now
+                  </button>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-600">No job advertisements available.</p>
+        )}
+
+        {/* Pagination Buttons */}
+        {jobAds.length > ADS_PER_PAGE && (
+          <div className="flex justify-between mt-6">
+            <button
+              className="px-4 py-2 text-sm bg-green-700 rounded disabled:opacity-50"
+              onClick={() => setCurrentPage((p) => p - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span className="self-center text-sm text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              className="px-4 py-2 text-sm bg-green-700 rounded disabled:opacity-50"
+              onClick={() => setCurrentPage((p) => p + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
       </main>
 
       <ToastContainer position="top-center" autoClose={3000} />

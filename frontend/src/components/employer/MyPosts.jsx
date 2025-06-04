@@ -1,5 +1,3 @@
-// src/pages/employer/MyPosts.js
-
 import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,6 +8,9 @@ const MyPosts = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [employerId, setEmployerId] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const JOBS_PER_PAGE = 5;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,10 +34,23 @@ const MyPosts = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const totalPages = Math.ceil(jobs.length / JOBS_PER_PAGE);
+  const displayedJobs = jobs.slice(
+    (currentPage - 1) * JOBS_PER_PAGE,
+    currentPage * JOBS_PER_PAGE
+  );
+
   return (
-    <div className="min-h-screen bg-green-100 flex flex-col items-center overflow-x-hidden">
+    <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
       {/* Header */}
-      <Header />
+      <header className="w-full py-4 text-white bg-green-800 shadow-md">
+        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
+          <button className="text-white" onClick={toggleMenu}>
+            <FaBars className="text-2xl" />
+          </button>
+          <h1 className="font-semibold truncate">CareerCrew.LK</h1>
+        </div>
+      </header>
 
       {/* Menu */}
       <div
@@ -53,28 +67,25 @@ const MyPosts = () => {
         </nav>
       </div>
 
-      {/* Page Title */}
       <div className="w-full max-w-screen-sm px-4 pt-4 text-lg font-semibold text-green-800">
         My Job Posts
       </div>
-
-      {/* Job Cards */}
-      <div className="w-full max-w-screen-sm px-4 pt-6 pb-8 grid gap-4">
+      <div className="grid w-full max-w-screen-sm gap-4 px-4 pt-6 pb-4">
         {jobs.length === 0 ? (
           <p className="text-center text-gray-500">No job advertisements available</p>
         ) : (
-          jobs.map((job) => (
+          displayedJobs.map((job) => (
             <div
               key={job._id}
-              className="bg-white rounded-lg shadow-md p-4 flex gap-6 items-center"
+              className="flex items-center gap-6 p-4 bg-white rounded-lg shadow-md"
             >
               <img
                 src={job.logoUrl || "/images/default-job.png"}
-                alt={job.title}
-                className="w-20 h-20 object-contain"
+                alt={job.jobTitle}
+                className="object-contain w-20 h-20"
               />
               <div className="text-sm text-green-900">
-                <h2 className="font-semibold text-base">{job.jobTitle}</h2>
+                <h2 className="text-base font-semibold">{job.jobTitle}</h2>
                 <p>{job.location}</p>
                 <p>{job.duration}</p>
                 <p>{job.fromDate}</p>
@@ -84,6 +95,39 @@ const MyPosts = () => {
           ))
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {jobs.length > JOBS_PER_PAGE && (
+        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 pb-8 text-sm">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded ${
+              currentPage === 1
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-green-500 text-white hover:bg-green-600"
+            }`}
+          >
+            Previous
+          </button>
+
+          <span className="font-medium text-green-900">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded ${
+              currentPage === totalPages
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-green-500 text-white hover:bg-green-600"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

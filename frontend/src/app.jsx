@@ -1,7 +1,7 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import Register from "./components/login/Register";
+import Register from "./components/login/Register/Register";
 import AddCompanyDetails from "./components/employer/CompanyDetails";
 import AddJobPost from "./components/employer/CreateJobPost";
 import Login from "./components/login/Login";
@@ -22,6 +22,8 @@ import EditJobSeekerProfile from "./components/jobSeeker/EditJobSeekerProfile";
 import SubscriptionPlans from "./components/SubscriptionPlans/SubscriptionPlans";
 import PaymentForm from "./components/PaymentPage";
 import PlanCard from "./components/SubscriptionPlans/PlanCard";
+import JobSeekerRegistrationFrom from "./components/login/Register/JobSeekerForm"
+import EmployerRegistrationFrom from "./components/login/Register/EmployerForm"
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -32,6 +34,14 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path:"/register/jobseeker",
+    element: <JobSeekerRegistrationFrom/>
+  },
+  {
+    path:"/register/employer",
+    element: <EmployerRegistrationFrom/>
   },
   {
     path: "/jobseeker/home",

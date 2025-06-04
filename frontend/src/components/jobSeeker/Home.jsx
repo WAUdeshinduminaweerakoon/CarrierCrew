@@ -6,7 +6,7 @@ import Pagination from '../../components/jobSeeker/Pagination';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 const Home = () => {
   const [jobs, setJobs] = useState([]);

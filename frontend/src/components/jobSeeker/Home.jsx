@@ -4,6 +4,9 @@ import FilterModal from '../../components/jobSeeker/FilterModal';
 import JobCard from '../../components/jobSeeker/JobCard';
 import Pagination from '../../components/jobSeeker/Pagination';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const Home = () => {
   const [jobs, setJobs] = useState([]);
@@ -14,63 +17,83 @@ const Home = () => {
   const [workingHours, setWorkingHours] = useState([0, 12]);
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 5;
-
+  const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [jobTitle, setCategories] = useState([]);
 
-  const jobseekerId = localStorage.getItem("jobseekerId");
+  const [jobseekerId, setEmployerId] = useState("");
+
+
+  useEffect(() => {
+        const storedUserId = localStorage.getItem("userId");
+        const userType = localStorage.getItem("userType");
+        if (userType === "JobSeeker" && storedUserId) {
+          setEmployerId(storedUserId);
+        } else {
+          alert("Login First.");
+          navigate("/");
+        }
+      }, []);
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/jobs/all');
         console.log("Fetched jobs:", response.data);
-        setJobs(response.data);
-        const uniqueLocations = [...new Set(response.data.map((job) => job.location))];
-        const uniqueCategories = [...new Set(response.data.map((job) => job.category))];
-        setLocations(uniqueLocations);
-        setCategories(uniqueCategories);
+
+        if (Array.isArray(response.data)) {
+          setJobs(response.data);
+
+          const uniqueLocations = [...new Set(response.data.map((job) => job.location))];
+          const uniqueCategories = [...new Set(response.data.map((job) => job.jobTitle || "Other"))];
+          setLocations(uniqueLocations);
+          setCategories(uniqueCategories);
+        } else {
+          
+          setJobs([]);
+          setLocations([]);
+          setCategories([]);
+        }
       } catch (error) {
         console.error('Error fetching jobs:', error);
+        setJobs([]);
+        setLocations([]);
+        setCategories([]);
       }
     };
 
     fetchJobs();
   }, []);
 
-  
-  const filteredJobs = jobs.filter((job) => {
-    
-    const jobSalary = job.salary ?? 0;
-    const jobHours = job.workingHours ?? 0;
-
  
+  const filteredJobs = Array.isArray(jobs)
+    ? jobs.filter((job) => {
+        const jobSalary = job.payment ?? 0; // Use `payment` for salary
+        const jobHours = job.duration ?? 0; // Use `duration` for working hours
 
-    return (
-      (!selectedLocation || job.location === selectedLocation) &&
-      (!selectedCategory || job.category === selectedCategory) &&
-      jobSalary >= salaryRange[0] &&
-      jobSalary <= salaryRange[1] &&
-      jobHours >= workingHours[0] &&
-      jobHours <= workingHours[1]
-    );
-  });
+        return (
+          (!selectedLocation || job.location === selectedLocation) &&
+          (!selectedCategory || (job.category || "Other") === selectedCategory) &&
+          jobSalary >= salaryRange[0] &&
+          jobSalary <= salaryRange[1] &&
+          jobHours >= workingHours[0] &&
+          jobHours <= workingHours[1]
+        );
+      })
+    : [];
 
- 
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const displayedJobs = filteredJobs.slice(
     (currentPage - 1) * jobsPerPage,
     currentPage * jobsPerPage
   );
 
- 
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedLocation, selectedCategory, salaryRange, workingHours]);
 
- 
   const applyFilters = () => {
-    setIsFilterOpen(false);
+    setIsFilterOpen(false); // Modal already triggers changes via state
   };
 
   return (
@@ -79,13 +102,13 @@ const Home = () => {
         selectedLocation={selectedLocation}
         selectedCategory={selectedCategory}
         locations={locations}
-        categories={categories}
+        categories={jobTitle}
         onLocationChange={setSelectedLocation}
         onCategoryChange={setSelectedCategory}
         toggleFilterModal={() => setIsFilterOpen(true)}
       />
 
-      <main className="max-w-5xl p-4 mx-auto text-justify sm:p-6 md:p-8 ">
+      <main className="max-w-5xl p-4 mx-auto text-justify sm:p-6 md:p-8">
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-1">
           {displayedJobs.length === 0 ? (
             <p className="text-center text-gray-500 col-span-full">No jobs found.</p>
@@ -96,7 +119,7 @@ const Home = () => {
           )}
         </div>
 
-        {filteredJobs.length > jobsPerPage && (
+        {(filteredJobs?.length ?? 0) > jobsPerPage && (
           <div className="mt-8">
             <Pagination
               currentPage={currentPage}
@@ -116,8 +139,10 @@ const Home = () => {
         setWorkingHours={setWorkingHours}
         applyFilters={applyFilters}
       />
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
 
 export default Home;
+

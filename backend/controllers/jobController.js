@@ -68,6 +68,7 @@ const getApplicantsByEmployer = async (req, res) => {
           jobTitle: job.jobTitle,
           appliedAt: applicant.appliedAt,
           location: job.location,
+          district: job.district,
           dateFrom: job.dateFrom,
           dateTo: job.dateTo,
           timeFrom: job.timeFrom,

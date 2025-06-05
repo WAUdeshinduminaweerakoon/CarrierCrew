@@ -67,20 +67,24 @@ const Home = () => {
 
  
   const filteredJobs = Array.isArray(jobs)
-    ? jobs.filter((job) => {
-        const jobSalary = job.payment ?? 0; // Use `payment` for salary
-        const jobHours = job.duration ?? 0; // Use `duration` for working hours
+  ? jobs.filter((job) => {
+      const jobSalary = job.payment ?? 0;
+      const jobHours = job.duration ?? 0;
 
-        return (
-          (!selectedLocation || job.location === selectedLocation) &&
-          (!selectedCategory || (job.category || "Other") === selectedCategory) &&
-          jobSalary >= salaryRange[0] &&
-          jobSalary <= salaryRange[1] &&
-          jobHours >= workingHours[0] &&
-          jobHours <= workingHours[1]
-        );
-      })
-    : [];
+      const normalizedJobLocation = job.location?.toUpperCase().trim() || "";
+      const normalizedSelectedLocation = selectedLocation?.toUpperCase().trim() || "";
+
+      return (
+        (!selectedLocation || normalizedJobLocation === normalizedSelectedLocation) &&
+        (!selectedCategory || (job.category || "Other") === selectedCategory) &&
+        jobSalary >= salaryRange[0] &&
+        jobSalary <= salaryRange[1] &&
+        jobHours >= workingHours[0] &&
+        jobHours <= workingHours[1]
+      );
+    })
+  : [];
+
 
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const displayedJobs = filteredJobs.slice(

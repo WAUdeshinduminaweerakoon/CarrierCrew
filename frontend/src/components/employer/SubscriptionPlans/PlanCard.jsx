@@ -37,7 +37,7 @@ const PlanCard = () => {
         else setUserSubscription(null); // explicitly clear if none found
       } catch (err) {
         toast.error("Error loading plan data.");
-        setTimeout(() => navigate("/subscription-plans"), 1500);
+        setTimeout(() => navigate("/employer/subs-plans"), 1500);
       }
     };
 
@@ -136,7 +136,7 @@ const PlanCard = () => {
             {/* Active plan: only "Change Plan" */}
             {status === "active" && (
               <button
-                onClick={() => navigate("/subscription-plans")}
+                onClick={() => navigate("/employer/subs-plans")}
                 className="w-full bg-yellow-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-yellow-600 transition"
               >
                 Change Plan
@@ -154,7 +154,7 @@ const PlanCard = () => {
                 </button>
 
                 <button
-                  onClick={() => navigate("/subscription-plans")}
+                  onClick={() => navigate("/employer/subs-plans")}
                   className="w-full bg-yellow-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-yellow-600 transition"
                 >
                   Change Plan
@@ -165,11 +165,22 @@ const PlanCard = () => {
         ) : (
           // If user does NOT have this plan - show Activate Now button
           <button
-            onClick={() => navigate("/plans/pay")}
+            onClick={() =>
+              navigate("/plans/pay", {
+                state: {
+                  amount: plan.price,
+                  from: userSubscription ? "change" : "new",
+                  activeSubscriptionId: userSubscription?._id || null,
+                  subscriptionPlanId:plan._id,
+                  employerId:userId,
+                },
+              })
+            }
             className="w-full bg-blue-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-700 transition"
           >
             Activate Now
           </button>
+
         )}
       </div>
     </div>

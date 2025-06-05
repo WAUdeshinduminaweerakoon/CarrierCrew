@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createJobPost, applyForJob, getApplicantsByEmployer, deleteJobPost } = require("../controllers/jobController");
+const { createJobPost, applyForJob, getApplicantsByEmployer, deleteJobPost,updateJobPost } = require("../controllers/jobController");
 const Job = require("../models/Job");
 const validatePlan = require('../middleware/validatePlan'); 
 
@@ -44,6 +44,8 @@ router.get("/employer/:employerId/applicants", getApplicantsByEmployer);
 router.post('/employer/create-job', validatePlan, createJobPost);
 
 router.delete('/:id/delete', deleteJobPost);
+
+router.put("/:id/edit", updateJobPost);
 
 
 

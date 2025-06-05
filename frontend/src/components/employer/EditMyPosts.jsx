@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
-import API_ROUTES from "../../configs/config";
+import API_ROUTES from "../../configs/config"; 
 
 export default function EditJobForm() {
   const navigate = useNavigate();
@@ -36,9 +36,7 @@ export default function EditJobForm() {
       setEmployerId(storedUserId);
     } else {
       toast.warn("You must be logged in as an Employer to post a job.");
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
+      setTimeout(() => navigate("/"), 3000);
     }
   }, []);
 
@@ -113,9 +111,7 @@ export default function EditJobForm() {
         const data = await response.json();
         if (response.ok) {
           toast.success("Job posted successfully!");
-          setTimeout(() => {
-            navigate("/employer/home");
-          }, 1500);
+          setTimeout(() => navigate("/employer/my-posts"), 1500);
         } else {
           toast.error(data.message || "Something went wrong!");
         }
@@ -126,7 +122,7 @@ export default function EditJobForm() {
     }
   };
 
-  const handleCancel = () => navigate("/employer/home");
+  const handleCancel = () => navigate("/employer/my-posts");
 
   const availableAreas = locations.find((d) => d.name === selectedDistrict)?.areas || [];
 
@@ -164,7 +160,7 @@ export default function EditJobForm() {
           {errors.jobTitle && <p className="text-red-500 text-sm">{errors.jobTitle}</p>}
         </div>
 
-        {/* District */}
+        {/* District & Area */}
         <div>
           <label className="block text-sm font-medium text-green-800">District</label>
           <select
@@ -183,7 +179,6 @@ export default function EditJobForm() {
           {errors.district && <p className="text-red-500 text-sm">{errors.district}</p>}
         </div>
 
-        {/* Area */}
         <div>
           <label className="block text-sm font-medium text-green-800">Area</label>
           <select
@@ -199,7 +194,7 @@ export default function EditJobForm() {
           {errors.area && <p className="text-red-500 text-sm">{errors.area}</p>}
         </div>
 
-        {/* Dates and Times */}
+        {/* Date, Time, Duration */}
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="block text-sm text-green-800">Date From</label>
@@ -307,3 +302,4 @@ export default function EditJobForm() {
     </div>
   );
 }
+

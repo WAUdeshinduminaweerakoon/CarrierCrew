@@ -121,7 +121,7 @@ const router = createBrowserRouter([
     element: <PlanCard/>
   },
   {
-    path: "/employer/edit-post",
+    path: "/employer/edit-post/:jobId",
     element: <EditJobForm/>
   },
 ]);

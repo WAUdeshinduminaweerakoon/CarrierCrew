@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
+import Header from "./Header";
 
 const MyPosts = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

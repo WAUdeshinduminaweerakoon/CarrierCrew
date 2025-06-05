@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBars, FaFilter } from 'react-icons/fa';
-import LocationDropdown from './LocationDropdown'; // Update path if needed
-import CategoryDropdown from './CategoryDropdown'; // If you have it
+import DistrictAreaDropdown from './DistrictAreaDropdown';
+import CategoryDropdown from './CategoryDropdown'; // Optional
 
 const Header = ({
-  selectedLocation = "",
   selectedCategory = "",
-  locations = [],
   categories = [],
   onLocationChange,
   onCategoryChange,
@@ -46,33 +44,14 @@ const Header = ({
         }`}
       >
         <nav className="flex flex-col text-center text-white bg-green-700">
-          <Link
-            to="/home"
-            className="py-3 border-b border-green-600 hover:bg-green-600"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            All Jobs
-          </Link>
-          <Link
-            to="/"
-            className="py-3 border-b border-green-600 hover:bg-green-600"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Login
-          </Link>
-          <Link
-            to="/jobseeker/profile"
-            className="py-3 hover:bg-green-600"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Profile
-          </Link>
+          <Link to="/home" className="py-3 border-b border-green-600 hover:bg-green-600" onClick={() => setIsMenuOpen(false)}>All Jobs</Link>
+          <Link to="/" className="py-3 border-b border-green-600 hover:bg-green-600" onClick={() => setIsMenuOpen(false)}>Login</Link>
+          <Link to="/jobseeker/profile" className="py-3 hover:bg-green-600" onClick={() => setIsMenuOpen(false)}>Profile</Link>
         </nav>
       </div>
 
       {/* Search & Filter Section */}
       <div className="flex flex-col max-w-screen-lg gap-4 px-4 py-4 mx-auto mb-6 bg-green-300 border-4 border-green-900 rounded-2xl md:flex-row md:items-center md:gap-6">
-        {/* Search input */}
         <input
           type="text"
           placeholder="Search for jobs..."
@@ -80,13 +59,8 @@ const Header = ({
           aria-label="Search for jobs"
         />
 
-        {/* Filters & button container */}
         <div className="flex flex-wrap gap-2 md:flex-nowrap md:items-center md:flex-1">
-          <LocationDropdown
-            locations={locations}
-            selectedLocation={selectedLocation}
-            onChange={onLocationChange}
-          />
+          <DistrictAreaDropdown onAreaChange={onLocationChange} />
 
           {categories && categories.length > 0 && (
             <CategoryDropdown

@@ -19,12 +19,12 @@ import EditEmployerProfiles from "./components/employer/EditEmployerProfiles";
 import EditCompanyProfile from "./components/employer/EditCompanyProfile";
 import ManageProfile from "./components/Account/ManageProfile";
 import EditJobSeekerProfile from "./components/jobSeeker/EditJobSeekerProfile";
-import SubscriptionPlans from "./components/SubscriptionPlans/SubscriptionPlans";
-import PaymentForm from "./components/PaymentPage";
-import PlanCard from "./components/SubscriptionPlans/PlanCard";
+import SubscriptionPlans from "./components/employer/SubscriptionPlans/SubscriptionPlans";
+import PaymentForm from "./components/employer/SubscriptionPlans/PaymentPage";
+import PlanCard from "./components/employer/SubscriptionPlans/PlanCard";
 import JobSeekerRegistrationFrom from "./components/login/Register/JobSeekerForm"
 import EmployerRegistrationFrom from "./components/login/Register/EmployerForm"
-import EditJobForm from "./components/employer/EditMyPosts";
+import EmployerChat from "./components/Chat/EmployerChat"
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -120,9 +120,9 @@ const router = createBrowserRouter([
     path:"/plan/:planName",
     element: <PlanCard/>
   },
-  {
-    path: "/employer/edit-post/:jobId",
-    element: <EditJobForm/>
+   {
+    path:"/chat",
+    element: <EmployerChat/>
   },
 ]);
 

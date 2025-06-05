@@ -57,7 +57,7 @@ const SubscriptionPlans = () => {
             </span>
             <div className="ml-16 text-center flex-2">
               <h3 className="text-green-800 font-semibold">
-                RS.{plan.price}/{plan.additionalCharacteristics[0]?.match(/\d+\s\w+/)?.[0] || "Plan"}
+                Rs.{plan.price} / per month
               </h3>
               <p className="text-sm whitespace-pre-line text-gray-700">
                 {plan.additionalCharacteristics.join("\n") +

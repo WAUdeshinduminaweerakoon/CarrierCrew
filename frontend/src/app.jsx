@@ -28,7 +28,7 @@ import EmployerChat from "./components/Chat/EmployerChat"
 import EditJobForm from "./components/employer/EditMyPosts";
 //import PaymentSuccess from "./components/employer/SubscriptionPlans/PaymentSuccess";
 //import PaymentFailure from "./components/employer/SubscriptionPlans/PaymentFailure";
-
+import EmployerSettings from "./components/employer/EmployerSettings";
 // Create router with routes
 const router = createBrowserRouter([
   {
@@ -140,6 +140,10 @@ const router = createBrowserRouter([
     path: "/payment-failure",
     element: <PaymentFailure />,
   },*/
+  {
+    path:"/employer/settings",
+    element: <EmployerSettings/>
+  },
 ]);
 
 const App = () => {

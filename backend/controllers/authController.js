@@ -4,6 +4,7 @@ const EmployerBackup = require('../models/backup/EmployerBackup');
 const JobSeekerBackup = require('../models/backup/JobSeekerBackup');
 const Job = require('../models/Job');
 const JobBackup = require('../models/backup/JobBackup');
+const bcrypt = require('bcrypt');
 
 
 // Helper: Check strong password
@@ -118,43 +119,84 @@ const registerJobSeeker = async (req, res) => {
   }
 };
 
+// const deleteEmployer = async (req, res) => {
+//   const employerId = req.params.id;
+
+//   try {
+//     // Step 1: Find employer
+//     const employer = await Employer.findById(employerId).lean();
+//     if (!employer) {
+//       return res.status(404).json({ message: "Employer not found" });
+//     }
+
+//     // Step 2: Mark status and backup employer
+//     employer.status = "owner-delete";
+//     await EmployerBackup.create(employer);
+
+//     // Step 3: Find all jobs by this employer
+//     const jobs = await Job.find({ employerId: employerId }).lean();
+
+//     if (jobs.length > 0) {
+//       // Step 4: Mark status and backup each job
+//       const jobsToBackup = jobs.map(job => ({
+//         ...job,
+//         status: "owner-account-delete"
+//       }));
+
+//       await JobBackup.insertMany(jobsToBackup);
+
+//       // Step 5: Delete all jobs from original collection
+//       const jobIds = jobs.map(job => job._id);
+//       await Job.deleteMany({ _id: { $in: jobIds } });
+//     }
+
+//     // Step 6: Delete employer from original collection
+//     await Employer.findByIdAndDelete(employerId);
+
+//     return res.status(200).json({ message: "Employer and related job posts deleted and backed up successfully" });
+//   } catch (error) {
+//     console.error("Error deleting employer and related jobs:", error);
+//     return res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
 const deleteEmployer = async (req, res) => {
   const employerId = req.params.id;
+  const { password } = req.body;
 
   try {
-    // Step 1: Find employer
-    const employer = await Employer.findById(employerId).lean();
+    const employer = await Employer.findById(employerId);
     if (!employer) {
       return res.status(404).json({ message: "Employer not found" });
     }
 
-    // Step 2: Mark status and backup employer
-    employer.status = "owner-delete";
-    await EmployerBackup.create(employer);
-
-    // Step 3: Find all jobs by this employer
-    const jobs = await Job.find({ employerId: employerId }).lean();
-
-    if (jobs.length > 0) {
-      // Step 4: Mark status and backup each job
-      const jobsToBackup = jobs.map(job => ({
-        ...job,
-        status: "owner-account-delete"
-      }));
-
-      await JobBackup.insertMany(jobsToBackup);
-
-      // Step 5: Delete all jobs from original collection
-      const jobIds = jobs.map(job => job._id);
-      await Job.deleteMany({ _id: { $in: jobIds } });
+    // ✅ Step 1: Compare password
+    const isMatch = await bcrypt.compare(password, employer.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid password" });
     }
 
-    // Step 6: Delete employer from original collection
+    // ✅ Step 2: Backup employer data with status
+    const backupEmployer = employer.toObject();
+    backupEmployer.status = "owner-deleted";
+    await EmployerBackup.create(backupEmployer);
+
+    // ✅ Step 3: Backup related jobs
+    const jobs = await Job.find({ employerId: employerId }).lean();
+    if (jobs.length > 0) {
+      const backupJobs = jobs.map(job => ({
+        ...job,
+        status: "owner-account-deleted"
+      }));
+      await JobBackup.insertMany(backupJobs);
+      await Job.deleteMany({ employerId });
+    }
+
+    // ✅ Step 4: Delete employer from main collection
     await Employer.findByIdAndDelete(employerId);
 
     return res.status(200).json({ message: "Employer and related job posts deleted and backed up successfully" });
   } catch (error) {
-    console.error("Error deleting employer and related jobs:", error);
+    console.error("Error during employer deletion:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

@@ -1,4 +1,3 @@
-// pages/jobSeeker/Home.jsx
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/jobSeeker/Header';
 import FilterModal from '../../components/jobSeeker/FilterModal';
@@ -8,6 +7,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import API_ROUTES from '../../configs/config';
 
 const Home = () => {
   const [jobs, setJobs] = useState([]);
@@ -26,6 +26,8 @@ const Home = () => {
   const [jobseekerId, setEmployerId] = useState("");
   const [searchText, setSearchText] = useState("");
 
+  const apiURL = `${API_ROUTES.JOBS}/all`;
+
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     const userType = localStorage.getItem("userType");
@@ -38,36 +40,40 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/jobs/all');
-        console.log("Fetched jobs:", response.data);
+  const fetchJobs = async () => {
+    try {
+      const response = await axios.get(apiURL);
+      console.log("Fetched jobs:", response.data);
 
-        if (Array.isArray(response.data)) {
-          setJobs(response.data);
+      if (Array.isArray(response.data)) {
+        const sortedJobs = response.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setJobs(sortedJobs);
 
-          const uniqueLocations = [...new Set(response.data.map((job) => job.location))];
-          const uniqueCategories = [...new Set(response.data.map((job) => job.category || "Other"))];
-          const uniqueDistricts = ([...new Set(response.data.map((job) => job.district || "Other"))]);
-          setLocations(uniqueLocations);
-          setCategories(uniqueCategories);
-          setDistricts(uniqueDistricts);
-        } else {
-          setJobs([]);
-          setLocations([]);
-          setCategories([]);
-          setDistricts([]);
-        }
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
+        const uniqueLocations = [...new Set(sortedJobs.map((job) => job.location))];
+        const uniqueCategories = [...new Set(sortedJobs.map((job) => job.category || "Other"))];
+        const uniqueDistricts = [...new Set(sortedJobs.map((job) => job.district || "Other"))];
+
+        setLocations(uniqueLocations);
+        setCategories(uniqueCategories);
+        setDistricts(uniqueDistricts);
+      } else {
         setJobs([]);
         setLocations([]);
         setCategories([]);
+        setDistricts([]);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+      setJobs([]);
+      setLocations([]);
+      setCategories([]);
+    }
+  };
 
-    fetchJobs();
-  }, []);
+  fetchJobs();
+}, []);
 
   
 

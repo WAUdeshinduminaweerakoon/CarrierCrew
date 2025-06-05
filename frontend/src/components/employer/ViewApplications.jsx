@@ -54,15 +54,7 @@ const ViewApplications = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
-      {/* Header */}
-      <header className="w-full py-4 text-white bg-green-800 shadow-md">
-        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
-          <button className="text-white" onClick={toggleMenu}>
-            <FaBars className="text-2xl" />
-          </button>
-          <h1 className="font-semibold truncate">CareerCrew.LK</h1>
-        </div>
-      </header>
+     <Header/>
 
       {/* Mobile Menu */}
       <div

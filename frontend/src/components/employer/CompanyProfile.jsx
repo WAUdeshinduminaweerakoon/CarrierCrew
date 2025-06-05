@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Header from "./Header";
 
 export default function CompanyProfile() {
     const navigate = useNavigate();
@@ -51,6 +52,8 @@ export default function CompanyProfile() {
     }
 
     return (
+        <div>
+            <Header/>
         <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
             <div className="w-full max-w-md pb-4 bg-white border border-green-200 shadow-xl rounded-2xl">
                 <div className="py-2 text-lg font-semibold text-center text-white bg-green-400 rounded-t-2xl">
@@ -118,6 +121,7 @@ export default function CompanyProfile() {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 }

@@ -8,6 +8,7 @@ const Header = ({
   selectedCategory = "",
   categories = [],
   onLocationChange,
+  onDistrictChange,
   onCategoryChange,
   toggleFilterModal,
   onSearchChange, 
@@ -61,7 +62,10 @@ const Header = ({
         />
 
         <div className="flex flex-wrap gap-2 md:flex-nowrap md:items-center md:flex-1">
-          <DistrictAreaDropdown onAreaChange={onLocationChange} />
+          <DistrictAreaDropdown 
+          onAreaChange={onLocationChange} 
+          onDistrictChange={onDistrictChange} 
+          />
 
           {categories.length > 0 && (
             <CategoryDropdown

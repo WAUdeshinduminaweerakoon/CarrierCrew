@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-const DistrictAreaDropdown = ({ onAreaChange }) => {
+const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
   const [districts, setDistricts] = useState([]);
   const [hoveredDistrict, setHoveredDistrict] = useState(null);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
-  const [selectedArea, setSelectedArea] = useState(null);
+  const [selectedLabel, setSelectedLabel] = useState("All District");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
 
@@ -18,11 +17,9 @@ const DistrictAreaDropdown = ({ onAreaChange }) => {
         console.error("Failed to fetch locations", err);
       }
     };
-
     fetchDistricts();
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -33,19 +30,31 @@ const DistrictAreaDropdown = ({ onAreaChange }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleAreaClick = (district, area) => {
-    setSelectedDistrict(district.name);
-    setSelectedArea(area.name);
+  const handleDistrictClick = (district) => {
+    //console.log("handleDistrictClick called with:", district);
+    setSelectedLabel(district.name);
     setIsOpen(false);
-    console.log("Selected Area:", area.name);
-    if (onAreaChange) onAreaChange(area.name);
+    if (onDistrictChange) {
+      console.log("Selected District:", district.name);
+      onDistrictChange(district.name);
+    }
+  };
+
+  const handleAreaClick = (district, area) => {
+    setSelectedLabel(`${district.name} - ${area.name}`);
+    setIsOpen(false);
+    if (onAreaChange) {
+      console.log("Selected Area:", area.name);
+      onAreaChange(area.name);
+    }
   };
 
   const handleReset = () => {
-    setSelectedDistrict(null);
-    setSelectedArea(null);
+    setSelectedLabel("All District");
     setIsOpen(false);
-    if (onAreaChange) onAreaChange(""); // Pass empty string to reset filter
+    if (onAreaChange) {
+      onAreaChange();
+    }
   };
 
   return (
@@ -56,12 +65,12 @@ const DistrictAreaDropdown = ({ onAreaChange }) => {
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        {selectedArea ? `${selectedDistrict} - ${selectedArea}` : "All District"}
+        {selectedLabel}
       </button>
 
       {isOpen && (
         <div className="absolute z-20 w-56 mt-2 bg-white border border-green-600 rounded-md shadow-lg">
-          {/* All District option */}
+          {/* Reset Option */}
           <div
             className="px-4 py-2 text-black cursor-pointer hover:bg-green-200 hover:text-green-800"
             onClick={handleReset}
@@ -69,26 +78,35 @@ const DistrictAreaDropdown = ({ onAreaChange }) => {
             All District
           </div>
 
-          {/* Districts and their areas */}
+          {/* Districts and Areas */}
           {districts.map((district) => (
             <div
               key={district._id}
-              className="relative px-4 py-2 text-black cursor-pointer hover:bg-green-100 hover:text-green-800"
+              className="relative px-4 py-2 text-black cursor-pointer hover:bg-green-100 hover:text-green-800 group"
               onMouseEnter={() => setHoveredDistrict(district)}
               onMouseLeave={() => setHoveredDistrict(null)}
             >
-              {district.name}
-              {district.areas.length > 0 && (
-                <span className="ml-2 text-green-600">&#9656;</span>
-              )}
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  //console.log("District clicked:", district);
+                  handleDistrictClick(district, district);
+                }}
+              >
+                {district.name}
+              </div>
 
+              {/* Areas submenu */}
               {hoveredDistrict?._id === district._id && district.areas.length > 0 && (
                 <div className="absolute top-0 z-30 w-56 ml-1 bg-white border border-green-400 rounded shadow-lg left-full">
                   {district.areas.map((area) => (
                     <div
                       key={area._id}
                       className="px-4 py-2 text-black cursor-pointer hover:bg-green-200 hover:text-green-800 whitespace-nowrap"
-                      onClick={() => handleAreaClick(district, area)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAreaClick(district, area);
+                      }}
                     >
                       {area.name}
                     </div>

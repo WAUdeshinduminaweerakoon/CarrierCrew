@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -89,13 +89,48 @@ export default function EditJobForm() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  const { jobId } = useParams();
+  useEffect(() => {
+  if (jobId) {
+    const fetchJob = async () => {
+      try {
+        const res = await fetch(`${API_ROUTES.JOBS}/${jobId}`);
+        const data = await res.json();
+
+        if (res.ok) {
+          setFormData({
+            jobTitle: data.jobTitle || "",
+            dateFrom: data.dateFrom?.slice(0, 10),
+            dateTo: data.dateTo?.slice(0, 10),
+            timeFrom: data.timeFrom || "",
+            timeTo: data.timeTo || "",
+            duration: data.duration || "",
+            payment: data.payment || "",
+            description: data.description || "",
+          });
+          setSelectedDistrict(data.district || "");
+          setSelectedArea(data.location || "");
+          setVacancies(data.vacancies || 1);
+        } else {
+          toast.error("Failed to fetch job data.");
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Error loading job details.");
+      }
+    };
+    fetchJob();
+  }
+  }, [jobId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await fetch(`${API_ROUTES.JOBS}/new`, {
-          method: "POST",
+        const method = jobId ? "PUT" : "POST";
+        const endpoint = jobId ? `${API_ROUTES.JOBS}/${jobId}` : `${API_ROUTES.JOBS}/new`;
+        const response = await fetch(endpoint, {
+          method,
           headers: {
             "Content-Type": "application/json",
           },

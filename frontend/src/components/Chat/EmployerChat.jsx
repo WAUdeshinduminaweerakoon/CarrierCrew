@@ -91,7 +91,7 @@ const styles = {
     fontSize: 14,
   },
   button: {
-    backgroundColor: '#22c55e', // same green as login button
+    backgroundColor: '#22c55e', 
     color: 'white',
     padding: '10px 16px',
     border: 'none',

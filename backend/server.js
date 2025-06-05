@@ -3,6 +3,8 @@ const connectDB = require('./config/db');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
+require('./scheduler/subscriptionExpiryScheduler.js');
+
 
 dotenv.config();
 

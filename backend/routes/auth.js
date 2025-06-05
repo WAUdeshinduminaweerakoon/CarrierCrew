@@ -4,6 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const Employer = require("../models/Employer");
 const JobSeeker = require("../models/Jobseeker");
+const { deleteEmployer, deleteJobSeeker } = require("../controllers/authController");
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -38,5 +39,8 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error." });
   }
 });
+
+router.delete("/employer/:id/delete", deleteEmployer);
+router.delete("/jobseeker/:id/delete", deleteJobSeeker);
 
 module.exports = router;

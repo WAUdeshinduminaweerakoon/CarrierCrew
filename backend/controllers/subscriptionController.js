@@ -1,6 +1,6 @@
 const SubscriptionPlan = require('../models/subscriptionPlan');
 const Employer = require('../models/Employer');
-
+const ActiveSubscription = require('../models/ActiveSubscription');
 
 
 // Create a new subscription plan (Admin)
@@ -115,13 +115,222 @@ const getSubscriptionPlanByName = async (req, res) => {
   }
 };
 
+const activateSubscription = async (req, res) => {
+  try {
+    const { employerId, subscriptionPlanId } = req.body;
+
+    // Validate input
+    if (!employerId || !subscriptionPlanId) {
+      return res.status(400).json({ message: 'Employer ID and Subscription Plan ID are required.' });
+    }
+
+    // Check if employer exists
+    const employer = await Employer.findById(employerId);
+    if (!employer) {
+      return res.status(404).json({ message: 'Employer not found.' });
+    }
+
+    // Check if subscription plan exists
+    const plan = await SubscriptionPlan.findById(subscriptionPlanId);
+    if (!plan) {
+      return res.status(404).json({ message: 'Subscription plan not found.' });
+    }
+
+    // Check for existing active subscription with same plan and employer
+    const existingSubscription = await ActiveSubscription.findOne({
+      employerId,
+      subscriptionPlan: subscriptionPlanId,
+      status: 'active'
+    });
+
+    if (
+      existingSubscription &&
+      existingSubscription.usage < plan.numberOfAddsPerMonth
+    ) {
+      return res.status(400).json({
+        message: 'You already have an active subscription of this type with unused ad slots.'
+      });
+    }
+
+    // Set activation and end date (e.g., 30 days validity)
+    const activatedDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(activatedDate.getDate() + 30);
+
+    // Create new active subscription
+    const activeSubscription = new ActiveSubscription({
+      employerId,
+      subscriptionPlan: subscriptionPlanId,
+      activatedDate,
+      endDate,
+      usage: 0,
+      status: 'active',
+    });
+
+    await activeSubscription.save();
+
+    return res.status(201).json({
+      message: 'Subscription activated successfully.',
+      activeSubscription,
+    });
+
+  } catch (error) {
+    console.error('Error activating subscription:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+const renewSubscription = async (req, res) => {
+  try {
+    const { activeSubscriptionId } = req.body;
+
+    // Validate input
+    if (!activeSubscriptionId) {
+      return res.status(400).json({ message: 'Active subscription ID is required.' });
+    }
+
+    // Fetch the active subscription
+    const activeSubscription = await ActiveSubscription.findById(activeSubscriptionId);
+
+    if (!activeSubscription) {
+      return res.status(404).json({ message: 'Active subscription not found.' });
+    }
+
+    // Check if status is already "active"
+    if (activeSubscription.status === 'active') {
+      return res.status(400).json({
+        message: 'Subscription is already active. No need to renew.',
+      });
+    }
+
+    // Check if status is not "expired"
+    if (activeSubscription.status !== 'expired') {
+      return res.status(400).json({
+        message: `Cannot renew a subscription unless it is expired. Current status: ${activeSubscription.status}`,
+      });
+    }
+
+    // Renew the subscription
+    const newActivatedDate = new Date();
+    const newEndDate = new Date();
+    newEndDate.setDate(newActivatedDate.getDate() + 30);
+
+    activeSubscription.activatedDate = newActivatedDate;
+    activeSubscription.endDate = newEndDate;
+    activeSubscription.status = 'active';
+    activeSubscription.usage = 0;
+
+    await activeSubscription.save();
+
+    return res.status(200).json({
+      message: 'Subscription renewed successfully.',
+      subscription: activeSubscription,
+    });
+
+  } catch (error) {
+    console.error('Error renewing subscription:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+const getSubscriptionsByEmployerId = async (req, res) => {
+  try {
+    const { employerId } = req.params;
+
+    // Validate input
+    if (!employerId) {
+      return res.status(400).json({ message: 'Employer ID is required.' });
+    }
+
+    // Check if employer exists (optional but good practice)
+    const employerExists = await Employer.findById(employerId);
+    if (!employerExists) {
+      return res.status(404).json({ message: 'Employer not found.' });
+    }
+
+    // Find all subscriptions for the employer and populate plan details
+    const subscriptions = await ActiveSubscription.find({ employerId })
+      .populate('subscriptionPlan') // populate full plan info
+      .sort({ activatedDate: -1 }); // most recent first
+
+    return res.status(200).json({
+      message: 'Subscriptions fetched successfully.',
+      subscriptions,
+    });
+  } catch (error) {
+    console.error('Error fetching subscriptions:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+const changeSubscriptionPlan = async (req, res) => {
+  try {
+    const { employerId, subscriptionPlanId } = req.body;
+
+    // Validate input
+    if (!employerId || !subscriptionPlanId) {
+      return res.status(400).json({ message: 'Employer ID and Subscription Plan ID are required.' });
+    }
+
+    // Verify employer exists
+    const employer = await Employer.findById(employerId);
+    if (!employer) {
+      return res.status(404).json({ message: 'Employer not found.' });
+    }
+
+    // Verify subscription plan exists
+    const newPlan = await SubscriptionPlan.findById(subscriptionPlanId);
+    if (!newPlan) {
+      return res.status(404).json({ message: 'Subscription plan not found.' });
+    }
+
+    // Find the employer's current subscription (optional: restrict to only "active")
+    const currentSubscription = await ActiveSubscription.findOne({ employerId });
+
+    if (!currentSubscription) {
+      return res.status(404).json({ message: 'No existing subscription found for this employer.' });
+    }
+
+    // Update subscription fields
+    const activatedDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(activatedDate.getDate() + 30);
+
+    currentSubscription.subscriptionPlan = subscriptionPlanId;
+    currentSubscription.activatedDate = activatedDate;
+    currentSubscription.endDate = endDate;
+    currentSubscription.usage = 0;
+    currentSubscription.status = 'active';
+
+    await currentSubscription.save();
+
+    return res.status(200).json({
+      message: 'Subscription plan changed successfully.',
+      updatedSubscription: currentSubscription,
+    });
+
+  } catch (error) {
+    console.error('Error changing subscription plan:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+
+
+
+
+
 
 
 
 module.exports = {
-    createSubscriptionPlan,
-    getAllSubscriptionPlans,
-    updateSubscriptionPlan,
-    assignSubscriptionPlan,
+    createSubscriptionPlan, //-- admin creates the allowed subscription plans
+    getAllSubscriptionPlans, //-- to fetch all the details of the allowed subscription plans
+    updateSubscriptionPlan, //-- admin updated the details of the allowed subscription plans
+    assignSubscriptionPlan, 
     getSubscriptionPlanByName,
+    activateSubscription, //-- employer activates a new subscription plan
+    renewSubscription, //-- employer renews an existing subscription plan
+    getSubscriptionsByEmployerId, //-- employer receives all the details of his/her subscrion plan
+    changeSubscriptionPlan, //--employer changes his subscription plan
 };

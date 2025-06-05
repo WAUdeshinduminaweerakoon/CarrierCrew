@@ -18,6 +18,7 @@ const applicantSchema = new mongoose.Schema(
 const jobSchema = new mongoose.Schema({
   jobTitle: { type: String, required: true },
   location: { type: String, required: true },
+  district: { type: String, required: true },
   dateFrom: { type: Date, required: true },
   dateTo: { type: Date, required: true },
   timeFrom: { type: String, required: true },
@@ -35,7 +36,15 @@ const jobSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Convert jobTitle and location to uppercase before saving
+jobSchema.pre('save', function (next) {
+  if (this.jobTitle) {
+    this.jobTitle = this.jobTitle.toUpperCase();
+  }
+  if (this.location) {
+    this.location = this.location.toUpperCase();
+  }
+  next();
+});
 
 module.exports = mongoose.model("Job", jobSchema);
-
-

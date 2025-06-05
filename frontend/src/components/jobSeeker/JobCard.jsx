@@ -37,7 +37,7 @@ const JobCard = ({ job, jobseekerId}) => {
   };
 
   return (
-    <div className="w-10/12 p-4 transition bg-white rounded-md shadow hover:bg-green-50">
+    <div className="w-10/12 p-4 text-center transition bg-white rounded-md shadow hover:bg-green-50">
       <div
         className="flex items-center gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}

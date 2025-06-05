@@ -137,7 +137,7 @@ const Home = () => {
       />
 
 
-      <main className="max-w-5xl p-4 mx-auto text-justify sm:p-6 md:p-8">
+      <main className="justify-center max-w-5xl p-4 mx-auto text-center sm:p-6 md:p-8">
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-1">
           {displayedJobs.length === 0 ? (
             <p className="text-center text-gray-500 col-span-full">No jobs found.</p>
@@ -149,7 +149,7 @@ const Home = () => {
         </div>
 
         {(filteredJobs?.length ?? 0) > jobsPerPage && (
-          <div className="mt-8">
+          <div className="flex justify-center mt-8">
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

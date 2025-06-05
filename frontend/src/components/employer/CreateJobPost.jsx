@@ -4,6 +4,7 @@ import { FaBars } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import API_ROUTES from "../../configs/config";
+import Header from "./Header";
 
 
 export default function NewJobForm() {
@@ -188,16 +189,11 @@ export default function NewJobForm() {
 
   
 return (
+  <div>
     <div>
+      <Header/>
        <ToastContainer position="top-center" autoClose={3000} />
-      <header className="bg-green-800 text-white w-full py-4 shadow-md">
-              <div className="w-full max-w-screen-sm px-4 flex justify-between items-center text-sm">
-                <button className="text-white" onClick={toggleMenu}>
-                  <FaBars className="text-2xl" />
-                </button>
-                <h1 className="font-semibold truncate">CareerCrew.LK</h1>
-              </div>
-            </header>
+      
     <form
       onSubmit={handleSubmit}
       className="max-w-md mx-auto p-4 rounded-2xl shadow-lg bg-white border border-green-200"
@@ -407,6 +403,7 @@ return (
         </div>
       </div>
     </form>
+    </div>
     </div>
   );
 }

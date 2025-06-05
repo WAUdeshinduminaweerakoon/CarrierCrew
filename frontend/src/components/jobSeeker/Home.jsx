@@ -20,6 +20,8 @@ const Home = () => {
   const jobsPerPage = 5;
   const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [districts, setDistricts] = useState([]);
   const [jobTitle, setCategories] = useState([]);
   const [jobseekerId, setEmployerId] = useState("");
   const [searchText, setSearchText] = useState("");
@@ -46,12 +48,15 @@ const Home = () => {
 
           const uniqueLocations = [...new Set(response.data.map((job) => job.location))];
           const uniqueCategories = [...new Set(response.data.map((job) => job.category || "Other"))];
+          const uniqueDistricts = ([...new Set(response.data.map((job) => job.district || "Other"))]);
           setLocations(uniqueLocations);
           setCategories(uniqueCategories);
+          setDistricts(uniqueDistricts);
         } else {
           setJobs([]);
           setLocations([]);
           setCategories([]);
+          setDistricts([]);
         }
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -72,6 +77,8 @@ const Home = () => {
         const jobHours = job.duration ?? 0;
 
         const normalizedSearchText = (searchText || "").toUpperCase().trim();
+        const normalizedJobDistrict = job.district?.toUpperCase().trim() || "";
+        const normalizedSelectedDistrict = selectedDistrict?.toUpperCase().trim() || "";
 
 
         const normalizedJobLocation = job.location?.toUpperCase().trim() || "";
@@ -83,6 +90,7 @@ const Home = () => {
         return (
           (!selectedLocation || normalizedJobLocation === normalizedSelectedLocation) &&
           (!selectedCategory || normalizedJobTitle === normalizedSelectedCategory) &&
+          (!selectedDistrict || normalizedJobDistrict === normalizedSelectedDistrict) &&
           jobSalary >= salaryRange[0] &&
           jobSalary <= salaryRange[1] &&
           jobHours >= workingHours[0] &&
@@ -90,7 +98,8 @@ const Home = () => {
           (!searchText ||
             normalizedJobTitle.includes(normalizedSearchText) ||
             normalizedCompany.includes(normalizedSearchText) ||
-            normalizedJobLocation.includes(normalizedSearchText) 
+            normalizedJobLocation.includes(normalizedSearchText)||
+            normalizedJobDistrict.includes(normalizedSearchText)
           )
         );
       })
@@ -105,7 +114,7 @@ const Home = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedLocation, selectedCategory, salaryRange, workingHours]);
+  }, [selectedLocation, selectedCategory,selectedDistrict, salaryRange, workingHours]);
 
   const applyFilters = () => {
     setIsFilterOpen(false);
@@ -116,9 +125,12 @@ const Home = () => {
       <Header
         selectedLocation={selectedLocation}
         selectedCategory={selectedCategory}
+        selectedDistrict={selectedDistrict}
         locations={locations}
+        districts={districts}
         categories={jobTitle}
         onLocationChange={setSelectedLocation}
+        onDistrictChange={setSelectedDistrict}
         onCategoryChange={setSelectedCategory}
         toggleFilterModal={() => setIsFilterOpen(true)}
         onSearchChange={setSearchText} 

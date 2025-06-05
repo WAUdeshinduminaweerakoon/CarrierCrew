@@ -35,7 +35,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
     setSelectedLabel(district.name);
     setIsOpen(false);
     if (onDistrictChange) {
-      console.log("Selected District:", district.name);
+      console.log("Selected District:", district );
       onDistrictChange(district.name);
     }
   };
@@ -90,7 +90,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   //console.log("District clicked:", district);
-                  handleDistrictClick(district, district);
+                  handleDistrictClick(district);
                 }}
               >
                 {district.name}

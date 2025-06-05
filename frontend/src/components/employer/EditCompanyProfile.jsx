@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import Header from "./Header";
 
 export default function EditCompanyProfile() {
   const navigate = useNavigate();
@@ -88,6 +89,8 @@ export default function EditCompanyProfile() {
   if (error) return <p className="mt-8 text-center text-red-500">{error}</p>;
 
   return (
+    <div>
+      <Header/>
     <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
       <ToastContainer position="top-center" autoClose={3000} />
       <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-xl">
@@ -167,6 +170,7 @@ export default function EditCompanyProfile() {
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 }

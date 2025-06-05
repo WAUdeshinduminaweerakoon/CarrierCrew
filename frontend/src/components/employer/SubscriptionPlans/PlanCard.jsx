@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import Header from "../Header";
 import "react-toastify/dist/ReactToastify.css";
 import API_ROUTES from "../../../configs/config";
 
@@ -82,6 +83,8 @@ const PlanCard = () => {
   }
 
   return (
+    <div>
+      <Header/>
     <div className="w-[360px] mx-auto min-h-screen bg-green-50 border border-green-300 rounded-xl shadow p-10 text-center space-y-4">
       <ToastContainer position="top-center" autoClose={3000} />
 
@@ -169,6 +172,7 @@ const PlanCard = () => {
           </button>
         )}
       </div>
+    </div>
     </div>
   );
 };

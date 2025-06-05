@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API_ROUTES from "../../../configs/config";
+import Header from "../Header";
 
 
 const PaymentForm = () => {
@@ -197,6 +198,8 @@ const PaymentForm = () => {
 
 
   return (
+    <div>
+      <Header/>
     <div className="max-w-md mx-auto min-h-screen mt-4 bg-white border border-gray-300 rounded-xl shadow-lg p-10 space-y-4">
       <ToastContainer position="top-center" autoClose={3000} />
       <h2 className="text-center text-green-600 font-bold text-xl">Pay For Service</h2>
@@ -333,6 +336,7 @@ const PaymentForm = () => {
         </div>
       )}
 
+    </div>
     </div>
   );
 };

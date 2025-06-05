@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
-import Header from "./Header";
 
 const MyPosts = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [employerId, setEmployerId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [expandedJobId, setExpandedJobId] = useState(null);
   const JOBS_PER_PAGE = 5;
 
   const navigate = useNavigate();
@@ -60,36 +60,93 @@ const MyPosts = () => {
         </nav>
       </div>
 
+      {/* Title */}
       <div className="w-full max-w-screen-sm px-4 pt-4 text-lg font-semibold text-green-800">
         My Job Posts
       </div>
+
+      {/* Job Posts */}
       <div className="grid w-full max-w-screen-sm gap-4 px-4 pt-6 pb-4">
         {jobs.length === 0 ? (
           <p className="text-center text-gray-500">No job advertisements available</p>
         ) : (
-          displayedJobs.map((job) => (
-            <div
-              key={job._id}
-              className="flex items-center gap-6 p-4 bg-white rounded-lg shadow-md"
-            >
-              <img
-                src={job.logoUrl || "/images/default-job.png"}
-                alt={job.jobTitle}
-                className="object-contain w-20 h-20"
-              />
-              <div className="text-sm text-green-900">
-                <h2 className="text-base font-semibold">{job.jobTitle}</h2>
-                <p>{job.location}</p>
-                <p>{job.duration}</p>
-                <p>{job.fromDate}</p>
-                <p>{job.payment}</p>
+          displayedJobs.map((job) => {
+            const isExpanded = expandedJobId === job._id;
+
+            return (
+              <div
+                key={job._id}
+                className="p-4 bg-white rounded-lg shadow-md"
+              >
+                {/* Basic Info */}
+                <div className="flex items-center gap-4">
+                  <img
+                    src={job.logoUrl || "/images/default-job.png"}
+                    alt={job.jobTitle}
+                    className="object-contain w-20 h-20"
+                  />
+                  <div className="text-sm text-green-900 flex flex-col gap-2">
+                    <p><span className="font-semibold">Title:</span> {job.jobTitle}</p>
+                    <p><span className="font-semibold">Location:</span> {job.location}</p>
+                    <p><span className="font-semibold">Duration(hrs):</span> {job.duration}</p>
+                    <p><span className="font-semibold">Payment(Rs):</span> {job.payment}</p>
+                  </div>
+                </div>
+
+                {/* Expanded Info */}
+                {isExpanded && (
+                  <div className="pt-6 text-sm text-green-900 leading-relaxed flex flex-col gap-2 mt-2">
+                    <p><span className="font-semibold">From Date:</span> {new Date(job.dateFrom).toLocaleDateString()}</p>
+                    <p><span className="font-semibold">To Date:</span> {new Date(job.dateTo).toLocaleDateString()}</p>
+                    <p><span className="font-semibold">Time From:</span> {job.timeFrom}</p>
+                    <p><span className="font-semibold">Time To:</span> {job.timeTo}</p>
+                    <p><span className="font-semibold">Vacancies:</span> {job.vacancies}</p>
+                    <p><span className="font-semibold">Description:</span> {job.description || "N/A"}</p>
+
+                    {/* Button Row */}
+                    <div className="flex justify-between pt-4">
+                      <button
+                        onClick={() => navigate(`/employer/edit-post/${job._id}`)}
+                        className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                      >
+                        Edit Job
+                      </button>
+                      <button
+                        onClick={() => navigate(`/`)}
+                        className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                      >
+                        Delete Job
+                      </button>
+                      <button
+                        onClick={() =>
+                          setExpandedJobId((prevId) => (prevId === job._id ? null : job._id))
+                        }
+                        className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                      >
+                        Show Less
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Show "More" Button if not expanded */}
+                {!isExpanded && (
+                  <div className="flex justify-end pt-4">
+                    <button
+                      onClick={() => setExpandedJobId(job._id)}
+                      className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                    >
+                     Show More
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       {jobs.length > JOBS_PER_PAGE && (
         <div className="flex items-center justify-between w-full max-w-screen-sm px-4 pb-8 text-sm">
           <button
@@ -126,3 +183,4 @@ const MyPosts = () => {
 };
 
 export default MyPosts;
+

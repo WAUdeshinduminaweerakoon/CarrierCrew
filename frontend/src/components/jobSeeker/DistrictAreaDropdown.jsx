@@ -37,9 +37,15 @@ const DistrictAreaDropdown = ({ onAreaChange }) => {
     setSelectedDistrict(district.name);
     setSelectedArea(area.name);
     setIsOpen(false);
- console.log("Selected Area:", area.name);
-    // ✅ Only pass area to parent
+    console.log("Selected Area:", area.name);
     if (onAreaChange) onAreaChange(area.name);
+  };
+
+  const handleReset = () => {
+    setSelectedDistrict(null);
+    setSelectedArea(null);
+    setIsOpen(false);
+    if (onAreaChange) onAreaChange(""); // Pass empty string to reset filter
   };
 
   return (
@@ -50,11 +56,20 @@ const DistrictAreaDropdown = ({ onAreaChange }) => {
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        {selectedArea ? `${selectedDistrict} - ${selectedArea}` : "Select District"}
+        {selectedArea ? `${selectedDistrict} - ${selectedArea}` : "All District"}
       </button>
 
       {isOpen && (
         <div className="absolute z-20 w-56 mt-2 bg-white border border-green-600 rounded-md shadow-lg">
+          {/* All District option */}
+          <div
+            className="px-4 py-2 text-black cursor-pointer hover:bg-green-200 hover:text-green-800"
+            onClick={handleReset}
+          >
+            All District
+          </div>
+
+          {/* Districts and their areas */}
           {districts.map((district) => (
             <div
               key={district._id}
@@ -77,7 +92,6 @@ const DistrictAreaDropdown = ({ onAreaChange }) => {
                     >
                       {area.name}
                     </div>
-                    
                   ))}
                 </div>
               )}

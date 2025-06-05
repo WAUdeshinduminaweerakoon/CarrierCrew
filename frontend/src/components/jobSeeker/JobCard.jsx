@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import API_ROUTES from '../../configs/config';
 
-const API_ROUTES = {
-  JOBS: 'http://localhost:5000/api/jobs',
-};
 
 const JobCard = ({ job, jobseekerId}) => {
   const [expanded, setExpanded] = useState(false);
-
+  const apiURL = `${API_ROUTES.JOBS}/${job._id}/apply`;
   const handleApply = async (e) => {
     e.stopPropagation(); 
     console.log("Applying for job:", job._id);
     console.log("Jobseeker ID:", jobseekerId);
 
     try {
-      const response = await fetch(`${API_ROUTES.JOBS}/${job._id}/apply`, {
+      const response = await fetch(apiURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

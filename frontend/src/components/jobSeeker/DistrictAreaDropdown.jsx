@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import API_ROUTES from '../../configs/config';
+
 
 const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
   const [districts, setDistricts] = useState([]);
@@ -7,11 +9,12 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
   const [selectedLabel, setSelectedLabel] = useState("All District");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
+  const apiURL = `${API_ROUTES.LOCATIONS}/all`;
 
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/locations/all");
+        const res = await axios.get(apiURL);
         setDistricts(res.data);
       } catch (err) {
         console.error("Failed to fetch locations", err);

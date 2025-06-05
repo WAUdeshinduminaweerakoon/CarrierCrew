@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_ROUTES from '../../configs/config';
 
 const CategoryDropdown = ({ selectedCategory, onChange }) => {
   const [categories, setCategories] = useState([]);
+  const apiURL = `${API_ROUTES.CATEGORY}/all`;
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/category/all');
+        const res = await axios.get(apiURL);
         setCategories(res.data || []);
       } catch (error) {
         console.error('Error fetching categories:', error);

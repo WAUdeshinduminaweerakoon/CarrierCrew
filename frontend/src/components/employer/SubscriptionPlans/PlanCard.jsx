@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getPlanByName } from "../../SubscriptionAPI";
-import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PlanCard = () => {
-  const { planName } = useParams(); // dynamic route param
+  const { planName } = useParams();
   const navigate = useNavigate();
   const [plan, setPlan] = useState(null);
 
   useEffect(() => {
-    async function fetchPlan() {
+    const fetchPlan = async () => {
       try {
-        const data = await getPlanByName(planName);
-        setPlan(data);
+        const response = await axios.get("http://localhost:5000/api/subscription/subscription-plans");
+        const matchedPlan = response.data.find(
+          (p) => p.planName.toLowerCase() === planName.toLowerCase()
+        );
+        if (!matchedPlan) throw new Error();
+        setPlan(matchedPlan);
       } catch (err) {
         toast.error("Plan not found.");
-        setTimeout(()=> {navigate("/");},1500); // or redirect to plans page
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       }
-    }
+    };
     fetchPlan();
   }, [planName, navigate]);
 
@@ -26,19 +32,25 @@ const PlanCard = () => {
 
   const getIcon = (name) => {
     switch (name.toLowerCase()) {
-      case "free": return "🚴";
-      case "basic": return "🏍️";
-      case "premium": return "🚗";
-      case "pro": return "✈️";
-      default: return "📦";
+      case "free":
+        return "🚴";
+      case "basic":
+        return "🏍️";
+      case "premium":
+        return "🚗";
+      case "pro":
+        return "✈️";
+      default:
+        return "📦";
     }
   };
 
- 
   return (
     <div className="w-[360px] mx-auto min-h-screen bg-green-50 border border-green-300 rounded-xl shadow p-10 text-center space-y-4">
-      <ToastContainer position="top-center" autoClose={3000}/>
-      <div className="flex justify-center text-5xl">{getIcon(plan.planName)}</div>
+      <ToastContainer position="top-center" autoClose={3000} />
+      <div className="flex justify-center text-5xl">
+        {getIcon(plan.planName)}
+      </div>
 
       <div className="relative">
         <div className="absolute top-1/2 left-0 w-full h-0.5 bg-green-300 transform -translate-y-1/2 rotate-1"></div>
@@ -48,7 +60,9 @@ const PlanCard = () => {
       </div>
 
       <div className="mt-2">
-        <h3 className="text-green-800 font-bold text-lg">RS.{plan.price.toFixed(2)}</h3>
+        <h3 className="text-green-800 font-bold text-lg">
+          RS.{plan.price.toFixed(2)}
+        </h3>
       </div>
 
       <ul className="text-lg text-gray-700 space-y-1">
@@ -74,3 +88,4 @@ const PlanCard = () => {
 };
 
 export default PlanCard;
+

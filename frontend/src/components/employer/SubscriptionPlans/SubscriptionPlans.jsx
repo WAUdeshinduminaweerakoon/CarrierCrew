@@ -1,6 +1,7 @@
 import React from "react";
 import { Bell, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import Header from "../Header";
 
 const plans = [
   {
@@ -31,6 +32,8 @@ const plans = [
 
 const SubscriptionPlans = () => {
   return (
+    <div>
+      <Header/>
     <div className="max-w-sm mx-auto bg-green-100 p-4 rounded-xl shadow-lg">
       {/* Header */}
       <div className="flex justify-between items-center bg-green-300 p-3 rounded-lg mb-4">
@@ -74,6 +77,7 @@ const SubscriptionPlans = () => {
           </div>
         </div>
       ))}
+    </div>
     </div>
   );
 };

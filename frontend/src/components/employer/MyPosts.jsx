@@ -119,6 +119,12 @@ const MyPosts = () => {
                         Edit Job
                       </button>
                       <button
+                        onClick={() => navigate(`/`)}
+                        className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                      >
+                        Delete Job
+                      </button>
+                      <button
                         onClick={() =>
                           setExpandedJobId((prevId) => (prevId === job._id ? null : job._id))
                         }

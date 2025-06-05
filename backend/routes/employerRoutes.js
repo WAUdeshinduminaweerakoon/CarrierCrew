@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Employer = require('../models/Employer');
+const { deleteEmployer } = require('../controllers/authController');
 
 // GET employer by ID
 router.get('/:id', async (req, res) => {
@@ -62,5 +63,8 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+// DELETE /api/employers/:id
+router.delete('/:id', deleteEmployer);
 
 module.exports = router;

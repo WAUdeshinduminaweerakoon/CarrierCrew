@@ -1,5 +1,6 @@
 const Job = require("../models/Job");
 const JobSeeker = require('../models/Jobseeker');
+const JobBackup = require('../models/backup/JobBackup')
 
 // Create a new job post
 const createJobPost = async (req, res) => {
@@ -98,9 +99,34 @@ const getApplicantsByEmployer = async (req, res) => {
   }
 };
 
+const deleteJobPost = async (req, res) => {
+  const jobId = req.params.id;
+
+  try {
+
+    const job = await Job.findById(jobId).lean();
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    job.status = "owner-delete";
+
+    await JobBackup.create(job);
+
+    await Job.findByIdAndDelete(jobId);
+
+    return res.status(200).json({ message: "Job deleted and backed up successfully" });
+  } catch (error) {
+    console.error("Error deleting job by owner:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 module.exports = {
   createJobPost,
   applyForJob,
   getApplicantsByEmployer,
+  deleteJobPost,
 };

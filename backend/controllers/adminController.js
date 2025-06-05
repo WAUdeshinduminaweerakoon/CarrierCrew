@@ -2,7 +2,7 @@ const Employer = require('../models/Employer');
 const JobSeeker = require('../models/Jobseeker');
 const Job = require('../models/Job');
 const Category = require('../models/Category')
-const JobBackup = require('../models/JobBackup')
+const JobBackup = require('../models/backup/JobBackup')
 const moment = require('moment'); 
 
 // Get total employer count

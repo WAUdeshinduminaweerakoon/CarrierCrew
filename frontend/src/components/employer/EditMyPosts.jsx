@@ -98,6 +98,7 @@ export default function EditJobForm() {
         const data = await res.json();
 
         if (res.ok) {
+          console.log("API job data:", data);
           setFormData({
             jobTitle: data.jobTitle || "",
             dateFrom: data.dateFrom?.slice(0, 10),
@@ -108,8 +109,15 @@ export default function EditJobForm() {
             payment: data.payment || "",
             description: data.description || "",
           });
-          setSelectedDistrict(data.district || "");
-          setSelectedArea(data.location || "");
+          // Fix district assignment
+          if (data.location) {
+          const [districtFromLocation, areaFromLocation] = data.location.split(" - ");
+          setSelectedDistrict(districtFromLocation || "");
+          setSelectedArea(areaFromLocation || "");  // or areaFromLocation
+        } else {
+          setSelectedDistrict("");
+          setSelectedArea("");
+        }
           setVacancies(data.vacancies || 1);
         } else {
           toast.error("Failed to fetch job data.");
@@ -208,7 +216,7 @@ export default function EditJobForm() {
           >
             <option value="">Select a district</option>
             {locations.map((d) => (
-              <option key={d.name} value={d.name}>{d.name}</option>
+              <option key={d._id} value={d.name}>{d.name}</option>
             ))}
           </select>
           {errors.district && <p className="text-red-500 text-sm">{errors.district}</p>}
@@ -223,7 +231,7 @@ export default function EditJobForm() {
           >
             <option value="">Select an area</option>
             {availableAreas.map((area) => (
-              <option key={area} value={area}>{area}</option>
+              <option key={area._id} value={area.name}>{area.name}</option>
             ))}
           </select>
           {errors.area && <p className="text-red-500 text-sm">{errors.area}</p>}

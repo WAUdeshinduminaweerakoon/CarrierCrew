@@ -124,7 +124,7 @@ export default function EmployerProfile() {
             <button
               className="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-700"
               type="button"
-              onClick={() => alert("Delete function not implemented yet")}
+              onClick={() => navigate(`/employer/settings`)}
             >
               Delete
             </button>

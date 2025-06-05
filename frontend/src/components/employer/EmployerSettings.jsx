@@ -44,6 +44,10 @@ const EmployerSettings = () => {
       // Delete employer
       await fetch(`${API_ROUTES.EMPLOYERS}/${employerId}`, {
         method: "DELETE",
+        headers: {
+        "Content-Type": "application/json",
+     },
+        body: JSON.stringify({ password }),
       });
 
       setSuccessMessage("Your account has been deleted successfully.");

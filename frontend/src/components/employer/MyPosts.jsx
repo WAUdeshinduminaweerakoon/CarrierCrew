@@ -51,7 +51,7 @@ const MyPosts = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await fetch(`${API_ROUTES.JOBS}/${jobToDelete._id}`, {
+      await fetch(`${API_ROUTES.JOBS}/${jobToDelete._id}/delete`, {
         method: "DELETE",
       });
 

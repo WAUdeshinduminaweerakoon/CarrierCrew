@@ -1,14 +1,15 @@
+
 import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
-import Header from "./Header";
 
 const MyPosts = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [employerId, setEmployerId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [expandedJobId, setExpandedJobId] = useState(null);
   const JOBS_PER_PAGE = 5;
 
   const navigate = useNavigate();
@@ -70,32 +71,65 @@ const MyPosts = () => {
       <div className="w-full max-w-screen-sm px-4 pt-4 text-lg font-semibold text-green-800">
         My Job Posts
       </div>
+
       <div className="grid w-full max-w-screen-sm gap-4 px-4 pt-6 pb-4">
         {jobs.length === 0 ? (
           <p className="text-center text-gray-500">No job advertisements available</p>
         ) : (
-          displayedJobs.map((job) => (
-            <div
-              key={job._id}
-              className="flex items-center gap-6 p-4 bg-white rounded-lg shadow-md"
-            >
-              <img
-                src={job.logoUrl || "/images/default-job.png"}
-                alt={job.jobTitle}
-                className="object-contain w-20 h-20"
-              />
-              <div className="text-sm text-green-900">
-                <div className="text-sm text-green-900 leading-relaxed">
-                <p><span className="font-semibold">Title:</span> {job.jobTitle}</p>
-                <p><span className="font-semibold">Location:</span> {job.location}</p>
-                <p><span className="font-semibold">Duration:</span> {job.duration}</p>
-                <p><span className="font-semibold">From Date:</span> {job.fromDate}</p>
-                <p><span className="font-semibold">Payment:Rs.</span> {job.payment}</p>
-              </div>
+          displayedJobs.map((job) => {
+            const isExpanded = expandedJobId === job._id;
 
+            return (
+              <div
+                key={job._id}
+                className="p-4 bg-white rounded-lg shadow-md"
+              >
+                <div className="flex items-center justify-between gap-6">
+                  <div className="flex items-center gap-6">
+                    <img
+                      src={job.logoUrl || "/images/default-job.png"}
+                      alt={job.jobTitle}
+                      className="object-contain w-20 h-20"
+                    />
+                    <div className="text-sm text-green-900">
+                      <p><span className="font-semibold">Title:</span> {job.jobTitle}</p>
+                      <p><span className="font-semibold">Location:</span> {job.location}</p>
+                      <p><span className="font-semibold">Duration(hrs):</span> {job.duration}</p>
+                      <p><span className="font-semibold">Payment(Rs):</span> {job.payment}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() =>
+                      setExpandedJobId((prevId) => (prevId === job._id ? null : job._id))
+                    }
+                    className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                  >
+                    {isExpanded ? "Hide" : "More"}
+                  </button>
+                </div>
+
+                {isExpanded && (
+                  <div className="pt-4 mt-4 border-t border-green-200 text-sm text-green-900 leading-relaxed">
+                    <p><span className="font-semibold">From Date:</span> {job.fromDate}</p>
+                    <p><span className="font-semibold">To Date:</span> {new Date(job.dateTo).toLocaleDateString()}</p>
+                    <p><span className="font-semibold">Time From:</span> {job.timeFrom}</p>
+                    <p><span className="font-semibold">Time To:</span> {job.timeTo}</p>
+                    <p><span className="font-semibold">Vacancies:</span> {job.vacancies}</p>
+                    <p><span className="font-semibold">Description:</span> {job.description || "N/A"}</p>
+
+                    <div className="pt-4">
+                      <button
+                        onClick={() => navigate(`/edit-job/${job._id}`)}
+                        className="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
+                      >
+                        Edit Job
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 

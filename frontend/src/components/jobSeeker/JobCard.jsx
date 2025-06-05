@@ -5,11 +5,11 @@ const API_ROUTES = {
   JOBS: 'http://localhost:5000/api/jobs',
 };
 
-const JobCard = ({ job, jobseekerId }) => {
+const JobCard = ({ job, jobseekerId}) => {
   const [expanded, setExpanded] = useState(false);
 
   const handleApply = async (e) => {
-    e.stopPropagation(); // Prevent card from toggling
+    e.stopPropagation(); 
     console.log("Applying for job:", job._id);
     console.log("Jobseeker ID:", jobseekerId);
 
@@ -38,7 +38,6 @@ const JobCard = ({ job, jobseekerId }) => {
 
   return (
     <div className="w-10/12 p-4 transition bg-white rounded-md shadow hover:bg-green-50">
-      {/* Clickable Header Section */}
       <div
         className="flex items-center gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
@@ -71,7 +70,6 @@ const JobCard = ({ job, jobseekerId }) => {
           <p><strong>Salary:</strong> {job.payment}</p>
           <p><strong>Description:</strong> {job.description}</p>
 
-          {/* Apply Button */}
           <button
             className="w-full py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800 disabled:opacity-50"
             onClick={handleApply}

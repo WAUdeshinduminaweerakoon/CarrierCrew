@@ -22,6 +22,7 @@ const Home = () => {
   const [locations, setLocations] = useState([]);
   const [jobTitle, setCategories] = useState([]);
   const [jobseekerId, setEmployerId] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -63,26 +64,38 @@ const Home = () => {
     fetchJobs();
   }, []);
 
+  
+
   const filteredJobs = Array.isArray(jobs)
     ? jobs.filter((job) => {
         const jobSalary = job.payment ?? 0;
         const jobHours = job.duration ?? 0;
 
+        const normalizedSearchText = (searchText || "").toUpperCase().trim();
+
+
         const normalizedJobLocation = job.location?.toUpperCase().trim() || "";
         const normalizedSelectedLocation = selectedLocation?.toUpperCase().trim() || "";
-        const normalizedjobTitle = job.jobTitle?.toUpperCase().trim() || "";
-        const normalizedselectedCategory = selectedCategory?.toUpperCase().trim() || "";
+        const normalizedJobTitle = job.jobTitle?.toUpperCase().trim() || "";
+        const normalizedSelectedCategory = selectedCategory?.toUpperCase().trim() || "";
+        const normalizedCompany = job.company?.toUpperCase().trim() || "";
 
         return (
           (!selectedLocation || normalizedJobLocation === normalizedSelectedLocation) &&
-          (!selectedCategory || (normalizedjobTitle || "Other") === normalizedselectedCategory) &&
+          (!selectedCategory || normalizedJobTitle === normalizedSelectedCategory) &&
           jobSalary >= salaryRange[0] &&
           jobSalary <= salaryRange[1] &&
           jobHours >= workingHours[0] &&
-          jobHours <= workingHours[1]
+          jobHours <= workingHours[1] &&
+          (!searchText ||
+            normalizedJobTitle.includes(normalizedSearchText) ||
+            normalizedCompany.includes(normalizedSearchText) ||
+            normalizedJobLocation.includes(normalizedSearchText) 
+          )
         );
       })
     : [];
+
 
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const displayedJobs = filteredJobs.slice(
@@ -108,7 +121,9 @@ const Home = () => {
         onLocationChange={setSelectedLocation}
         onCategoryChange={setSelectedCategory}
         toggleFilterModal={() => setIsFilterOpen(true)}
+        onSearchChange={setSearchText} 
       />
+
 
       <main className="max-w-5xl p-4 mx-auto text-justify sm:p-6 md:p-8">
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-1">

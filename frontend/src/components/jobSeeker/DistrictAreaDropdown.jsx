@@ -45,7 +45,7 @@ const DistrictAreaDropdown = ({ onAreaChange }) => {
   return (
     <div className="relative inline-block" ref={dropdownRef}>
       <button
-        className="px-4 py-2 text-green-800 bg-white border border-green-900 rounded-md hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+        className="p-2 text-green-700 bg-white border border-green-900 rounded hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500"
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="true"
         aria-expanded={isOpen}

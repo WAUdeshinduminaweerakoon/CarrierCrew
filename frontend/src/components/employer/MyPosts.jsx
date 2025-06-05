@@ -293,7 +293,7 @@ const MyPosts = () => {
                         }
                         className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
                       >
-                        Hide
+                        Show Less
                       </button>
                     </div>
                   </div>
@@ -306,7 +306,7 @@ const MyPosts = () => {
                       onClick={() => setExpandedJobId(job._id)}
                       className="px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
                     >
-                      More
+                     Show More
                     </button>
                   </div>
                 )}

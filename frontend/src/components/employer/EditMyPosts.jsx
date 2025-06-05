@@ -109,15 +109,8 @@ export default function EditJobForm() {
             payment: data.payment || "",
             description: data.description || "",
           });
-          // Fix district assignment
-          if (data.location) {
-          const [districtFromLocation, areaFromLocation] = data.location.split(" - ");
-          setSelectedDistrict(districtFromLocation || "");
-          setSelectedArea(areaFromLocation || "");  // or areaFromLocation
-        } else {
-          setSelectedDistrict("");
-          setSelectedArea("");
-        }
+          setSelectedDistrict(data.district || "");
+          setSelectedArea(data.location || "");
           setVacancies(data.vacancies || 1);
         } else {
           toast.error("Failed to fetch job data.");

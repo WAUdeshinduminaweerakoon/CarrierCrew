@@ -25,6 +25,7 @@ import PlanCard from "./components/employer/SubscriptionPlans/PlanCard";
 import JobSeekerRegistrationFrom from "./components/login/Register/JobSeekerForm"
 import EmployerRegistrationFrom from "./components/login/Register/EmployerForm"
 import EmployerChat from "./components/Chat/EmployerChat"
+import EditJobForm from "./components/employer/EditMyPosts";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -123,6 +124,10 @@ const router = createBrowserRouter([
    {
     path:"/chat",
     element: <EmployerChat/>
+  },
+  {
+    path:"/employer/edit-post/:jobId",
+    element: <EditJobForm/>
   },
 ]);
 

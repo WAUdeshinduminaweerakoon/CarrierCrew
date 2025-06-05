@@ -4,6 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Header from "../Header";
 import "react-toastify/dist/ReactToastify.css";
+import API_ROUTES from "../../../configs/config";
 
 const PlanCard = () => {
   const { planName } = useParams();
@@ -16,9 +17,7 @@ const PlanCard = () => {
     const fetchData = async () => {
       try {
         // Fetch all plans
-        const response = await axios.get(
-          "http://localhost:5000/api/subscription/subscription-plans"
-        );
+        const response = await axios.get(API_ROUTES.SUBSCRIPTIONS+"/subscription-plans");
         const matchedPlan = response.data.find(
           (p) => p.planName.toLowerCase() === planName.toLowerCase()
         );
@@ -27,7 +26,7 @@ const PlanCard = () => {
 
         // Fetch user subscriptions
         const subRes = await axios.get(
-          `http://localhost:5000/api/subscription/employer/${userId}`
+          `${API_ROUTES.SUBSCRIPTIONS}/employer/${userId}`
         );
 
         // Find if user subscribed to this plan
@@ -60,6 +59,18 @@ const PlanCard = () => {
         return "📦";
     }
   };
+  
+  const handleRenew = () => {
+    navigate("/plans/pay", {
+      state: {
+        amount: plan.price,
+        from: "renew",
+        activeSubscriptionId: userSubscription._id,
+      },
+    });
+  };
+
+
 
   const status = userSubscription?.status; // can be "active" or "expired" or undefined
 
@@ -136,7 +147,7 @@ const PlanCard = () => {
             {status === "expired" && (
               <>
                 <button
-                  onClick={() => navigate("/plans/pay")}
+                  onClick={handleRenew}
                   className="w-full bg-green-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-700 transition"
                 >
                   Renew Plan

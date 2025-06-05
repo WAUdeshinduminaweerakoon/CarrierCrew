@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Header from "../Header";
 
 const iconMap = {
   free: "🚴",
@@ -59,6 +60,8 @@ const getStatusBadge = (planId) => {
   };
 
   return (
+    <div>
+      <Header/>
     <div className="max-w-sm mx-auto bg-green-100 p-4 rounded-xl shadow-lg">
       <ToastContainer position="top-center" autoClose={3000} />
 
@@ -127,6 +130,7 @@ const getStatusBadge = (planId) => {
           </div>
         );
       })}
+    </div>
     </div>
   );
 };

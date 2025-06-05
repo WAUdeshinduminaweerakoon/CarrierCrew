@@ -1,3 +1,4 @@
+// pages/jobSeeker/Home.jsx
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/jobSeeker/Header';
 import FilterModal from '../../components/jobSeeker/FilterModal';
@@ -20,20 +21,18 @@ const Home = () => {
   const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
   const [jobTitle, setCategories] = useState([]);
-
   const [jobseekerId, setEmployerId] = useState("");
 
-
   useEffect(() => {
-        const storedUserId = localStorage.getItem("userId");
-        const userType = localStorage.getItem("userType");
-        if (userType === "JobSeeker" && storedUserId) {
-          setEmployerId(storedUserId);
-        } else {
-          alert("Login First.");
-          navigate("/");
-        }
-      }, []);
+    const storedUserId = localStorage.getItem("userId");
+    const userType = localStorage.getItem("userType");
+    if (userType === "JobSeeker" && storedUserId) {
+      setEmployerId(storedUserId);
+    } else {
+      alert("Login First.");
+      navigate("/");
+    }
+  }, []);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -45,11 +44,10 @@ const Home = () => {
           setJobs(response.data);
 
           const uniqueLocations = [...new Set(response.data.map((job) => job.location))];
-          const uniqueCategories = [...new Set(response.data.map((job) => job.jobTitle || "Other"))];
+          const uniqueCategories = [...new Set(response.data.map((job) => job.category || "Other"))];
           setLocations(uniqueLocations);
           setCategories(uniqueCategories);
         } else {
-          
           setJobs([]);
           setLocations([]);
           setCategories([]);
@@ -65,26 +63,26 @@ const Home = () => {
     fetchJobs();
   }, []);
 
- 
   const filteredJobs = Array.isArray(jobs)
-  ? jobs.filter((job) => {
-      const jobSalary = job.payment ?? 0;
-      const jobHours = job.duration ?? 0;
+    ? jobs.filter((job) => {
+        const jobSalary = job.payment ?? 0;
+        const jobHours = job.duration ?? 0;
 
-      const normalizedJobLocation = job.location?.toUpperCase().trim() || "";
-      const normalizedSelectedLocation = selectedLocation?.toUpperCase().trim() || "";
+        const normalizedJobLocation = job.location?.toUpperCase().trim() || "";
+        const normalizedSelectedLocation = selectedLocation?.toUpperCase().trim() || "";
+        const normalizedjobTitle = job.jobTitle?.toUpperCase().trim() || "";
+        const normalizedselectedCategory = selectedCategory?.toUpperCase().trim() || "";
 
-      return (
-        (!selectedLocation || normalizedJobLocation === normalizedSelectedLocation) &&
-        (!selectedCategory || (job.category || "Other") === selectedCategory) &&
-        jobSalary >= salaryRange[0] &&
-        jobSalary <= salaryRange[1] &&
-        jobHours >= workingHours[0] &&
-        jobHours <= workingHours[1]
-      );
-    })
-  : [];
-
+        return (
+          (!selectedLocation || normalizedJobLocation === normalizedSelectedLocation) &&
+          (!selectedCategory || (normalizedjobTitle || "Other") === normalizedselectedCategory) &&
+          jobSalary >= salaryRange[0] &&
+          jobSalary <= salaryRange[1] &&
+          jobHours >= workingHours[0] &&
+          jobHours <= workingHours[1]
+        );
+      })
+    : [];
 
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const displayedJobs = filteredJobs.slice(
@@ -97,7 +95,7 @@ const Home = () => {
   }, [selectedLocation, selectedCategory, salaryRange, workingHours]);
 
   const applyFilters = () => {
-    setIsFilterOpen(false); // Modal already triggers changes via state
+    setIsFilterOpen(false);
   };
 
   return (
@@ -149,4 +147,3 @@ const Home = () => {
 };
 
 export default Home;
-

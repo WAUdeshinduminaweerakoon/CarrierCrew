@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import API_ROUTES from "../../../configs/config";
 
 const iconMap = {
   free: "🚴",
@@ -21,12 +22,12 @@ const SubscriptionPlans = () => {
     const fetchPlansAndSubscription = async () => {
       try {
         // Fetch all plans
-        const plansResponse = await axios.get("http://localhost:5000/api/subscription/subscription-plans");
+        const plansResponse = await axios.get(API_ROUTES.SUBSCRIPTIONS+"/subscription-plans");
         setPlans(plansResponse.data);
 
         // Fetch current subscription
         const subscriptionResponse = await axios.get(
-          `http://localhost:5000/api/subscription/employer/${userId}`
+          `${API_ROUTES.SUBSCRIPTIONS}/employer/${userId}`
         );
 
         if (subscriptionResponse.data.subscriptions.length > 0) {

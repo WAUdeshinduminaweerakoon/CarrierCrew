@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import API_ROUTES from "../../../configs/config";
 
 const PlanCard = () => {
   const { planName } = useParams();
@@ -15,9 +16,7 @@ const PlanCard = () => {
     const fetchData = async () => {
       try {
         // Fetch all plans
-        const response = await axios.get(
-          "http://localhost:5000/api/subscription/subscription-plans"
-        );
+        const response = await axios.get(API_ROUTES.SUBSCRIPTIONS+"/subscription-plans");
         const matchedPlan = response.data.find(
           (p) => p.planName.toLowerCase() === planName.toLowerCase()
         );
@@ -26,7 +25,7 @@ const PlanCard = () => {
 
         // Fetch user subscriptions
         const subRes = await axios.get(
-          `http://localhost:5000/api/subscription/employer/${userId}`
+          `${API_ROUTES.SUBSCRIPTIONS}/employer/${userId}`
         );
 
         // Find if user subscribed to this plan

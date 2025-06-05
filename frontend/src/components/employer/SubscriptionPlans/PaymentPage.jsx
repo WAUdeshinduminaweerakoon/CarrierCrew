@@ -133,21 +133,65 @@ const PaymentForm = () => {
 
       const data = await res.json();
 
-      if (res.ok) {
-        toast.success(data.message || "OTP verified successfully");
-
-        setTimeout(() => {
-          navigate("/payment-success");
-        }, 1500); // Optional delay to show success toast
-      } else {
-        navigate("/payment-failure");
+      if (!res.ok) {
+        toast.error(data.message || "OTP verification failed");
+        return navigate("/payment-failure");
       }
+
+      //toast.success(data.message || "OTP verified successfully");
+
+      // Proceed to process the payment
+      await processPaymentAndRenew();
     } catch (err) {
       console.error("Error verifying OTP:", err);
-      toast.error("Error verifying OTP");
+      toast.error("Network error during OTP verification");
       navigate("/payment-failure");
     }
   };
+
+  const processPaymentAndRenew = async () => {
+    try {
+      const paymentRes = await fetch(API_ROUTES.PAYMENT + "/process-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, amount }),
+      });
+
+      const paymentData = await paymentRes.json();
+
+      if (!paymentRes.ok) {
+        toast.error(paymentData.error || "Payment processing failed");
+        return navigate("/payment-failure");
+      }
+
+      toast.success(paymentData.message || "Payment successful");
+
+      // Call subscription renew API
+      const renewRes = await fetch(API_ROUTES.SUBSCRIPTIONS+"/renew", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activeSubscriptionId }),
+      });
+
+      const renewData = await renewRes.json();
+
+      if (!renewRes.ok) {
+        toast.error(renewData.error || "Subscription renewal failed");
+        return navigate("/employer/subs-plans");
+      }
+
+      toast.success(renewData.message || "Subscription activated");
+
+      setTimeout(() => {
+        navigate("/employer/subs-plans");
+      }, 1500);
+    } catch (err) {
+      console.error("Error during payment/subscription process:", err);
+      toast.error("Unexpected error occurred");
+      navigate("/employer/subs-plans");
+    }
+  };
+
 
 
 

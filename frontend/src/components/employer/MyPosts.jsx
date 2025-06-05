@@ -85,11 +85,14 @@ const MyPosts = () => {
                 className="object-contain w-20 h-20"
               />
               <div className="text-sm text-green-900">
-                <h2 className="text-base font-semibold">{job.jobTitle}</h2>
-                <p>{job.location}</p>
-                <p>{job.duration}</p>
-                <p>{job.fromDate}</p>
-                <p>{job.payment}</p>
+                <div className="text-sm text-green-900 leading-relaxed">
+                <p><span className="font-semibold">Title:</span> {job.jobTitle}</p>
+                <p><span className="font-semibold">Location:</span> {job.location}</p>
+                <p><span className="font-semibold">Duration:</span> {job.duration}</p>
+                <p><span className="font-semibold">From Date:</span> {job.fromDate}</p>
+                <p><span className="font-semibold">Payment:Rs.</span> {job.payment}</p>
+              </div>
+
               </div>
             </div>
           ))

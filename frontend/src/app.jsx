@@ -26,6 +26,8 @@ import JobSeekerRegistrationFrom from "./components/login/Register/JobSeekerForm
 import EmployerRegistrationFrom from "./components/login/Register/EmployerForm"
 import EmployerChat from "./components/Chat/EmployerChat"
 import EditJobForm from "./components/employer/EditMyPosts";
+import PaymentSuccess from "./components/employer/SubscriptionPlans/PaymentSuccess";
+import PaymentFailure from "./components/employer/SubscriptionPlans/PaymentFailure";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -128,6 +130,14 @@ const router = createBrowserRouter([
   {
     path:"/employer/edit-post/:jobId",
     element: <EditJobForm/>
+  },
+  {
+    path: "/payment-success",
+    element: <PaymentSuccess />,
+  },
+  {
+    path: "/payment-failure",
+    element: <PaymentFailure />,
   },
 ]);
 

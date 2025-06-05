@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API_ROUTES from "../../../configs/config";
 
+
 const PaymentForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { amount, from, activeSubscriptionId } = location.state || {};
 
   const [cardDetails, setCardDetails] = useState({
     name: "",
@@ -122,26 +125,30 @@ const PaymentForm = () => {
     }
 
     try {
-      const res = await fetch(API_ROUTES.PAYMENT+"/verify-otp", {
+      const res = await fetch(API_ROUTES.PAYMENT + "/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId, otp }),
       });
 
       const data = await res.json();
+
       if (res.ok) {
         toast.success(data.message || "OTP verified successfully");
-        setOtpVerified(true);
-        // Navigate or perform post-payment action here
-        // navigate("/success");
+
+        setTimeout(() => {
+          navigate("/payment-success");
+        }, 1500); // Optional delay to show success toast
       } else {
-        toast.error(data.message || "Invalid OTP");
+        navigate("/payment-failure");
       }
     } catch (err) {
       console.error("Error verifying OTP:", err);
       toast.error("Error verifying OTP");
+      navigate("/payment-failure");
     }
   };
+
 
 
 

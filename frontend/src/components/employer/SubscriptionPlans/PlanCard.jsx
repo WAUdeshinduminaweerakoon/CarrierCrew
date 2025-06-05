@@ -59,6 +59,18 @@ const PlanCard = () => {
         return "📦";
     }
   };
+  
+  const handleRenew = () => {
+    navigate("/plans/pay", {
+      state: {
+        amount: plan.price,
+        from: "renew",
+        activeSubscriptionId: userSubscription._id,
+      },
+    });
+  };
+
+
 
   const status = userSubscription?.status; // can be "active" or "expired" or undefined
 
@@ -133,7 +145,7 @@ const PlanCard = () => {
             {status === "expired" && (
               <>
                 <button
-                  onClick={() => navigate("/plans/pay")}
+                  onClick={handleRenew}
                   className="w-full bg-green-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-700 transition"
                 >
                   Renew Plan

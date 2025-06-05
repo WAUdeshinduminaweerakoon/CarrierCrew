@@ -153,7 +153,7 @@ export default function EditJobForm() {
 
         const data = await response.json();
         if (response.ok) {
-          toast.success("Job posted successfully!");
+          toast.success("Job updated successfully!");
           setTimeout(() => navigate("/employer/my-posts"), 1500);
         } else {
           toast.error(data.message || "Something went wrong!");

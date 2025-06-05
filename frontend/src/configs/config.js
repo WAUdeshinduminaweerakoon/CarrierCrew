@@ -1,5 +1,7 @@
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:5000";
 
+const PAYMENT_GATEWAY = "http://localhost:5001";
+
 const API_ROUTES = {
   AUTH: `${BASE_URL}/api/auth`,
   REGISTER: `${BASE_URL}/api/auth2`,
@@ -8,6 +10,7 @@ const API_ROUTES = {
   OTP: `${BASE_URL}/api/verify`,
   SUBSCRIPTIONS: `${BASE_URL}/api/subscription`,
   CATEGORY : `${BASE_URL}/api/category`,
+  PAYMENT : `${PAYMENT_GATEWAY}/api/payment`,
 };
 
 export default API_ROUTES;

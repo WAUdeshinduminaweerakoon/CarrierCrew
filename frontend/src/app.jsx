@@ -24,6 +24,7 @@ import PaymentForm from "./components/PaymentPage";
 import PlanCard from "./components/SubscriptionPlans/PlanCard";
 import JobSeekerRegistrationFrom from "./components/login/Register/JobSeekerForm"
 import EmployerRegistrationFrom from "./components/login/Register/EmployerForm"
+import EditJobForm from "./components/employer/EditMyPosts";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -87,7 +88,7 @@ const router = createBrowserRouter([
     path: "/deleteaccount",
     element: <DeleteAccount/>
   },
-    {
+  {
     path: "/employer/my-posts",
     element: <MyPosts/>
   },
@@ -118,6 +119,10 @@ const router = createBrowserRouter([
   {
     path:"/plan/:planName",
     element: <PlanCard/>
+  },
+  {
+    path: "/employer/edit-post",
+    element: <EditJobForm/>
   },
 ]);
 

@@ -137,64 +137,8 @@ const EmployerHome = () => {
           </div>
         </div>
       </div>
-      <div className="grid w-full max-w-screen-sm gap-4 px-4 pt-6 pb-4">
-        {jobs.length === 0 ? (
-          <p className="text-center text-gray-500">
-            No job advertisements available
-          </p>
-        ) : (
-          currentJobs.map((job) => (
-            <div
-              key={job._id}
-              className="flex items-center gap-6 p-4 bg-white rounded-lg shadow-md"
-            >
-              <img
-                src={job.logoUrl || "/images/default-job.png"}
-                alt={job.title}
-                className="object-contain w-20 h-20"
-              />
-              <div className="text-sm text-green-900">
-                <h2 className="text-base font-semibold">{job.jobTitle}</h2>
-                <p>{job.location}</p>
-                <p>{job.duration}</p>
-                <p>{job.fromDate}</p>
-                <p>{job.payment}</p>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* Pagination Controls */}
-      {jobs.length > jobsPerPage && (
-        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 pb-8 text-sm">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 rounded ${
-              currentPage === 1 ? "bg-gray-300" : "bg-green-700 text-white"
-            }`}
-          >
-            Previous
-          </button>
-          <span className="text-green-800">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded ${
-              currentPage === totalPages
-                ? "bg-gray-300"
-                : "bg-green-700 text-white"
-            }`}
-          >
-            Next
-          </button>
-        </div>
-      )}
+      
+    
     </div>
   );
 };

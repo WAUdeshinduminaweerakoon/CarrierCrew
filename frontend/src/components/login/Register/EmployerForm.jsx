@@ -18,6 +18,10 @@ const EmployerRegistration = () => {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [nearestCityOptions, setNearestCityOptions] = useState([]);
 
+  const [authFile, setAuthFile] = useState(null);
+  const [authFileUrl, setAuthFileUrl] = useState("");
+
+
   const [companyForm, setCompanyForm] = useState({
     name: "",
     email: "",
@@ -99,12 +103,19 @@ const EmployerRegistration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCompanySubmit = (e) => {
+  const handleCompanySubmit = async (e) => {
     e.preventDefault();
     if (validateCompany()) {
+      if (authFile) {
+        const uploadedUrl = await uploadFileToS3(authFile);
+        if (!uploadedUrl) return; // Stop if upload fails
+        setAuthFileUrl(uploadedUrl);
+      }
       setStep("employerDetails");
     }
   };
+
+
 
   const handleDataChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -181,16 +192,17 @@ const EmployerRegistration = () => {
     }
   };
 
-  // Handle final credentials submit (complete registration)
   const handleCredentialsSubmit = async (e) => {
     e.preventDefault();
     if (validateCredentials()) {
       try {
-        // Compose payload including username and password now
         const payload = {
           ...formData,
           userType: "Employer",
-          company: companyForm,
+          company: {
+            ...companyForm,
+            authorizationLetterUrl: authFileUrl || "", // ✅ include uploaded S3 file link
+          },
         };
 
         const res = await axios.post(`${API_ROUTES.REGISTER}/register/employer`, payload);
@@ -205,6 +217,26 @@ const EmployerRegistration = () => {
       }
     }
   };
+
+
+  const uploadFileToS3 = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post(`${API_ROUTES.FILEUPLOAD}/s3`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return res.data.fileUrl;
+    } catch (err) {
+      console.error("Upload error:", err);
+      toast.error("Failed to upload file");
+      return null;
+    }
+  };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen pt-10 pb-10 bg-green-50">
@@ -240,11 +272,12 @@ const EmployerRegistration = () => {
               )}
               <label htmlFor="upload" className="text-sm text-left text-green-600 cursor-pointer">
                 Upload Authorization Letter
-                <input
-                  type="file"
-                  id="upload"
-                  className="w-full p-2 mt-1 text-sm border border-green-500 rounded-md"
-                />
+                  <input
+                    type="file"
+                    id="upload"
+                    className="w-full p-2 mt-1 text-sm border border-green-500 rounded-md"
+                    onChange={(e) => setAuthFile(e.target.files[0])}
+                  />
               </label>
               <div className="flex justify-end mt-5">
                 <button

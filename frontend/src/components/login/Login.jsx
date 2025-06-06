@@ -112,7 +112,7 @@ const Login = () => {
               <p className="mt-1 text-sm text-red-500">{errors.password}</p>
             )}
             <div className="mt-2 text-right">
-              <Link to="/forgotpassword" className="text-sm text-blue-600 hover:underline">
+              <Link to="/forgot-password/step1" className="text-sm text-blue-600 hover:underline">
                 Forgot Password?
               </Link>
             </div>

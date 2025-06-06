@@ -137,7 +137,7 @@ const EmployerSettings = () => {
                 <strong>This action will delete your employer profile and all related information from CareerCrew.LK permanently.</strong>
               </p>
               <p className="text-gray-700 mb-4">
-                <strong>I would like to proceed with the account deletion process</strong>
+                <strong>Would you like to proceed with the account deletion process</strong>
               </p>
               <div className="mb-4">
                 <label className="inline-flex items-center">

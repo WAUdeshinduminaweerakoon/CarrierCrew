@@ -4,7 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const Employer = require("../models/Employer");
 const JobSeeker = require("../models/Jobseeker");
-const { deleteEmployer, deleteJobSeeker } = require("../controllers/authController");
+const { deleteEmployer, deleteJobSeeker, sendOtpForPasswordReset, verifyOtpForPasswordReset, resetPassword } = require("../controllers/authController");
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -42,5 +42,8 @@ router.post("/login", async (req, res) => {
 
 router.delete("/employer/:id/delete", deleteEmployer);
 router.delete("/jobseeker/:id/delete", deleteJobSeeker);
+router.post("/account/recover", sendOtpForPasswordReset);
+router.post("/account/recover/verify-otp", verifyOtpForPasswordReset);
+router.post("/account/recover/reset-password", resetPassword);
 
 module.exports = router;

@@ -10,8 +10,9 @@ import EmployerProfile from "./components/employer/EmployerProfile";
 import EmployerHome from "./components/employer/EmployerHome";
 import JobSeekerProfile from "./components/jobSeeker/JobSeekerProfile";
 import CompanyProfile from "./components/employer/CompanyProfile";
-import ForgotPassword from "./components/ForgotPassword";
-import VerifyOtp from "./components/login/OtpVerfication";
+import ResetPassword from "./components/login/ResetPassword";
+//import VerifyOtp from "./components/login/OtpVerfication";
+import VerifyOtp from "./components/login/VerifyOtp";
 import Applications from "./components/employer/ViewApplications"
 import DeleteAccount from "./components/Account/DeleteAccountConfirm";
 import MyPosts from "./components/employer/MyPosts";
@@ -28,6 +29,7 @@ import EmployerChat from "./components/Chat/EmployerChat"
 import EditJobForm from "./components/employer/EditMyPosts";
 //import PaymentSuccess from "./components/employer/SubscriptionPlans/PaymentSuccess";
 //import PaymentFailure from "./components/employer/SubscriptionPlans/PaymentFailure";
+import ForgotPasswordPage1 from "./components/login/ForgotPasswordPage1";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -76,11 +78,11 @@ const router = createBrowserRouter([
     element: <CompanyProfile/>
   },
   {
-    path: "/forgotpassword",
-    element: <ForgotPassword/>
+    path: "/reset-password",
+    element: <ResetPassword/>
   },
-    {
-    path: "/verify",
+  {
+    path: "/verify-otp",
     element: <VerifyOtp/>
   },
     {
@@ -130,6 +132,10 @@ const router = createBrowserRouter([
   {
     path:"/employer/edit-post/:jobId",
     element: <EditJobForm/>
+  },
+  {
+    path:"/forgot-password/step1",
+    element: <ForgotPasswordPage1/>
   },
   /*
   {

@@ -12,26 +12,34 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendOtp = async (req, res) => {
-  const { email } = req.body;
+const sendOtp = async (email) => {
   const otp = generateOtp();
 
+  await Otp.deleteMany({ email });
+  await Otp.create({ email, otp });
+
+  await transporter.sendMail({
+    from: `"Part Time Jobs LK" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "Your OTP Code",
+    text: `Your OTP is ${otp}`,
+  });
+
+  return true; // Indicate success
+};
+
+// For routing (still needed for /send-otp endpoint)
+const sendOtpHandler = async (req, res) => {
+  const { email } = req.body;
+
   try {
-    await Otp.deleteMany({ email }); // Remove existing OTPs
-    await Otp.create({ email, otp });
-
-    await transporter.sendMail({
-      from: `"Part Time Jobs LK" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Your OTP Code",
-      text: `Your OTP is ${otp}`,
-    });
-
+    await sendOtp(email);
     res.status(200).json({ message: "OTP sent to your email" });
   } catch (err) {
     res.status(500).json({ message: "Error sending OTP" });
   }
 };
+
 
 const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
@@ -47,5 +55,6 @@ const verifyOtp = async (req, res) => {
 
 module.exports = {
   sendOtp,
+  sendOtpHandler,
   verifyOtp,
 };

@@ -12,7 +12,8 @@ const API_ROUTES = {
   CATEGORY : `${BASE_URL}/api/category`,
   PAYMENT : `${PAYMENT_GATEWAY}/api/payment`,
   ACCOUNT :  `${BASE_URL}/api/auth/account`,
-};
+  FILEUPLOAD : `${BASE_URL}/api/file/upload`,
+}
 
 export default API_ROUTES;
 

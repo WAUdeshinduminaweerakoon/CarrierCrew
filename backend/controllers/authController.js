@@ -6,6 +6,9 @@ const Job = require('../models/Job');
 const JobBackup = require('../models/backup/JobBackup');
 const bcrypt = require('bcrypt');
 
+const { sendOtp, verifyOtp } = require('./otpController');
+const bcrypt = require('bcryptjs');
+
 
 // Helper: Check strong password
 function isStrongPassword(password) {
@@ -191,8 +194,88 @@ const deleteJobSeeker = async (req, res) => {
   }
 };
 
+const sendOtpForPasswordReset = async (req, res) => {
+  const { username } = req.body;
+
+  if (!username || username.trim() === "") {
+    return res.status(400).json({ message: "Username is required" });
+  }
+
+  try {
+    let user = await Employer.findOne({ username });
+    if (!user) {
+      user = await JobSeeker.findOne({ username });
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: "No account found with this username" });
+    }
+
+    const { email, _id: userId, userType } = user;
+
+    // ✅ Reuse OTP logic
+    await sendOtp(email);
+
+    res.status(200).json({
+      message: "OTP sent to your email",
+      email,
+      userId,
+      userType,
+    });
+
+  } catch (err) {
+    console.error("Error in sendOtpForPasswordReset:", err);
+    res.status(500).json({ message: "Error processing your request" });
+  }
+};
 
 
+const verifyOtpForPasswordReset = async (req, res) => {
+  return verifyOtp(req, res);
+};
+
+const resetPassword = async (req, res) => {
+  const { userType, userId, newPassword } = req.body;
+
+  if (!userType || !userId || !newPassword) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    if (userType === "Employer") {
+      const updatedEmployer = await Employer.findByIdAndUpdate(
+        userId,
+        { password: hashedPassword },
+        { new: true }
+      );
+
+      if (!updatedEmployer) {
+        return res.status(404).json({ message: "Employer not found" });
+      }
+
+    } else if (userType === "JobSeeker") {
+      const updatedJobSeeker = await JobSeeker.findByIdAndUpdate(
+        userId,
+        { password: hashedPassword },
+        { new: true }
+      );
+
+      if (!updatedJobSeeker) {
+        return res.status(404).json({ message: "Job Seeker not found" });
+      }
+
+    } else {
+      return res.status(400).json({ message: "Invalid user type" });
+    }
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error("Reset password error:", err);
+    res.status(500).json({ message: "Server error during password reset" });
+  }
+};
 
 
 module.exports = {
@@ -200,4 +283,7 @@ module.exports = {
   registerJobSeeker,
   deleteEmployer,
   deleteJobSeeker,
+  sendOtpForPasswordReset,
+  verifyOtpForPasswordReset,
+  resetPassword,
 };

@@ -149,13 +149,17 @@ const EmployerHome = () => {
         </div>
       </div>
    <>
-  <h1 className="text-lg font-bold text-center text-green-800 mb-2">
-    Total Job Posts: {jobs.length}
-  </h1>
-  <div className="w-full max-w-screen-sm px-4 pt-2 text-green-900 font-medium">
-  <p>Total Job Posts: {jobs.length}</p>
-  <p>Total Applicants: {totalApplicants}</p>
+  
+  <div className="w-full max-w-screen-sm px-4 pt-2">
+  <div className="w-full max-w-screen-sm px-4 pt-2">
+  <div className="bg-white text-green-900 font-medium rounded-xl shadow p-4 grid grid-cols-1 gap-2 text-center">
+    <p>Total Job Posts: {jobs.length}</p>
+    <p>Total Applicants: {totalApplicants}</p>
+  </div>
 </div>
+
+</div>
+
 
 </>
 

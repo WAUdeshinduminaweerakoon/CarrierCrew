@@ -19,28 +19,39 @@ const EmployerHome = () => {
   const jobsPerPage = 1;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    const userType = localStorage.getItem("userType");
-
-    if (userType === "Employer" && storedUserId) {
-      setEmployerId(storedUserId);
-
-      fetch(`${API_ROUTES.JOBS}/employer/${storedUserId}`)
-        .then((res) => res.json())
-        .then((data) => setJobs(data))
-        .catch((err) => console.error("Failed to fetch jobs:", err));
-    } else {
-      alert("Login first.");
-      navigate("/");
-    }
-  }, [navigate]);
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const totalPages = Math.ceil(jobs.length / jobsPerPage);
   const startIndex = (currentPage - 1) * jobsPerPage;
   const currentJobs = jobs.slice(startIndex, startIndex + jobsPerPage);
+  const [totalApplicants, setTotalApplicants] = useState(0);
+
+  useEffect(() => {
+  const storedUserId = localStorage.getItem("userId");
+  const userType = localStorage.getItem("userType");
+
+  if (userType === "Employer" && storedUserId) {
+    setEmployerId(storedUserId);
+
+    fetch(`${API_ROUTES.JOBS}/employer/${storedUserId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setJobs(data);
+
+        // 🧠 Calculate total applicants from all job posts
+        const total = data.reduce(
+          (acc, job) => acc + (job.applicants?.length || 0),
+          0
+        );
+        setTotalApplicants(total);
+      })
+      .catch((err) => console.error("Failed to fetch jobs:", err));
+  } else {
+    alert("Login first.");
+    navigate("/");
+  }
+}, []);
+
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
@@ -138,9 +149,18 @@ const EmployerHome = () => {
         </div>
       </div>
    <>
-  <h1 className="text-lg font-bold text-center text-green-800 mb-2">
-    Total Job Posts: {jobs.length}
-  </h1>
+  
+  <div className="w-full max-w-screen-sm px-4 pt-2">
+  <div className="w-full max-w-screen-sm px-4 pt-2">
+  <div className="bg-white text-green-900 font-medium rounded-xl shadow p-4 grid grid-cols-1 gap-2 text-center">
+    <p>Total Job Posts: {jobs.length}</p>
+    <p>Total Applicants: {totalApplicants}</p>
+  </div>
+</div>
+
+</div>
+
+
 </>
 
       </div>

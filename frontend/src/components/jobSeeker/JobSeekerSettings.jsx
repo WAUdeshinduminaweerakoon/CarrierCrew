@@ -3,15 +3,15 @@ import { HomeIcon, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
 
-const EmployerSettings = () => {
-  const [activeTab, setActiveTab] = useState("employerAccounts");
+const JobSeekerSettings = () => {
+  const [activeTab, setActiveTab] = useState("jobSeekerAccounts");
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const employerId = localStorage.getItem("userId");
+  const jobSeekerId = localStorage.getItem("userId");
 
   const handleDeleteProfile = async () => {
     if (!confirmChecked) {
@@ -25,12 +25,12 @@ const EmployerSettings = () => {
     }
 
     try {
-      const verifyResponse = await fetch(`${API_ROUTES.AUTH}/employer/verifypassword`, {
+      const verifyResponse = await fetch(`${API_ROUTES.AUTH}/jobseeker/verifypassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId: employerId, password }),
+        body: JSON.stringify({ userId: jobSeekerId, password }),
       });
 
       const verifyData = await verifyResponse.json();
@@ -40,7 +40,7 @@ const EmployerSettings = () => {
         return;
       }
 
-      const deleteResponse = await fetch(`${API_ROUTES.AUTH}/employer/${employerId}/delete`, {
+      const deleteResponse = await fetch(`${API_ROUTES.AUTH}/jobseeker/${jobSeekerId}/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +72,7 @@ const EmployerSettings = () => {
         <div className="flex items-center space-x-4">
           <button
             className="text-gray-600 hover:text-blue-600 flex items-center md:px-2"
-            onClick={() => navigate("/employer/home")}
+            onClick={() => navigate("/jobseeker/home")}
           >
             <HomeIcon className="h-6 w-6" />
             <span className="hidden md:inline ml-1">Home</span>
@@ -87,16 +87,16 @@ const EmployerSettings = () => {
         {menuOpen && (
           <div className="absolute right-4 top-16 w-48 bg-white border rounded shadow-md md:hidden">
             <button
-              onClick={() => setActiveTab("employerAccounts")}
+              onClick={() => setActiveTab("jobSeekerAccounts")}
               className="block w-full text-left px-4 py-2 hover:bg-gray-100"
             >
-              Manage Employer Accounts
+              Manage Jobseeker Accounts
             </button>
             <button
               onClick={() => setActiveTab("accountDeletion")}
               className="block w-full text-left px-4 py-2 hover:bg-gray-100"
             >
-              Employer Profile Deletion
+              Jobseeker Profile Deletion
             </button>
           </div>
         )}
@@ -108,10 +108,10 @@ const EmployerSettings = () => {
           <ul className="space-y-2">
             <li>
               <button
-                className={`block w-full text-left ${activeTab === 'employerAccounts' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}
-                onClick={() => setActiveTab('employerAccounts')}
+                className={`block w-full text-left ${activeTab === 'jobSeekerAccounts' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}
+                onClick={() => setActiveTab('jobSeekerAccounts')}
               >
-                Manage Employer Accounts
+                Manage Jobseeker Accounts
               </button>
             </li>
             <li>
@@ -119,22 +119,22 @@ const EmployerSettings = () => {
                 className={`block w-full text-left ${activeTab === 'accountDeletion' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('accountDeletion')}
               >
-                Employer Profile Deletion
+                Jobseeker Profile Deletion
               </button>
             </li>
           </ul>
         </aside>
 
         <main className="flex-grow p-4 bg-gray-100">
-          {activeTab === 'employerAccounts' && (
-            <div className="text-gray-700 text-center text-lg font-medium">Employer account management content goes here.</div>
+          {activeTab === 'jobSeekerAccounts' && (
+            <div className="text-gray-700 text-center text-lg font-medium">Jobseeker account management content goes here.</div>
           )}
 
           {activeTab === 'accountDeletion' && (
             <div className="bg-green-100 p-6 rounded-lg shadow max-w-xl mx-auto w-full">
               <h2 className="text-2xl font-bold mb-4">Profile Deletion</h2>
               <p className="text-gray-700 mb-2">
-                <strong>This action will delete your employer profile and all related information from CareerCrew.LK permanently.</strong>
+                <strong>This action will delete your jobseeker profile and all related information from CareerCrew.LK permanently.</strong>
               </p>
               <p className="text-gray-700 mb-4">
                 <strong>Would you like to proceed with the account deletion process</strong>
@@ -167,7 +167,7 @@ const EmployerSettings = () => {
               <div className="flex justify-between flex-wrap sm:justify-end gap-4">
                 <button
                   className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                  onClick={() => navigate("/employer/home")}
+                  onClick={() => navigate("/jobseeker/home")}
                 >
                   Cancel
                 </button>
@@ -186,4 +186,4 @@ const EmployerSettings = () => {
   );
 };
 
-export default EmployerSettings;
+export default JobSeekerSettings;

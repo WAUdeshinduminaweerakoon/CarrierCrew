@@ -304,6 +304,35 @@ const verifyEmployerPassword = async (req, res) => {
   }
 };
 
+const verifyJobSeekerPassword = async (req, res) => {
+  const { userId, password } = req.body;
+
+  if (!userId || !password) {
+    return res.status(400).json({ message: "User ID and password are required" });
+  }
+
+  try {
+    // 1. Find the employer by ID
+    const jobSeeker = await JobSeeker.findById(userId);
+    if (!jobSeeker) {
+      return res.status(404).json({ message: "Employer not found" });
+    }
+
+    // 2. Compare entered password with hashed password
+    const isMatch = await bcrypt.compare(password, jobSeeker.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    // 3. Return success
+    res.status(200).json({ message: "Password verified successfully" });
+
+  } catch (err) {
+    console.error("Error verifying password:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 module.exports = {
   registerEmployer,
@@ -314,4 +343,5 @@ module.exports = {
   verifyOtpForPasswordReset,
   resetPassword,
   verifyEmployerPassword,
+  verifyJobSeekerPassword,
 };

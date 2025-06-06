@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import Header from "../Header";
 import "react-toastify/dist/ReactToastify.css";
+import API_ROUTES from "../../../configs/config";
 
 const PlanCard = () => {
   const { planName } = useParams();
@@ -15,9 +17,7 @@ const PlanCard = () => {
     const fetchData = async () => {
       try {
         // Fetch all plans
-        const response = await axios.get(
-          "http://localhost:5000/api/subscription/subscription-plans"
-        );
+        const response = await axios.get(API_ROUTES.SUBSCRIPTIONS+"/subscription-plans");
         const matchedPlan = response.data.find(
           (p) => p.planName.toLowerCase() === planName.toLowerCase()
         );
@@ -26,7 +26,7 @@ const PlanCard = () => {
 
         // Fetch user subscriptions
         const subRes = await axios.get(
-          `http://localhost:5000/api/subscription/employer/${userId}`
+          `${API_ROUTES.SUBSCRIPTIONS}/employer/${userId}`
         );
 
         // Find if user subscribed to this plan
@@ -37,7 +37,7 @@ const PlanCard = () => {
         else setUserSubscription(null); // explicitly clear if none found
       } catch (err) {
         toast.error("Error loading plan data.");
-        setTimeout(() => navigate("/subscription-plans"), 1500);
+        setTimeout(() => navigate("/employer/subs-plans"), 1500);
       }
     };
 
@@ -59,6 +59,18 @@ const PlanCard = () => {
         return "📦";
     }
   };
+  
+  const handleRenew = () => {
+    navigate("/plans/pay", {
+      state: {
+        amount: plan.price,
+        from: "renew",
+        activeSubscriptionId: userSubscription._id,
+      },
+    });
+  };
+
+
 
   const status = userSubscription?.status; // can be "active" or "expired" or undefined
 
@@ -71,6 +83,8 @@ const PlanCard = () => {
   }
 
   return (
+    <div>
+      <Header/>
     <div className="w-[360px] mx-auto min-h-screen bg-green-50 border border-green-300 rounded-xl shadow p-10 text-center space-y-4">
       <ToastContainer position="top-center" autoClose={3000} />
 
@@ -122,7 +136,7 @@ const PlanCard = () => {
             {/* Active plan: only "Change Plan" */}
             {status === "active" && (
               <button
-                onClick={() => navigate("/subscription-plans")}
+                onClick={() => navigate("/employer/subs-plans")}
                 className="w-full bg-yellow-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-yellow-600 transition"
               >
                 Change Plan
@@ -133,14 +147,14 @@ const PlanCard = () => {
             {status === "expired" && (
               <>
                 <button
-                  onClick={() => navigate("/plans/pay")}
+                  onClick={handleRenew}
                   className="w-full bg-green-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-green-700 transition"
                 >
                   Renew Plan
                 </button>
 
                 <button
-                  onClick={() => navigate("/subscription-plans")}
+                  onClick={() => navigate("/employer/subs-plans")}
                   className="w-full bg-yellow-500 text-white font-semibold px-6 py-2 rounded-md hover:bg-yellow-600 transition"
                 >
                   Change Plan
@@ -151,13 +165,25 @@ const PlanCard = () => {
         ) : (
           // If user does NOT have this plan - show Activate Now button
           <button
-            onClick={() => navigate("/plans/pay")}
+            onClick={() =>
+              navigate("/plans/pay", {
+                state: {
+                  amount: plan.price,
+                  from: userSubscription ? "change" : "new",
+                  activeSubscriptionId: userSubscription?._id || null,
+                  subscriptionPlanId:plan._id,
+                  employerId:userId,
+                },
+              })
+            }
             className="w-full bg-blue-600 text-white font-semibold px-6 py-2 rounded-md hover:bg-blue-700 transition"
           >
             Activate Now
           </button>
+
         )}
       </div>
+    </div>
     </div>
   );
 };

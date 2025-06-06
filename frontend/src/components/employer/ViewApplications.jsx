@@ -17,30 +17,34 @@ const ViewApplications = () => {
   const employerId = localStorage.getItem('userId');
   const apiURL = `${API_ROUTES.JOBS}/employer/${employerId}/applicants`;
 
-  useEffect(() => {
-    const fetchApplicants = async () => {
-      try {
-        const response = await axios.get(apiURL);
-        const rawApplicants = response.data.applicants;
+ useEffect(() => {
+  const fetchApplicants = async () => {
+    try {
+      const response = await axios.get(apiURL);
+      const rawApplicants = response.data.applicants;
 
-        const flatApplications = rawApplicants.flatMap(applicant =>
-          applicant.appliedJobs.map(job => ({
-            ...job,
-            jobSeeker: applicant.jobSeeker,
-          }))
-        );
+      const flatApplications = rawApplicants.flatMap(applicant =>
+        applicant.appliedJobs.map(job => ({
+          ...job,
+          jobSeeker: applicant.jobSeeker,
+        }))
+      );
 
-        setApplications(flatApplications);
-      } catch (err) {
-        setError('Failed to fetch applicant data.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      // Sort by appliedAt or updatedAt in descending order
+      flatApplications.sort((a, b) => new Date(b.appliedAt || b.updatedAt) - new Date(a.appliedAt || a.updatedAt));
 
-    fetchApplicants();
-  }, [apiURL]);
+      setApplications(flatApplications);
+    } catch (err) {
+      setError('Failed to fetch applicant data.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchApplicants();
+}, [apiURL]);
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -54,15 +58,7 @@ const ViewApplications = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
-      {/* Header */}
-      <header className="w-full py-4 text-white bg-green-800 shadow-md">
-        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
-          <button className="text-white" onClick={toggleMenu}>
-            <FaBars className="text-2xl" />
-          </button>
-          <h1 className="font-semibold truncate">CareerCrew.LK</h1>
-        </div>
-      </header>
+     <Header/>
 
       {/* Mobile Menu */}
       <div

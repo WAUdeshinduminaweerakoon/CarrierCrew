@@ -99,21 +99,28 @@ const getApplicantsByEmployer = async (req, res) => {
   }
 };
 
+// delete job and backup 
 const deleteJobPost = async (req, res) => {
   const jobId = req.params.id;
 
   try {
-
     const job = await Job.findById(jobId).lean();
 
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
     }
 
-    job.status = "owner-delete";
+    // Mark the job as deleted by the owner before backup
+    const jobToBackup = {
+      ...job,
+      status: "owner-delete",
+      deletedAt: new Date()
+    };
 
-    await JobBackup.create(job);
+    // Save to backup collection
+    await JobBackup.create(jobToBackup);
 
+    // Delete from original collection
     await Job.findByIdAndDelete(jobId);
 
     return res.status(200).json({ message: "Job deleted and backed up successfully" });
@@ -124,9 +131,27 @@ const deleteJobPost = async (req, res) => {
 };
 
 
+// Update a job post
+const updateJobPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedJob = await Job.findByIdAndUpdate(id, req.body, { new: true });
+
+    if (!updatedJob) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    res.status(200).json({ message: "Job updated successfully", job: updatedJob });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update job post" });
+  }
+};
+
 module.exports = {
   createJobPost,
   applyForJob,
   getApplicantsByEmployer,
   deleteJobPost,
+  updateJobPost,
 };

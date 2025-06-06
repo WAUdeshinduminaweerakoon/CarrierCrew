@@ -7,7 +7,7 @@ const JobBackup = require('../models/backup/JobBackup');
 const bcrypt = require('bcrypt');
 
 const { sendOtp, verifyOtp } = require('./otpController');
-const bcrypt = require('bcryptjs');
+
 
 
 // Helper: Check strong password

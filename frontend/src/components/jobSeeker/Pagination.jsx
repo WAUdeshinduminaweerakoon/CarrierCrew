@@ -5,8 +5,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const canGoNext = currentPage < totalPages;
 
   return (
-    <div className="flex flex-col items-center justify-between gap-2 mt-6 sm:flex-row">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col items-center justify-between mt-6 gap-25 sm:flex-row">
+      <div className="flex items-center gap-20">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={!canGoBack}

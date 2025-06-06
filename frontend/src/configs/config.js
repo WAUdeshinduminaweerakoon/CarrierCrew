@@ -11,6 +11,8 @@ const API_ROUTES = {
   SUBSCRIPTIONS: `${BASE_URL}/api/subscription`,
   CATEGORY : `${BASE_URL}/api/category`,
   PAYMENT : `${PAYMENT_GATEWAY}/api/payment`,
+  EMPLOYERS: `${BASE_URL}/employers`,
+  EMPLOYER_BACKUP: `${BASE_URL}/employers/backup`,
 };
 
 export default API_ROUTES;

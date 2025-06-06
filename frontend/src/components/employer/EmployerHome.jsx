@@ -45,12 +45,36 @@ const EmployerHome = () => {
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
       <header className="w-full py-4 text-white bg-green-800 shadow-md">
-        <div className="flex items-center justify-between w-full max-w-screen-sm px-4 text-sm">
-          <button className="text-white" onClick={toggleMenu}>
-            <FaBars className="text-2xl" />
-          </button>
-          <h1 className="font-semibold truncate">CareerCrew.LK</h1>
-        </div>
+        
+      <div className="w-full max-w-screen-lg mx-auto px-4 flex items-center justify-between relative">
+        
+        <h1 className="font-semibold text-lg">CareerCrew.LK</h1>
+
+        
+        <nav className="hidden sm:flex gap-4 text-sm items-center">
+         
+          <Link to="#" className="py-2 px-2 hover:underline">Settings</Link>
+          <Link to="/" className="py-2 px-2 hover:underline">Logout</Link>
+        </nav>
+
+        
+        <button className="sm:hidden" onClick={toggleMenu}>
+          <FaBars className="text-2xl" />
+        </button>
+      </div>
+
+      
+      <div
+        className={`sm:hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen ? "max-h-screen" : "max-h-0 overflow-hidden"
+        }`}
+      >
+        <nav className="bg-green-800 text-white text-center px-4">
+          
+          <Link to="#" className="block py-2 hover:bg-green-700">Settings</Link>
+          <Link to="/" className="block py-2 hover:bg-green-700">Logout</Link>
+        </nav>
+      </div>
       </header>
 
       <div

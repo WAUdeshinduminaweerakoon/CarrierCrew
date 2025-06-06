@@ -42,12 +42,10 @@ const EmployerRegistration = () => {
     address: "",
     district: "",
     nearestCity: "",
-    // username, password, confirmPassword will be added only at setCredentials step
   });
 
   const [errors, setErrors] = useState({});
 
-  // OTP modal related states
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
@@ -143,7 +141,7 @@ const EmployerRegistration = () => {
         email: formData.email,
       });
       setMessage(res.data.message);
-      setShowOtpModal(true); // Show OTP modal
+      setShowOtpModal(true); 
       toast.success("OTP sent to your email", { autoClose: 3000 });
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to send OTP");
@@ -173,7 +171,7 @@ const EmployerRegistration = () => {
     }
   };
 
-  // Validate credentials form
+
   const validateCredentials = () => {
     const newErrors = {};
     if (!formData.username?.trim()) newErrors.username = "Username is required.";
@@ -184,7 +182,7 @@ const EmployerRegistration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle employer details submit (send OTP)
+
   const handleEmployerDetailsSubmit = async (e) => {
     e.preventDefault();
     if (validateEmployerDetails()) {
@@ -201,7 +199,7 @@ const EmployerRegistration = () => {
           userType: "Employer",
           company: {
             ...companyForm,
-            authorizationLetterUrl: authFileUrl || "", // ✅ include uploaded S3 file link
+            authorizationLetterUrl: authFileUrl || "", 
           },
         };
 
@@ -298,7 +296,6 @@ const EmployerRegistration = () => {
           </>
         )}
 
-        {/* Employer Details Step - No username/password here */}
         {step === "employerDetails" && (
           <>
             <h2 className="mb-6 text-lg font-bold text-center text-green-600">

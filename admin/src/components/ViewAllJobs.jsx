@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { HomeIcon } from "lucide-react";
 import API_ROUTES from "../configs/config";
-import JobFilterSidebar from "../components/JobFilterSidebar"; // Import new sidebar
+import JobFilterSidebar from "../components/JobFilterSidebar";
 
 const ViewJobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -10,6 +10,8 @@ const ViewJobs = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [jobToDelete, setJobToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedArea, setSelectedArea] = useState("");
 
   useEffect(() => {
     fetchJobs();
@@ -25,30 +27,53 @@ const ViewJobs = () => {
     }
   };
 
-  // const filteredJobs = jobs.filter((job) => {
-  //   const search = searchTerm.toLowerCase();
-  //   return (
-  //     job.jobTitle.toLowerCase().includes(search) ||
-  //     job.location.toLowerCase().includes(search) ||
-  //     job.employer.firstName.toLowerCase().includes(search)||
-  //     job.employer.lastName.toLowerCase().includes(search)||
-  //     job.employer.company.name.toLowerCase().includes(search)
-  //   );
-  // });
-    const filteredJobs = jobs.filter((job) => {
-      const search = searchTerm.toLowerCase();
-      const fullName = `${job.employer.firstName} ${job.employer.lastName}`.toLowerCase();
-      return (
-        job.jobId.toString().toLowerCase().includes(search) ||
-        job.jobTitle.toLowerCase().includes(search) ||
-        job.location.toLowerCase().includes(search) ||
-        job.employer.firstName.toLowerCase().includes(search) ||
-        job.employer.lastName.toLowerCase().includes(search) ||
-        fullName.includes(search) ||
-        (job.employer.company?.name?.toLowerCase().includes(search) || false)
-      );
-    });
+  const filteredJobs = jobs.filter((job) => {
+    const search = searchTerm.toLowerCase();
+    const fullName = `${job.employer.firstName} ${job.employer.lastName}`.toLowerCase();
 
+    const matchesSearch =
+      job.jobId.toString().toLowerCase().includes(search) ||
+      job.jobTitle.toLowerCase().includes(search) ||
+      job.location.toLowerCase().includes(search) ||
+      job.employer.firstName.toLowerCase().includes(search) ||
+      job.employer.lastName.toLowerCase().includes(search) ||
+      fullName.includes(search) ||
+      (job.employer.company?.name?.toLowerCase().includes(search) || false);
+
+    const matchesDistrict = selectedDistrict
+      ? job.district?.toLowerCase() === selectedDistrict.toLowerCase()
+      : true;
+
+    const matchesArea = selectedArea
+      ? job.location?.toLowerCase() === selectedArea.toLowerCase()
+      : true;
+
+    return matchesSearch && matchesDistrict && matchesArea;
+  });
+
+  const handleDelete = async () => {
+    if (!jobToDelete) return;
+    try {
+      const res = await fetch(`${API_ROUTES.ADMIN_JOBS}/${jobToDelete}/delete`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setJobs((prev) => prev.filter((job) => job.jobId !== jobToDelete));
+        alert("Job post deleted successfully.");
+      } else {
+        alert("Failed to delete job.");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Error deleting job.");
+    } finally {
+      setShowConfirm(false);
+      setJobToDelete(null);
+      setExpandedIndex(null);
+      setContactVisibleIndex(null);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -69,6 +94,8 @@ const ViewJobs = () => {
         <JobFilterSidebar
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
+          onDistrictChange={setSelectedDistrict}
+          onAreaChange={setSelectedArea}
         />
 
         <main className="flex-grow p-8 bg-gray-100">
@@ -83,7 +110,7 @@ const ViewJobs = () => {
 
                 return (
                   <div
-                    key={index}
+                    key={job.jobId}
                     className="p-6 bg-white rounded shadow cursor-pointer"
                     onClick={() =>
                       setExpandedIndex((prev) => (prev === index ? null : index))
@@ -98,8 +125,7 @@ const ViewJobs = () => {
                           </span>
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Published by {job.employer.firstName}{" "}
-                          {job.employer.lastName}
+                          Published by {job.employer.firstName} {job.employer.lastName}
                         </p>
                         {job.employer.company && (
                           <p className="text-sm text-gray-600">
@@ -109,14 +135,8 @@ const ViewJobs = () => {
                       </div>
 
                       <div className="text-sm text-right text-gray-700">
-                        <p>
-                          <span className="font-semibold">Job ID:</span>{" "}
-                          {job.jobId}
-                        </p>
-                        <p>
-                          <span className="font-semibold">Vacancies:</span>{" "}
-                          {job.vacancies}
-                        </p>
+                        <p><span className="font-semibold">Job ID:</span> {job.jobId}</p>
+                        <p><span className="font-semibold">Vacancies:</span> {job.vacancies}</p>
                         <p>
                           <span className="font-semibold">Created on</span>{" "}
                           {new Date(job.createdAt).toLocaleDateString()}{" "}
@@ -129,32 +149,21 @@ const ViewJobs = () => {
                     {isExpanded && (
                       <div className="mt-4">
                         <p className="text-gray-600">
-                          Date:{" "}
-                          {new Date(job.dateFrom).toLocaleDateString()} -{" "}
+                          Date: {new Date(job.dateFrom).toLocaleDateString()} -{" "}
                           {new Date(job.dateTo).toLocaleDateString()}
                         </p>
-                        <p className="text-gray-600">
-                          Time: {job.timeFrom} - {job.timeTo}
-                        </p>
-                        <p className="text-gray-600">
-                          Duration: {job.duration} day(s)
-                        </p>
-                        <p className="text-gray-600">
-                          Payment: Rs. {job.payment}
-                        </p>
+                        <p className="text-gray-600">Time: {job.timeFrom} - {job.timeTo}</p>
+                        <p className="text-gray-600">Duration: {job.duration} day(s)</p>
+                        <p className="text-gray-600">Payment: Rs. {job.payment}</p>
                         <p className="text-gray-600">Job Description:</p>
                         <p>{job.description}</p>
-                        <p className="text-gray-600">
-                          No. of Applicants: {job.numberOfApplicants}
-                        </p>
+                        <p className="text-gray-600">No. of Applicants: {job.numberOfApplicants}</p>
 
                         <div className="mt-4">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              setContactVisibleIndex((prev) =>
-                                prev === index ? null : index
-                              );
+                              setContactVisibleIndex((prev) => prev === index ? null : index);
                             }}
                             className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
                           >
@@ -165,27 +174,18 @@ const ViewJobs = () => {
                             <div className="flex justify-between p-4 mt-4 bg-gray-100 rounded">
                               <div>
                                 <h4 className="font-bold text-gray-700">
-                                  {job.employer.firstName}{" "}
-                                  {job.employer.lastName}
+                                  {job.employer.firstName} {job.employer.lastName}
                                 </h4>
-                                <p className="text-gray-600">
-                                  {job.employer.email}
-                                </p>
-                                <p className="text-gray-600">
-                                  {job.employer.mobileNumber}
-                                </p>
+                                <p className="text-gray-600">{job.employer.email}</p>
+                                <p className="text-gray-600">{job.employer.mobileNumber}</p>
                               </div>
                               {job.employer.company && (
                                 <div className="text-right">
                                   <h4 className="font-bold text-gray-700">
                                     {job.employer.company.name}
                                   </h4>
-                                  <p className="text-gray-600">
-                                    {job.employer.company.email}
-                                  </p>
-                                  <p className="text-gray-600">
-                                    {job.employer.company.telephone}
-                                  </p>
+                                  <p className="text-gray-600">{job.employer.company.email}</p>
+                                  <p className="text-gray-600">{job.employer.company.telephone}</p>
                                 </div>
                               )}
                             </div>
@@ -232,29 +232,7 @@ const ViewJobs = () => {
               </button>
               <button
                 className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
-                onClick={async () => {
-                  if (!jobToDelete) return;
-
-                  try {
-                    const res = await fetch(`${API_ROUTES.ADMIN_JOBS}/${jobToDelete}/delete`, {
-                      method: "DELETE",
-                    });
-
-                    if (res.ok) {
-                      setJobs((prev) => prev.filter((job) => job.jobId !== jobToDelete));
-                      alert("Job post has been deleted successfully.");
-                    } else {
-                      console.error("Failed to delete job");
-                    }
-                  } catch (err) {
-                    console.error("Error deleting job", err);
-                  } finally {
-                    setShowConfirm(false);
-                    setJobToDelete(null);
-                    setExpandedIndex(null);
-                    setContactVisibleIndex(null);
-                  }
-                }}
+                onClick={handleDelete}
               >
                 Confirm Delete
               </button>

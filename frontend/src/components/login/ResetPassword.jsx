@@ -16,10 +16,10 @@ const NewPassword = () => {
 
   const { userId, email, userType } = location.state || {};
 
-  // Password validation
+  // Updated password validation
   const isStrongPassword = (password) => {
     const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     return regex.test(password);
   };
 
@@ -29,7 +29,7 @@ const NewPassword = () => {
       errors.newPassword = "New password is required.";
     } else if (!isStrongPassword(newPassword)) {
       errors.newPassword =
-        "Password must be at least 6 characters, including uppercase, lowercase, number, and special character.";
+        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
     }
 
     if (!confirmPassword.trim()) {
@@ -51,8 +51,7 @@ const NewPassword = () => {
 
     try {
       setLoading(true);
-      console.log("Navigating to reset-password with:", { userId, email, userType });
-      const res = await axios.post(API_ROUTES.ACCOUNT+"/recover/reset-password", {
+      const res = await axios.post(API_ROUTES.ACCOUNT + "/recover/reset-password", {
         userId,
         userType,
         newPassword,
@@ -157,4 +156,5 @@ const NewPassword = () => {
 };
 
 export default NewPassword;
+
 

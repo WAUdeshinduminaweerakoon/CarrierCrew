@@ -206,6 +206,7 @@ const getAllJobsWithEmployerDetails = async (req, res) => {
         jobId: job._id,
         jobTitle: job.jobTitle,
         location: job.location,
+        district: job.district,
         dateFrom: job.dateFrom,
         dateTo: job.dateTo,
         timeFrom: job.timeFrom,

@@ -82,7 +82,7 @@ const EmployerHome = () => {
       >
         <nav className="bg-green-800 text-white text-center px-4">
           
-          <Link to="#" className="block py-2 hover:bg-green-700">Settings</Link>
+          <Link to="/employer/settings" className="block py-2 hover:bg-green-700">Settings</Link>
           <Link to="/" className="block py-2 hover:bg-green-700">Logout</Link>
         </nav>
       </div>

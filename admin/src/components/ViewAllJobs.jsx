@@ -25,14 +25,30 @@ const ViewJobs = () => {
     }
   };
 
-  const filteredJobs = jobs.filter((job) => {
-    const search = searchTerm.toLowerCase();
-    return (
-      job.jobTitle.toLowerCase().includes(search) ||
-      job.location.toLowerCase().includes(search) 
+  // const filteredJobs = jobs.filter((job) => {
+  //   const search = searchTerm.toLowerCase();
+  //   return (
+  //     job.jobTitle.toLowerCase().includes(search) ||
+  //     job.location.toLowerCase().includes(search) ||
+  //     job.employer.firstName.toLowerCase().includes(search)||
+  //     job.employer.lastName.toLowerCase().includes(search)||
+  //     job.employer.company.name.toLowerCase().includes(search)
+  //   );
+  // });
+    const filteredJobs = jobs.filter((job) => {
+      const search = searchTerm.toLowerCase();
+      const fullName = `${job.employer.firstName} ${job.employer.lastName}`.toLowerCase();
+      return (
+        job.jobId.toString().toLowerCase().includes(search) ||
+        job.jobTitle.toLowerCase().includes(search) ||
+        job.location.toLowerCase().includes(search) ||
+        job.employer.firstName.toLowerCase().includes(search) ||
+        job.employer.lastName.toLowerCase().includes(search) ||
+        fullName.includes(search) ||
+        (job.employer.company?.name?.toLowerCase().includes(search) || false)
+      );
+    });
 
-    );
-  });
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">

@@ -141,10 +141,6 @@ const EmployerHome = () => {
   <h1 className="text-lg font-bold text-center text-green-800 mb-2">
     Total Job Posts: {jobs.length}
   </h1>
-
-  
-       
-  
 </>
 
       </div>

@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import API_ROUTES from '../../configs/config';
 
-
-const JobCard = ({ job, jobseekerId}) => {
+const JobCard = ({ job, jobseekerId }) => {
   const [expanded, setExpanded] = useState(false);
   const apiURL = `${API_ROUTES.JOBS}/${job._id}/apply`;
-  const handleApply = async (e) => {
-    e.stopPropagation(); 
-    console.log("Applying for job:", job._id);
-    console.log("Jobseeker ID:", jobseekerId);
 
+  const handleApply = async (e) => {
+    e.stopPropagation();
     try {
       const response = await fetch(apiURL, {
         method: "POST",
@@ -21,7 +18,6 @@ const JobCard = ({ job, jobseekerId}) => {
       });
 
       const result = await response.json();
-      console.log("Apply response:", result);
 
       if (response.ok) {
         toast.success("Application submitted successfully!");
@@ -29,13 +25,12 @@ const JobCard = ({ job, jobseekerId}) => {
         toast.error(`Application failed: ${result.message || "Unknown error"}`);
       }
     } catch (err) {
-      console.error("Application error:", err);
       toast.error("Something went wrong while applying.");
     }
   };
 
   return (
-    <div className="w-10/12 p-4 text-center transition bg-white rounded-md shadow hover:bg-green-50">
+    <div className="w-full max-w-8/12 mx-auto p-4 transition bg-white rounded-lg shadow hover:bg-green-50">
       <div
         className="flex items-center gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
@@ -43,16 +38,14 @@ const JobCard = ({ job, jobseekerId}) => {
         <img
           src={job.image}
           alt={job.category}
-          className="object-cover w-16 h-16 rounded-md"
+          className="object-cover w-14 h-14 rounded-md"
         />
         <div className="flex-1 text-left">
           <h3 className="text-lg font-semibold text-green-800">{job.jobTitle}</h3>
           <p className="text-sm text-gray-600">{job.location}</p>
-          <p className="text-sm text-gray-600">{job.duration}</p>
-          <p className="text-sm text-gray-600">
-            {job.dateFrom ? job.dateFrom.slice(0, 10) : ''}
-          </p>
-          <p className="text-sm font-medium text-green-700">{job.payment}</p>
+          <p className="text-sm text-gray-600">{job.duration} hrs</p>
+          <p className="text-sm text-gray-600">{job.dateFrom?.slice(0, 10)}</p>
+          <p className="text-sm font-medium text-green-700">Rs. {job.payment}</p>
         </div>
       </div>
 
@@ -60,12 +53,8 @@ const JobCard = ({ job, jobseekerId}) => {
       {expanded && (
         <div className="mt-4 space-y-2 text-sm text-left text-gray-700">
           <p><strong>Working Hours:</strong> {job.duration}</p>
-          <p>
-            <strong>Working Days:</strong>{" "}
-            {job.dateFrom ? job.dateFrom.slice(0, 10) : ""} -{" "}
-            {job.dateTo ? job.dateTo.slice(0, 10) : ""}
-          </p>
-          <p><strong>Salary:</strong> {job.payment}</p>
+          <p><strong>Working Days:</strong> {job.dateFrom?.slice(0, 10)} - {job.dateTo?.slice(0, 10)}</p>
+          <p><strong>Salary:</strong> Rs. {job.payment}</p>
           <p><strong>Description:</strong> {job.description}</p>
 
           <button
@@ -81,3 +70,5 @@ const JobCard = ({ job, jobseekerId}) => {
 };
 
 export default JobCard;
+
+

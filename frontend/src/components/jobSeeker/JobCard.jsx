@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import API_ROUTES from '../../configs/config';
 
-const JobCard = ({ job, jobseekerId }) => {
+const JobCard = ({ job, jobseekerId, categoriesWithImages }) => {
   const [expanded, setExpanded] = useState(false);
   const apiURL = `${API_ROUTES.JOBS}/${job._id}/apply`;
 
@@ -29,6 +29,15 @@ const JobCard = ({ job, jobseekerId }) => {
     }
   };
 
+    const matchedCategory = categoriesWithImages.find(
+      (cat) =>
+        cat.name?.toLowerCase().trim() === job.jobTitle?.toLowerCase().trim()
+    );
+
+
+
+  const imageToShow = matchedCategory?.image || "/default-image.jpg";
+
   return (
     <div className="w-full max-w-8/12 mx-auto p-4 transition bg-white rounded-lg shadow hover:bg-green-50">
       <div
@@ -36,10 +45,11 @@ const JobCard = ({ job, jobseekerId }) => {
         onClick={() => setExpanded(!expanded)}
       >
         <img
-          src={job.image}
+          src={imageToShow}
           alt={job.category}
-          className="object-cover w-14 h-14 rounded-md"
+          className="object-cover w-28 h-28 rounded-md"
         />
+
         <div className="flex-1 text-left">
           <h3 className="text-lg font-semibold text-green-800">{job.jobTitle}</h3>
           <p className="text-sm text-gray-600">{job.location}</p>

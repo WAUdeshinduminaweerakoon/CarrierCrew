@@ -25,6 +25,7 @@ const Home = () => {
   const [jobTitle, setCategories] = useState([]);
   const [jobseekerId, setEmployerId] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [categoriesWithImages, setCategoriesWithImages] = useState([]);
 
   const apiURL = `${API_ROUTES.JOBS}/all`;
 
@@ -38,6 +39,22 @@ const Home = () => {
       setTimeout(()=> {navigate("/");},1000);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/category/images");
+        if (Array.isArray(response.data)) {
+          setCategoriesWithImages(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch categories with images:", err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+
 
   useEffect(() => {
   const fetchJobs = async () => {
@@ -149,7 +166,12 @@ const Home = () => {
             <p className="text-center text-gray-500 col-span-full">No jobs found.</p>
           ) : (
             displayedJobs.map((job) => (
-              <JobCard key={job._id} job={job} jobseekerId={jobseekerId} />
+              <JobCard
+                key={job._id}
+                job={job}
+                jobseekerId={jobseekerId}
+                categoriesWithImages={categoriesWithImages}
+              />
             ))
           )}
         </div>

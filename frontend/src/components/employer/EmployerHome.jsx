@@ -49,14 +49,14 @@ const EmployerHome = () => {
         .catch((err) => {
           console.error("Failed to fetch jobs:", err);
           toast.error("Failed to load jobs. Try again later.");
+        });
 
-          fetch(`${API_ROUTES.JOBSEEKER}/count`)
+         fetch(`${API_ROUTES.JOBSEEKER}/count`)
       .then((res) => res.json())
       .then((data) => setJobSeekerCount(data.count))
       .catch((err) =>
         console.error("Failed to fetch job seeker count:", err)
       );
-        });
     } else {
       setTimeout(() => { navigate("/");}, 1000);
       toast.warn("Please login first.");

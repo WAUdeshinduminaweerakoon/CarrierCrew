@@ -1,7 +1,8 @@
 // Enhanced GeneralSettings.js UI with left navigation and dynamic right content
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { HomeIcon } from "lucide-react";
 import API_ROUTES from "../configs/config";
+import axios from 'axios';
 
 const districts = [
   "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
@@ -28,8 +29,16 @@ const GeneralSettings = () => {
 
   const [categoryName, setCategoryName] = useState("");
   const [categories, setCategories] = useState([]);
+  const [file, setFile] = useState(null);
+  const fileInputRef = useRef(null);
 
-
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+    });
 
   useEffect(() => {
     fetchPlans();
@@ -122,29 +131,32 @@ const GeneralSettings = () => {
     }
   };
 
-  const handleAddCategory = async () => {
-    if (!categoryName.trim()) {
-      alert("Please enter a category name");
-      return;
-    }
-    try {
-      const response = await fetch(API_ROUTES.ADMIN_CATEGORY + "/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: categoryName }),
-      });
-      const data = await response.json();
-      if (!response.ok) alert(`Error: ${data.message || "Unknown error"}`);
-      else {
+    const handleAddCategory = async (e) => {
+      e.preventDefault();
+  
+      const base64Image = await convertToBase64(file);
+
+      const name = categoryName;
+
+      const payload = {
+        name,
+        base64Image,
+        contentType: file.type,
+      };
+  
+      try {
+        const response = await axios.post(API_ROUTES.ADMIN_CATEGORY + "/add", payload);
         alert("Category added successfully!");
         setCategoryName("");
-        fetchCategories(); 
+        setFile(null);
+        fileInputRef.current.value = "";
+        fetchCategories();
+      } catch (error) {
+        console.error(error);
+        alert(`Error: ${error.response?.data?.message || "Failed to create category"}`);
       }
-    } catch (error) {
-      alert("Something went wrong while adding the category");
-      console.error(error);
-    }
-  };
+
+    };
 
   const fetchCategories = async () => {
     try {
@@ -262,23 +274,59 @@ const GeneralSettings = () => {
 
           {activeTab === 'categories' && (
             <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-2xl font-bold mb-4">Add New Category</h2>
-              <label className="block mb-4">
-                Category Name
-                <input
-                  type="text"
-                  value={categoryName}
-                  onChange={(e) => setCategoryName(e.target.value)}
-                  className="block w-full p-2 border rounded"
-                  placeholder="Enter category name"
-                />
-              </label>
-              <div className="flex gap-4 mb-6">
-                <button onClick={handleAddCategory} className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
-                <button onClick={() => setCategoryName("")} className="bg-gray-300 text-gray-800 px-4 py-2 rounded">Reset</button>
-              </div>
+              <h2 className="text-2xl font-bold mb-6">Add New Category</h2>
 
-              <br></br>
+              <form
+                className="space-y-4"
+                onSubmit={handleAddCategory}
+              >
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">Category Name</label>
+                  <input
+                    type="text"
+                    value={categoryName}
+                    onChange={(e) => setCategoryName(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Enter category name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-medium mb-1">Upload Icon/Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    ref={fileInputRef}
+                    className="block"
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  >
+                    Add
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCategoryName("");
+                      setFile(null);
+                      fileInputRef.current.value = "";
+                    }}
+                    className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </form>
+
+              <hr className="my-6" />
+
               <h3 className="text-xl font-semibold mb-3 text-gray-800">Existing Categories</h3>
               {categories.length === 0 ? (
                 <p className="text-gray-500">No categories found.</p>
@@ -291,10 +339,6 @@ const GeneralSettings = () => {
               )}
             </div>
           )}
-
-
-
-
 
 
         </main>

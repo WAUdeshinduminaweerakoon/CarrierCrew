@@ -167,21 +167,25 @@ const getUserRegistrationsLast4Months = async (req, res) => {
   }
 };
 
-const addNewCategory = async (req, res) => {
+const createCategory = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, base64Image, contentType } = req.body;
 
-    // Check if the category already exists
     const existingCategory = await Category.findOne({ name });
     if (existingCategory) {
       return res.status(400).json({ message: 'Category already exists' });
     }
 
-    // Create and save the new category
-    const newCategory = new Category({ name });
-    await newCategory.save();
+    const category = new Category({
+      name,
+      image: {
+        data: Buffer.from(base64Image, 'base64'),
+        contentType,
+      },
+    });
 
-    res.status(201).json({ message: 'Category created successfully', category: newCategory });
+    await category.save();
+    res.status(201).json({ message: 'Category created successfully', category: name });
   } catch (error) {
     console.error('Error creating category:', error);
     res.status(500).json({ message: 'Server error' });
@@ -274,7 +278,7 @@ module.exports = {
   getTotalApplicantCount,
   getJobsLastFourMonths,
   getUserRegistrationsLast4Months,
-  addNewCategory,
+  createCategory,
   getAllJobsWithEmployerDetails,
   deleteJobByAdmin,
 };

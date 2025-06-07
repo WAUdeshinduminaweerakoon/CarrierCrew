@@ -35,7 +35,7 @@ const Home = () => {
       setEmployerId(storedUserId);
     } else {
       alert("Login First.");
-      navigate("/");
+      setTimeout(()=> {navigate("/");},1000);
     }
   }, []);
 

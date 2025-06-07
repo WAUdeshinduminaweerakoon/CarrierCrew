@@ -2,6 +2,18 @@ const express = require('express');
 const router = express.Router();
 const JobSeeker = require('../models/Jobseeker');
 
+
+//Get count
+      router.get('/count', async (req, res) => {
+      try {
+        const count = await JobSeeker.countDocuments();
+        res.json({ count });
+      } catch (err) {
+        console.error('Error counting job seekers:', err.message);
+        res.status(500).json({ message: 'Failed to get job seeker count' });
+      }
+    });
+    
 // FIRST: Get education options (specific route)
 router.get('/education-options', (req, res) => {
   try {

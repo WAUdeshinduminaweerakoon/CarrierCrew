@@ -36,6 +36,8 @@ const JobSeekerRegistration = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loadingOtp, setLoadingOtp] = useState(false);// disable contiune untill otp send
+
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -70,7 +72,8 @@ const JobSeekerRegistration = () => {
 
   const handleSendOtp = async () => {
     try {
-      const res = await axios.post(`${API_ROUTES.OTP}/send-otp`, {
+        setLoadingOtp(true); // Start loading
+        const res = await axios.post(`${API_ROUTES.OTP}/send-otp`, {
         email: formData.email,
       });
       setMessage(res.data.message);
@@ -79,6 +82,8 @@ const JobSeekerRegistration = () => {
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to send OTP");
       toast.error(message, { autoClose: 3000 });
+    }finally {
+    setLoadingOtp(false); // Stop loading after try/catch
     }
   };
 
@@ -132,7 +137,7 @@ const JobSeekerRegistration = () => {
 
   const handleInitialSubmit = async (e) => {
     e.preventDefault();
-    if (validateStepOne()) {
+    if (validateStepOne() && !loadingOtp) {
       await handleSendOtp();
     }
   };
@@ -241,8 +246,8 @@ const JobSeekerRegistration = () => {
               {errors.education && <span className="text-sm text-red-500">{errors.education}</span>}
             </div>
 
-            <button type="submit" className="w-full px-4 py-2 mt-4 text-white bg-green-500 rounded-md hover:bg-green-600">
-              Continue
+            <button type="submit" className="w-full px-4 py-2 mt-4 text-white bg-green-500 rounded-md hover:bg-green-600 disabled:opacity-50" disabled={loadingOtp}>
+              {loadingOtp ? "Sending OTP..." : "Continue"}
             </button>
           </form>
         )}

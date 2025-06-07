@@ -133,10 +133,10 @@ const EmployerRegistration = () => {
       });
       setMessage(res.data.message);
       setShowOtpModal(true); // Show OTP modal
-      toast.success("OTP sent to your email", { autoClose: 3000 });
+      toast.success("OTP sent to your email", { autoClose: 2000 });
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to send OTP");
-      toast.error(message, { autoClose: 3000 });
+      toast.error(message, { autoClose: 2000 });
     }
   };
 
@@ -153,11 +153,11 @@ const EmployerRegistration = () => {
           autoClose: 3000,
         });
       } else {
-        toast.error("Invalid OTP", { autoClose: 3000 });
+        toast.error("Invalid OTP", { autoClose: 2000 });
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "OTP verification failed", {
-        autoClose: 3000,
+        autoClose: 2000,
       });
     }
   };
@@ -217,7 +217,7 @@ const EmployerRegistration = () => {
               Add Company Details (Optional)
             </h1>
             <form className="flex flex-col gap-3" onSubmit={handleCompanySubmit}>
-              {["name", "email", "telephone", "companyType", "address", "nearestCity"].map(
+              {["Name", "Email", "Telephone", "CompanyType", "Address", "NearestCity"].map(
                 (field) => (
                   <div key={field}>
                     <input
@@ -272,7 +272,7 @@ const EmployerRegistration = () => {
               Add Employer Details (Required)
             </h2>
             <form className="flex flex-col gap-4" onSubmit={handleEmployerDetailsSubmit}>
-              {["firstName", "lastName", "email", "mobileNumber", "nic", "address", "district", "nearestCity"].map((field) => {
+              {["FirstName", "LastName", "Email", "MobileNumber", "NIC", "Address", "District", "NearestCity"].map((field) => {
                 if(field === "district") {
                   return (
                     <div key={field}>

@@ -47,6 +47,7 @@ const EmployerRegistration = () => {
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
+  const [loadingOtp, setLoadingOtp] = useState(false);// make unable coutiune untill opt send
 
   useEffect(() => {
     setCompanyErrors({});
@@ -128,7 +129,8 @@ const EmployerRegistration = () => {
 
   const handleSendOtp = async () => {
     try {
-      const res = await axios.post(`${API_ROUTES.OTP}/send-otp`, {
+        setLoadingOtp(true); // Start loading
+        const res = await axios.post(`${API_ROUTES.OTP}/send-otp`, {
         email: formData.email,
       });
       setMessage(res.data.message);
@@ -137,6 +139,8 @@ const EmployerRegistration = () => {
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to send OTP");
       toast.error(message, { autoClose: 2000 });
+    } finally {
+    setLoadingOtp(false); // Stop loading after try/catch
     }
   };
 
@@ -176,7 +180,7 @@ const EmployerRegistration = () => {
   // Handle employer details submit (send OTP)
   const handleEmployerDetailsSubmit = async (e) => {
     e.preventDefault();
-    if (validateEmployerDetails()) {
+    if (validateEmployerDetails() && !loadingOtp) {
       await handleSendOtp();
     }
   };
@@ -327,8 +331,8 @@ const EmployerRegistration = () => {
                   </div>
                 );
               })}
-              <button type="submit" className="py-2 text-white bg-green-600 rounded-md">
-                Continue
+              <button type="submit" className="py-2 text-white bg-green-600 rounded-md disabled:opacity-50" disabled={loadingOtp}>
+                {loadingOtp ? "Sending OTP..." : "Continue"}
               </button>
             </form>
           </>

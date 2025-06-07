@@ -4,7 +4,6 @@ import { format } from 'date-fns';
 import API_ROUTES from '../../configs/config';
 import { FaBars } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import Header from "./Header";
 import ApplicationHeader from "./ApplicationHeader";
 
 const ViewApplications = () => {
@@ -54,15 +53,14 @@ const filteredApplications = applications.filter((app) => {
   const search = searchTerm.toLowerCase();
   const fullName = `${app.jobSeeker.firstName} ${app.jobSeeker.lastName}`.toLowerCase();
   const title = app.jobTitle?.toLowerCase() || '';
-  const city = app.jobSeeker?.nearestCity?.toLowerCase() || '';
-  const district = app.jobSeeker?.district?.toLowerCase() || '';
-  const area = app.jobSeeker?.area?.toLowerCase() || '';
+  const area = app.location.toLowerCase() || '';
+  const district = app.district.toLowerCase() || '';
   const category = app.jobTitle?.toLowerCase() || '';
 
   const matchesSearch =
     fullName.includes(search) ||
     title.includes(search) ||
-    city.includes(search);
+    area.includes(search);
 
   const matchesDistrict = !selectedDistrict || district === selectedDistrict.toLowerCase();
   const matchesArea = !selectedArea || area === selectedArea.toLowerCase();
@@ -86,7 +84,6 @@ const filteredApplications = applications.filter((app) => {
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
-     <Header/>
      <ApplicationHeader
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}

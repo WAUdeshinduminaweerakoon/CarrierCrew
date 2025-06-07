@@ -21,6 +21,7 @@ const EmployerHome = () => {
   const jobsPerPage = 1;
   const navigate = useNavigate();
   const [totalApplicants, setTotalApplicants] = useState(0);
+  const [jobSeekerCount, setJobSeekerCount] = useState(null);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -48,6 +49,13 @@ const EmployerHome = () => {
         .catch((err) => {
           console.error("Failed to fetch jobs:", err);
           toast.error("Failed to load jobs. Try again later.");
+
+          fetch(`${API_ROUTES.JOBSEEKER}/count`)
+      .then((res) => res.json())
+      .then((data) => setJobSeekerCount(data.count))
+      .catch((err) =>
+        console.error("Failed to fetch job seeker count:", err)
+      );
         });
     } else {
       setTimeout(() => { navigate("/");}, 1000);
@@ -156,6 +164,7 @@ const EmployerHome = () => {
         <div className="bg-white text-green-900 font-medium rounded-xl shadow p-4 grid grid-cols-1 gap-2 text-center">
           <p>Total Job Posts: {jobs.length}</p>
           <p>Total Applicants: {totalApplicants}</p>
+          <p>Total Job Seekers: {jobSeekerCount !== null ? jobSeekerCount : 'Loading...'}</p>
         </div>
       </div>
     </div>

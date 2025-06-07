@@ -18,6 +18,10 @@ const EmployerRegistration = () => {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [nearestCityOptions, setNearestCityOptions] = useState([]);
 
+  const [authFile, setAuthFile] = useState(null);
+  const [authFileUrl, setAuthFileUrl] = useState("");
+
+
   const [companyForm, setCompanyForm] = useState({
     name: "",
     email: "",
@@ -38,12 +42,10 @@ const EmployerRegistration = () => {
     address: "",
     district: "",
     nearestCity: "",
-    // username, password, confirmPassword will be added only at setCredentials step
   });
 
   const [errors, setErrors] = useState({});
 
-  // OTP modal related states
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
@@ -99,12 +101,19 @@ const EmployerRegistration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCompanySubmit = (e) => {
+  const handleCompanySubmit = async (e) => {
     e.preventDefault();
     if (validateCompany()) {
+      if (authFile) {
+        const uploadedUrl = await uploadFileToS3(authFile);
+        if (!uploadedUrl) return; // Stop if upload fails
+        setAuthFileUrl(uploadedUrl);
+      }
       setStep("employerDetails");
     }
   };
+
+
 
   const handleDataChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -132,7 +141,7 @@ const EmployerRegistration = () => {
         email: formData.email,
       });
       setMessage(res.data.message);
-      setShowOtpModal(true); // Show OTP modal
+      setShowOtpModal(true); 
       toast.success("OTP sent to your email", { autoClose: 3000 });
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to send OTP");
@@ -162,7 +171,7 @@ const EmployerRegistration = () => {
     }
   };
 
-  // Validate credentials form
+
   const validateCredentials = () => {
     const newErrors = {};
     if (!formData.username?.trim()) newErrors.username = "Username is required.";
@@ -173,7 +182,7 @@ const EmployerRegistration = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle employer details submit (send OTP)
+
   const handleEmployerDetailsSubmit = async (e) => {
     e.preventDefault();
     if (validateEmployerDetails()) {
@@ -181,16 +190,17 @@ const EmployerRegistration = () => {
     }
   };
 
-  // Handle final credentials submit (complete registration)
   const handleCredentialsSubmit = async (e) => {
     e.preventDefault();
     if (validateCredentials()) {
       try {
-        // Compose payload including username and password now
         const payload = {
           ...formData,
           userType: "Employer",
-          company: companyForm,
+          company: {
+            ...companyForm,
+            authorizationLetterUrl: authFileUrl || "", 
+          },
         };
 
         const res = await axios.post(`${API_ROUTES.REGISTER}/register/employer`, payload);
@@ -205,6 +215,26 @@ const EmployerRegistration = () => {
       }
     }
   };
+
+
+  const uploadFileToS3 = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post(`${API_ROUTES.FILEUPLOAD}/s3`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return res.data.fileUrl;
+    } catch (err) {
+      console.error("Upload error:", err);
+      toast.error("Failed to upload file");
+      return null;
+    }
+  };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen pt-10 pb-10 bg-green-50">
@@ -240,11 +270,12 @@ const EmployerRegistration = () => {
               )}
               <label htmlFor="upload" className="text-sm text-left text-green-600 cursor-pointer">
                 Upload Authorization Letter
-                <input
-                  type="file"
-                  id="upload"
-                  className="w-full p-2 mt-1 text-sm border border-green-500 rounded-md"
-                />
+                  <input
+                    type="file"
+                    id="upload"
+                    className="w-full p-2 mt-1 text-sm border border-green-500 rounded-md"
+                    onChange={(e) => setAuthFile(e.target.files[0])}
+                  />
               </label>
               <div className="flex justify-end mt-5">
                 <button
@@ -265,7 +296,6 @@ const EmployerRegistration = () => {
           </>
         )}
 
-        {/* Employer Details Step - No username/password here */}
         {step === "employerDetails" && (
           <>
             <h2 className="mb-6 text-lg font-bold text-center text-green-600">

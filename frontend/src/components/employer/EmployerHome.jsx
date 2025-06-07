@@ -25,6 +25,8 @@ const EmployerHome = () => {
   const startIndex = (currentPage - 1) * jobsPerPage;
   const currentJobs = jobs.slice(startIndex, startIndex + jobsPerPage);
   const [totalApplicants, setTotalApplicants] = useState(0);
+  const [jobSeekerCount, setJobSeekerCount] = useState(null);
+
 
   useEffect(() => {
   const storedUserId = localStorage.getItem("userId");
@@ -32,7 +34,7 @@ const EmployerHome = () => {
 
   if (userType === "Employer" && storedUserId) {
     setEmployerId(storedUserId);
-
+    
     fetch(`${API_ROUTES.JOBS}/employer/${storedUserId}`)
       .then((res) => res.json())
       .then((data) => {
@@ -46,6 +48,14 @@ const EmployerHome = () => {
         setTotalApplicants(total);
       })
       .catch((err) => console.error("Failed to fetch jobs:", err));
+
+      fetch(`${API_ROUTES.JOBSEEKER}/count`)
+      .then((res) => res.json())
+      .then((data) => setJobSeekerCount(data.count))
+      .catch((err) =>
+        console.error("Failed to fetch job seeker count:", err)
+      );
+      
   } else {
     alert("Login first.");
     navigate("/");
@@ -153,9 +163,11 @@ const EmployerHome = () => {
   <div className="w-full max-w-screen-sm px-4 pt-2">
   <div className="w-full max-w-screen-sm px-4 pt-2">
   <div className="bg-white text-green-900 font-medium rounded-xl shadow p-4 grid grid-cols-1 gap-2 text-center">
-    <p>Total Job Posts: {jobs.length}</p>
-    <p>Total Applicants: {totalApplicants}</p>
-  </div>
+  <p>Total Job Posts: {jobs.length}</p>
+  <p>Total Applicants: {totalApplicants}</p>
+  <p>Total Job Seekers: {jobSeekerCount !== null ? jobSeekerCount : 'Loading...'}</p>
+</div>
+
 </div>
 
 </div>

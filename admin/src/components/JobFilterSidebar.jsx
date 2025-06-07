@@ -34,15 +34,16 @@ const JobFilterSidebar = ({
 
       {/* Search Filter */}
       <div className="mb-4">
-        <h3 className="mb-2 text-sm font-semibold text-gray-600">Search</h3>
-        <input
-          type="text"
-          placeholder="Search by title or location"
-          value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full px-3 py-2 text-sm border rounded"
-        />
-      </div>
+      <h3 className="mb-2 text-sm font-semibold text-green-700">Search</h3>
+      <input
+        type="text"
+        placeholder="Search by title, location..."
+        value={searchTerm}
+        onChange={(e) => onSearchChange(e.target.value)}
+        className="w-full px-3 py-2 text-sm text-green-600 border border-black rounded"
+      />
+    </div>
+
 
       <div className="mb-4">
         <h3 className="mb-2 text-sm font-semibold text-gray-600">Location</h3>
@@ -59,17 +60,20 @@ const JobFilterSidebar = ({
           onChange={onCategoryChange}
         />
       </div>
+      <div className="mb-4">
         <VacanciesFilter
           vacancies={vacancies}
           onChange={setVacancies}
         />
-        <CreatedDateFilter
+      </div>
+      <div className="mb-4">
+          <CreatedDateFilter
           dateFrom={dateFrom}
           dateTo={dateTo}
           onDateFromChange={setDateFrom}
           onDateToChange={setDateTo}
         />
-
+      </div>
       <div className="mb-4">
         <button
           onClick={() => setIsModalOpen(true)}

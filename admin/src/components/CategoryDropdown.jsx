@@ -25,7 +25,7 @@ const CategoryDropdown = ({ selectedCategory, onChange }) => {
         console.log('Selected category name:', e.target.value);
         onChange(e.target.value);
       }}
-      className="p-2 text-green-700 bg-white border border-green-900 rounded hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+      className="p-2 text-gray-700 bg-white border border-green-900 rounded hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500"
     >
       <option value="">All Categories</option>
       {categories.map((category) => (

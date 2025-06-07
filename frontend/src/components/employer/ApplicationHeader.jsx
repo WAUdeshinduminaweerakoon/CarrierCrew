@@ -70,30 +70,27 @@ const ApplictionHeader = ({
           </nav>
         </div>
 
-        {/* Filters + Search */}
-        <div className="flex flex-col max-w-screen-lg gap-4 px-4 py-4 mx-auto mb-6 bg-green-300 border-4 border-green-900 rounded-2xl md:flex-row md:items-center md:gap-6">
-          {/* Search bar */}
-          <input
+        <div className="flex flex-col max-w-screen-lg gap-4 px-4 py-4 mx-auto mb-6 bg-green-300 border-4 border-green-900 rounded-2xl md:flex-row md:items-center md:justify-between">
+        <input
             type="text"
             placeholder="Search for jobs..."
             onChange={(e) => onSearchChange?.(e.target.value)}
-            className="flex-grow w-full p-2 text-black bg-white border border-green-800 md:w-auto rounded-xl focus:outline-none focus:ring-2 focus:ring-green-700"
+            className="flex-grow w-full p-2 text-black bg-white border border-green-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-700 md:max-w-xs"
             aria-label="Search for jobs"
-          />
+        />
 
-          {/* Filters */}
-          <div className="flex flex-wrap items-center gap-2 md:flex-1 md:gap-4">
+  
+        <div className="flex flex-col flex-grow gap-2 md:flex-row md:items-center md:gap-4">
             <DistrictAreaDropdownEmployer
-              onDistrictChange={onDistrictChange}
-              onAreaChange={onAreaChange}
+            onDistrictChange={onDistrictChange}
+            onAreaChange={onAreaChange}
             />
             <CategoryDropdownEmployer
-             selectedCategory={selectedCategory}
-             onChange={onCategoryChange}
+            selectedCategory={selectedCategory}
+            onChange={onCategoryChange}
             />
-          </div>
+        </div>
 
-          {/* <div className="mt-4 text-right"> */}
             <button
                 onClick={() => {
                 onSearchChange('');
@@ -101,11 +98,12 @@ const ApplictionHeader = ({
                 onAreaChange('');
                 onCategoryChange('');
                 }}
-                className="px-3 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                className="px-3 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700 md:ml-4"
             >
                 Reset Filters
             </button>
         </div>
+
       </header>
     </>
   );

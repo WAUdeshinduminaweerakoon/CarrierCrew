@@ -30,7 +30,7 @@ const JobCard = ({ job, jobseekerId }) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 transition bg-white rounded-lg shadow hover:bg-green-50">
+    <div className="w-full max-w-8/12 mx-auto p-4 transition bg-white rounded-lg shadow hover:bg-green-50">
       <div
         className="flex items-center gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
@@ -70,3 +70,5 @@ const JobCard = ({ job, jobseekerId }) => {
 };
 
 export default JobCard;
+
+

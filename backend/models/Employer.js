@@ -32,6 +32,7 @@ const employerSchema = new mongoose.Schema({
   planStartDate: Date,
   planEndDate: Date,
   postsUsed: { type: Number, default: 0 },
+  description: String,
 }
 }, { timestamps: true });
 

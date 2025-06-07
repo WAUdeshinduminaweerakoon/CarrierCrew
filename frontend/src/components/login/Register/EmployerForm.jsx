@@ -280,7 +280,9 @@ const EmployerRegistration = () => {
                         name="district"
                         value={selectedDistrict}
                         onChange={handleDistrictChange}
-                        className="w-full p-2 border border-green-400 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                         className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 ${
+                          errors.district ? "border-red-500 focus:ring-red-500" : "border-green-400 focus:ring-green-500"
+                        }`}
                       >
                         <option value="">Select District</option>
                         {locations.map((loc) => (

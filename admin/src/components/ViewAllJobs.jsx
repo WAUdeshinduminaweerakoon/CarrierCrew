@@ -12,6 +12,15 @@ const ViewJobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
+  const [salaryRange, setSalaryRange] = useState([0, 10000]);
+  const [workingHours, setWorkingHours] = useState([0, 12]);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+   
+
+  const applyFilters = () => {
+  setIsFilterModalOpen(false); 
+  };
+
 
   useEffect(() => {
     fetchJobs();
@@ -26,6 +35,9 @@ const ViewJobs = () => {
       console.error("Error fetching jobs", err);
     }
   };
+
+
+ 
 
   const filteredJobs = jobs.filter((job) => {
     const search = searchTerm.toLowerCase();
@@ -44,11 +56,16 @@ const ViewJobs = () => {
       ? job.district?.toLowerCase() === selectedDistrict.toLowerCase()
       : true;
 
-    const matchesArea = selectedArea
+    const matchesArea = selectedArea 
       ? job.location?.toLowerCase() === selectedArea.toLowerCase()
       : true;
 
-    return matchesSearch && matchesDistrict && matchesArea;
+    const matchesSalary = job.payment >= salaryRange[0] && job.payment <= salaryRange[1];
+
+    const jobHours = job.duration; // approx
+    const matchesWorkingHours = jobHours >= workingHours[0] && jobHours <= workingHours[1];
+
+  return matchesSearch && matchesDistrict && matchesArea && matchesSalary && matchesWorkingHours;
   });
 
   const handleDelete = async () => {
@@ -92,10 +109,17 @@ const ViewJobs = () => {
 
       <div className="flex flex-grow">
         <JobFilterSidebar
+          isOpen={isFilterModalOpen}
+          onClose={() => setIsFilterModalOpen(false)}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           onDistrictChange={setSelectedDistrict}
           onAreaChange={setSelectedArea}
+          salaryRange={salaryRange}
+          setSalaryRange={setSalaryRange}
+          workingHours={workingHours}
+          setWorkingHours={setWorkingHours}
+          applyFilters={applyFilters}
         />
 
         <main className="flex-grow p-8 bg-gray-100">

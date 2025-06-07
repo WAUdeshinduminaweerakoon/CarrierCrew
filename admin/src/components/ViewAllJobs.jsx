@@ -16,6 +16,10 @@ const ViewJobs = () => {
   const [workingHours, setWorkingHours] = useState([0, 12]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [vacancies, setVacancies] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+
 
    
 
@@ -66,12 +70,21 @@ const ViewJobs = () => {
     ? job.jobTitle?.toLowerCase() === selectedCategory.toLowerCase()
     : true;
 
+    const matchesVacancies = vacancies
+    ? job.vacancies >= parseInt(vacancies)
+    : true;
+    
+    const createdAt = new Date(job.createdAt);
+    const matchesDate = (!dateFrom || createdAt >= new Date(dateFrom)) &&
+                      (!dateTo || createdAt <= new Date(dateTo));
+
+
     const matchesSalary = job.payment >= salaryRange[0] && job.payment <= salaryRange[1];
 
     const jobHours = job.duration; // approx
     const matchesWorkingHours = jobHours >= workingHours[0] && jobHours <= workingHours[1];
 
-  return matchesSearch && matchesDistrict && matchesArea && matchesCategory && matchesSalary && matchesWorkingHours;
+  return matchesSearch && matchesDistrict && matchesArea && matchesCategory && matchesVacancies && matchesDate && matchesSalary && matchesWorkingHours;
   });
 
   const handleDelete = async () => {
@@ -128,6 +141,12 @@ const ViewJobs = () => {
           workingHours={workingHours}
           setWorkingHours={setWorkingHours}
           applyFilters={applyFilters}
+          vacancies={vacancies}
+          setVacancies={setVacancies}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          setDateFrom={setDateFrom}
+          setDateTo={setDateTo}
         />
 
         <main className="flex-grow p-8 bg-gray-100">

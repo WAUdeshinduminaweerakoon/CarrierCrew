@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import DistrictAreaDropdown from "./DistrictAreaDropdown";
 import FilterModal from "./FilterModal"; 
 import CategoryDropdown from "./CategoryDropdown";
-
-
-
+import VacanciesFilter from "./VacanciesFilter";
+import CreatedDateFilter from "./CreatedDateFilter";
 
 
 const JobFilterSidebar = ({
@@ -18,6 +17,12 @@ const JobFilterSidebar = ({
   setSalaryRange,
   workingHours,
   setWorkingHours,
+  vacancies,
+  setVacancies,
+  dateFrom,
+  setDateFrom,
+  dateTo,
+  setDateTo,
   applyFilters,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,6 +59,16 @@ const JobFilterSidebar = ({
           onChange={onCategoryChange}
         />
       </div>
+        <VacanciesFilter
+          vacancies={vacancies}
+          onChange={setVacancies}
+        />
+        <CreatedDateFilter
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          onDateFromChange={setDateFrom}
+          onDateToChange={setDateTo}
+        />
 
       <div className="mb-4">
         <button

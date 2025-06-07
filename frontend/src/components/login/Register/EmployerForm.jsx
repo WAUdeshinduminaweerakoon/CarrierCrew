@@ -217,7 +217,7 @@ const EmployerRegistration = () => {
               Add Company Details (Optional)
             </h1>
             <form className="flex flex-col gap-3" onSubmit={handleCompanySubmit}>
-              {["Name", "Email", "Telephone", "CompanyType", "Address", "NearestCity"].map(
+              {["name", "email", "telephone", "companyType", "address", "nearestCity"].map(
                 (field) => (
                   <div key={field}>
                     <input
@@ -272,7 +272,7 @@ const EmployerRegistration = () => {
               Add Employer Details (Required)
             </h2>
             <form className="flex flex-col gap-4" onSubmit={handleEmployerDetailsSubmit}>
-              {["FirstName", "LastName", "Email", "MobileNumber", "NIC", "Address", "District", "NearestCity"].map((field) => {
+              {["firstName", "lastName", "email", "mobileNumber", "nic", "address", "district", "nearestCity"].map((field) => {
                 if(field === "district") {
                   return (
                     <div key={field}>

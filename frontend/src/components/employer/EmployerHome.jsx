@@ -50,7 +50,7 @@ const EmployerHome = () => {
           toast.error("Failed to load jobs. Try again later.");
         });
     } else {
-      setTimeout(() => { navigate("/");}, 1500);
+      setTimeout(() => { navigate("/");}, 1000);
       toast.warn("Please login first.");
     }
   }, []);

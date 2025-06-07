@@ -53,6 +53,18 @@ router.put('/:id', async (req, res) => {
       };
     }
 
+    //Get count
+      router.get('/count', async (req, res) => {
+      try {
+        const count = await JobSeeker.countDocuments();
+        res.json({ count });
+      } catch (err) {
+        console.error('Error counting job seekers:', err.message);
+        res.status(500).json({ message: 'Failed to get job seeker count' });
+      }
+    });
+
+
     // Update other fields (skip 'profile' since we handled it above)
     Object.keys(updateData).forEach((key) => {
       if (key !== 'profile') {
@@ -73,5 +85,6 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 module.exports = router;

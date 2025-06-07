@@ -2,7 +2,18 @@ const express = require('express');
 const router = express.Router();
 const JobSeeker = require('../models/Jobseeker');
 
-// FIRST: Get education options (specific route)
+// ✅ GET total job seeker count
+router.get('/count', async (req, res) => {
+  try {
+    const count = await JobSeeker.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    console.error('Error counting job seekers:', err.message);
+    res.status(500).json({ message: 'Failed to get job seeker count' });
+  }
+});
+
+// FIRST: Get education options
 router.get('/education-options', (req, res) => {
   try {
     const educationEnum = JobSeeker.schema.path('education').enumValues;
@@ -13,7 +24,7 @@ router.get('/education-options', (req, res) => {
   }
 });
 
-// GET job seeker by ID (dynamic route)
+// GET job seeker by ID
 router.get('/:id', async (req, res) => {
   try {
     const jobSeeker = await JobSeeker.findById(req.params.id).lean();
@@ -22,7 +33,6 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Job seeker not found' });
     }
 
-    // Optionally remove sensitive info
     if (jobSeeker.password) {
       delete jobSeeker.password;
     }
@@ -45,7 +55,6 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Job seeker not found' });
     }
 
-    // Update profile fields if provided
     if (updateData.profile) {
       jobSeeker.profile = {
         ...jobSeeker.profile.toObject(),
@@ -53,19 +62,6 @@ router.put('/:id', async (req, res) => {
       };
     }
 
-    //Get count
-      router.get('/count', async (req, res) => {
-      try {
-        const count = await JobSeeker.countDocuments();
-        res.json({ count });
-      } catch (err) {
-        console.error('Error counting job seekers:', err.message);
-        res.status(500).json({ message: 'Failed to get job seeker count' });
-      }
-    });
-
-
-    // Update other fields (skip 'profile' since we handled it above)
     Object.keys(updateData).forEach((key) => {
       if (key !== 'profile') {
         jobSeeker[key] = updateData[key];
@@ -85,6 +81,5 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
 
 module.exports = router;

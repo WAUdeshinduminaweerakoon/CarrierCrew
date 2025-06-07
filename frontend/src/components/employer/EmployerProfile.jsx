@@ -27,12 +27,10 @@ export default function EmployerProfile() {
         return res.json();
       })
       .then((data) => {
-        console.log("Fetched employer data:", data);
         setEmployer(data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Fetch error:", err);
         setError(err.message);
         setLoading(false);
       });
@@ -42,88 +40,94 @@ export default function EmployerProfile() {
 
   if (loading) return <p className="mt-8 text-center">Loading profile...</p>;
   if (error) return <p className="mt-8 text-center text-red-500">{error}</p>;
-
   if (!employer) return <p className="mt-8 text-center">No employer data found.</p>;
 
   const company = employer.company || {};
 
   return (
-    <div>
+    <div className="flex flex-col items-center min-h-screen bg-green-100">
       <Header />
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100">
-      <div className="w-full max-w-md pb-4 bg-white border border-green-200 shadow-xl rounded-2xl">
-        <div className="py-2 text-lg font-semibold text-center text-white bg-green-400 rounded-t-2xl">
-          Employer Profile
-        </div>
-        <div className="p-4 mx-4 mt-4 border border-green-300 rounded-xl">
-          <div className="flex flex-col items-center">
-            <div className="flex items-center justify-center w-20 h-20 text-2xl font-bold text-white bg-green-300 rounded-full">
-              <span>👤</span>
-            </div>
-            <h2 className="mt-2 text-xl font-semibold">{employer.company?.name || 'N/A'}</h2>
-            <p className="text-sm text-gray-500">{employer.company?.email || 'N/A'}</p>
+
+      <div className="w-full max-w-screen-sm p-4">
+        <div className="p-6 bg-white rounded-xl shadow-md">
+          <div className="text-xl font-semibold text-green-800 mb-4 text-center">
+            Employer Profile
           </div>
 
-          <div className="mt-4 space-y-2 text-sm">
-            <p><strong>Name</strong>: {employer.firstName} {employer.lastName}</p>
-            <p><strong>Contact</strong>: {employer.mobileNumber || "N/A"}</p>
-            <p><strong>Address</strong>: {employer.address || "N/A"}</p>
-            <p><strong>Nearest City</strong>: {employer.nearestCity || "N/A"}</p>
-            <div className="p-3 bg-gray-100 border border-gray-300 rounded-md">
-              <p className="text-sm text-justify">
-                <strong>Description</strong>: {company.description || "No description provided"}
-              </p>
+          <div className="flex flex-col items-center mb-4">
+            <div className="w-20 h-20 rounded-full bg-green-300 text-white flex items-center justify-center text-3xl">
+              👤
             </div>
-            <div className="flex items-center mt-2">
-              <strong className="mr-2">Rating</strong>:
-              <div className="flex space-x-1 text-yellow-400">
-                {[...Array(5)].map((_, i) => {
-                  const isFilled = i < (company.rating || 0);
-                  return (
-                    <Star
-                      key={i}
-                      size={16}
-                      fill={isFilled ? "currentColor" : "none"}
-                      stroke="currentColor"
-                      strokeWidth={isFilled ? 1 : 1.5}
-                      className={isFilled ? "" : "text-gray-300"}
-                    />
-                  );
-                })}
-              </div>
-            </div>
+            <h2 className="mt-2 text-lg font-bold text-green-900">
+              {employer.firstName} {employer.lastName}
+            </h2>
+          </div>
 
-            <p><strong>Authorized Person</strong>: {company.authorizedPerson || "N/A"}</p>
+          <div className="border-t border-green-200 pt-4">
+            <h3 className="text-sm font-semibold text-green-800 mb-1">General Details</h3>
+            <p className="text-sm"><strong>NIC:</strong> {employer.nic || "N/A"}</p>
+            <p className="text-sm"><strong>Nearest City:</strong> {employer.nearestCity || "N/A"}</p>
+            <p className="text-sm"><strong>District:</strong> {employer.district || "N/A"}</p>
+          </div>
 
-            <div className="flex items-center justify-between pt-4 mx-4 mt-4 border-t border-blue-200">
-              <span className="text-gray-700 font-small"><strong>Show Company Profile</strong></span>
-              <button
-                className="px-4 py-1 text-white bg-green-600 rounded hover:bg-green-700"
-                onClick={() => navigate("/employer/companyprofile")}
-              >
-                View
-              </button>
+          <div className="border-t border-green-200 pt-4 mt-4">
+            <h3 className="text-sm font-semibold text-green-800 mb-1">Contact Details</h3>
+            <p className="text-sm"><strong>Email:</strong> {employer.email || "N/A"}</p>
+            <p className="text-sm"><strong>Mobile:</strong> {employer.mobileNumber || "N/A"}</p>
+            <p className="text-sm"><strong>Address:</strong><br />{employer.address || "N/A"}</p>
+          </div>
+
+          <div className="border-t border-green-200 pt-4 mt-4">
+            <h3 className="text-sm font-semibold text-green-800 mb-1">Description</h3>
+            <div className="bg-gray-100 border border-gray-300 rounded-md p-3 text-sm text-justify">
+              {employer.description || "No description provided"}
             </div>
+          </div>
+
+          <div className="flex items-center mt-4 text-sm">
+            <strong className="mr-2 text-green-900">Rating:</strong>
+            <div className="flex space-x-1 text-yellow-400">
+              {[...Array(5)].map((_, i) => {
+                const isFilled = i < (company.rating || 0);
+                return (
+                  <Star
+                    key={i}
+                    size={16}
+                    fill={isFilled ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    strokeWidth={isFilled ? 1 : 1.5}
+                    className={isFilled ? "" : "text-gray-300"}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center mt-6 border-t border-green-200 pt-4">
+            <span className="text-sm text-green-900 font-medium">Show Company Profile</span>
+            <button
+              className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
+              onClick={() => navigate("/employer/companyprofile")}
+            >
+              View
+            </button>
           </div>
 
           <div className="flex justify-between mt-6">
             <button
-              className="px-4 py-1 text-green-700 border border-green-600 rounded hover:bg-green-200"
-              type="button"
+              className="px-4 py-1 border border-green-600 text-green-700 rounded hover:bg-green-100"
               onClick={handleBack}
             >
               Back
             </button>
             <button
-              className="px-4 py-1 text-white bg-green-500 rounded hover:bg-green-700"
-              type="button"
+              className="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-700"
               onClick={() => navigate(`/employer/edit-profile/${employer._id}`)}
             >
               Edit
             </button>
             <button
-              className="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-700"
-              type="button"
+              className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-700"
               onClick={() => navigate("/employer/settings")}
             >
               Delete
@@ -132,6 +136,7 @@ export default function EmployerProfile() {
         </div>
       </div>
     </div>
-    </div>
   );
 }
+
+

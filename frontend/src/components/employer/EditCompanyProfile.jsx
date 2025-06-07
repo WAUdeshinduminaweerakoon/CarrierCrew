@@ -19,8 +19,8 @@ export default function EditCompanyProfile() {
     telephone: '',
     address: '',
     nearestCity: '',
-    rating: 0,
-    authorizedPerson: '',
+    //rating: 0,
+    //authorizedPerson: '',
   });
 
   useEffect(() => {
@@ -43,8 +43,8 @@ export default function EditCompanyProfile() {
           telephone: data.company?.telephone || '',
           address: data.company?.address || '',
           nearestCity: data.company?.nearestCity || '',
-          rating: data.company?.rating || 0,
-          authorizedPerson: data.company?.authorizedPerson || '',
+          //rating: data.company?.rating || 0,
+          //authorizedPerson: data.company?.authorizedPerson || '',
         });
         setLoading(false);
       })
@@ -143,24 +143,7 @@ export default function EditCompanyProfile() {
             placeholder="Nearest City"
             className="w-full p-2 border rounded"
           />
-          <input
-            type="number"
-            name="rating"
-            value={companyData.rating}
-            onChange={handleChange}
-            placeholder="Rating (0-5)"
-            min="0"
-            max="5"
-            className="w-full p-2 border rounded"
-          />
-          <input
-            type="text"
-            name="authorizedPerson"
-            value={companyData.authorizedPerson}
-            onChange={handleChange}
-            placeholder="Authorized Person"
-            className="w-full p-2 border rounded"
-          />
+        
 
           <button
             type="submit"

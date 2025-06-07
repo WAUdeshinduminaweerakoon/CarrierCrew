@@ -19,13 +19,8 @@ export default function EditEmployerProfile() {
     address: '',
     nearestCity: '',
     district: '', 
-    company: {
-      name: '',
-      email: '',
-      description: '',
-      rating: 0,
-      authorizedPerson: '',
-    },
+    email:'',
+    description:'',
   });
 
   useEffect(() => {
@@ -45,16 +40,11 @@ export default function EditEmployerProfile() {
           firstName: data.firstName || '',
           lastName: data.lastName || '',
           mobileNumber: data.mobileNumber || '',
+          email: data.email || '',
           address: data.address || '',
           nearestCity: data.nearestCity || '',
           district: data.district || '', 
-          company: {
-            name: data.company?.name || '',
-            email: data.company?.email || '',
-            description: data.company?.description || '',
-            rating: data.company?.rating || 0,
-            authorizedPerson: data.company?.authorizedPerson || '',
-          },
+          description: data.description || '',
         });
         setLoading(false);
       })
@@ -118,95 +108,85 @@ export default function EditEmployerProfile() {
       <div className="w-full max-w-md p-6 bg-white shadow-lg rounded-xl">
         <h2 className="mb-4 text-2xl font-bold text-center text-green-600">Edit Employer Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-3">
+
+          <h3 className="mt-4 font-semibold">First Name</h3>
           <input
             type="text"
             name="firstName"
             value={formData.firstName}
             onChange={handleChange}
-            placeholder="First Name"
+            placeholder="Enter your First Name"
             className="w-full p-2 border rounded"
           />
+
+          <h3 className="mt-4 font-semibold">Last Name</h3>
           <input
             type="text"
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
-            placeholder="Last Name"
+            placeholder="Enter your Last Name"
             className="w-full p-2 border rounded"
           />
+
+          <h3 className="mt-4 font-semibold">Mobile No.</h3>
           <input
             type="text"
             name="mobileNumber"
             value={formData.mobileNumber}
             onChange={handleChange}
-            placeholder="Mobile Number"
+            placeholder="Enter your Mobile Number"
             className="w-full p-2 border rounded"
           />
+
+          <h3 className="mt-4 font-semibold">Address</h3>
           <input
             type="text"
             name="address"
             value={formData.address}
             onChange={handleChange}
-            placeholder="Address"
+            placeholder="Enter your Address"
             className="w-full p-2 border rounded"
           />
+
+          <h3 className="mt-4 font-semibold">Nearest City</h3>
           <input
             type="text"
             name="nearestCity"
             value={formData.nearestCity}
             onChange={handleChange}
-            placeholder="Nearest City"
+            placeholder="Enter your Nearest City"
             className="w-full p-2 border rounded"
           />
+
+          <h3 className="mt-4 font-semibold">District</h3>
           <input
             type="text"
             name="district"
             value={formData.district}
             onChange={handleChange}
-            placeholder="District"
+            placeholder="Enter your District"
             className="w-full p-2 border rounded"
           />
 
-          <h3 className="mt-4 font-semibold">Company Info</h3>
-          <input
-            type="text"
-            name="company.name"
-            value={formData.company.name}
-            onChange={handleChange}
-            placeholder="Company Name"
-            className="w-full p-2 border rounded"
-          />
+          <h3 className="mt-4 font-semibold">Email Address</h3>
+
           <input
             type="email"
-            name="company.email"
-            value={formData.company.email}
+            name="email"
+            value={formData.email}
             onChange={handleChange}
-            placeholder="Company Email"
+            placeholder="Enter your Email Address"
             className="w-full p-2 border rounded"
           />
+
+          <h3 className="mt-4 font-semibold">About</h3>
+
           <textarea
-            name="company.description"
-            value={formData.company.description}
+            name="description"
+            value={formData.description}
             onChange={handleChange}
-            placeholder="Company Description"
-            className="w-full p-2 border rounded"
-          />
-          <input
-            type="number"
-            name="company.rating"
-            value={formData.company.rating}
-            onChange={handleChange}
-            placeholder="Rating (0-5)"
-            min="0"
-            max="5"
-            className="w-full p-2 border rounded"
-          />
-          <input
-            type="text"
-            name="company.authorizedPerson"
-            value={formData.company.authorizedPerson}
-            onChange={handleChange}
-            placeholder="Authorized Person"
+            placeholder="Briefly explain about you"
             className="w-full p-2 border rounded"
           />
 

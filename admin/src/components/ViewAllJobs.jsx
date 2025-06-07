@@ -27,29 +27,46 @@ const ViewJobs = () => {
     }
   };
 
-  const filteredJobs = jobs.filter((job) => {
-    const search = searchTerm.toLowerCase();
-    const fullName = `${job.employer.firstName} ${job.employer.lastName}`.toLowerCase();
+  const filteredJobs = Array.isArray(jobs)
+  ? jobs.filter((job) => {
+      const search = searchTerm.toLowerCase().trim();
 
-    const matchesSearch =
-      job.jobId.toString().toLowerCase().includes(search) ||
-      job.jobTitle.toLowerCase().includes(search) ||
-      job.location.toLowerCase().includes(search) ||
-      job.employer.firstName.toLowerCase().includes(search) ||
-      job.employer.lastName.toLowerCase().includes(search) ||
-      fullName.includes(search) ||
-      (job.employer.company?.name?.toLowerCase().includes(search) || false);
+      // Safely extract and normalize all fields
+      const jobId = job.jobId?.toString().toLowerCase() || "";
+      const jobTitle = job.jobTitle?.toLowerCase().trim() || "";
+      const jobLocation = job.location?.toLowerCase().trim() || "";
+      const jobDistrict = job.district?.toLowerCase().trim() || "";
 
-    const matchesDistrict = selectedDistrict
-      ? job.district?.toLowerCase() === selectedDistrict.toLowerCase()
-      : true;
+      const firstName = job.employer?.firstName?.toLowerCase().trim() || "";
+      const lastName = job.employer?.lastName?.toLowerCase().trim() || "";
+      const fullName = `${firstName} ${lastName}`;
+      const companyName = job.employer?.company?.name?.toLowerCase().trim() || "";
 
-    const matchesArea = selectedArea
-      ? job.location?.toLowerCase() === selectedArea.toLowerCase()
-      : true;
+      // Flexible search match
+      const matchesSearch =
+        !search ||
+        jobId.includes(search) ||
+        jobTitle.includes(search) ||
+        jobLocation.includes(search) ||
+        jobDistrict.includes(search) ||
+        firstName.includes(search) ||
+        lastName.includes(search) ||
+        fullName.includes(search) ||
+        companyName.includes(search);
 
-    return matchesSearch && matchesDistrict && matchesArea;
-  });
+      // Area and district filters
+      const matchesDistrict = selectedDistrict
+        ? jobDistrict === selectedDistrict.toLowerCase().trim()
+        : true;
+
+      const matchesArea = selectedArea
+        ? jobLocation === selectedArea.toLowerCase().trim()
+        : true;
+
+      return matchesSearch && matchesDistrict && matchesArea;
+    })
+  : [];
+
 
   const handleDelete = async () => {
     if (!jobToDelete) return;

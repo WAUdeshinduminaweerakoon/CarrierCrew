@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DistrictAreaDropdown from "./DistrictAreaDropdown";
-import FilterModal from "./FilterModal"; // ✅ Make sure this path is correct
+import FilterModal from "./FilterModal"; 
+import CategoryDropdown from "./CategoryDropdown";
 
 
 
@@ -11,6 +12,8 @@ const JobFilterSidebar = ({
   onSearchChange,
   onDistrictChange,
   onAreaChange,
+  selectedCategory,
+  onCategoryChange,
   salaryRange,
   setSalaryRange,
   workingHours,
@@ -36,7 +39,6 @@ const JobFilterSidebar = ({
         />
       </div>
 
-      {/* Location Filter */}
       <div className="mb-4">
         <h3 className="mb-2 text-sm font-semibold text-gray-600">Location</h3>
         <DistrictAreaDropdown
@@ -45,7 +47,14 @@ const JobFilterSidebar = ({
         />
       </div>
 
-      {/* Button to open Filter Modal */}
+      <div className="mb-4">
+        <h3 className="mb-2 text-sm font-semibold text-gray-600">Category</h3>
+        <CategoryDropdown
+          selectedCategory={selectedCategory}
+          onChange={onCategoryChange}
+        />
+      </div>
+
       <div className="mb-4">
         <button
           onClick={() => setIsModalOpen(true)}

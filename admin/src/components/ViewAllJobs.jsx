@@ -15,6 +15,8 @@ const ViewJobs = () => {
   const [salaryRange, setSalaryRange] = useState([0, 10000]);
   const [workingHours, setWorkingHours] = useState([0, 12]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
    
 
   const applyFilters = () => {
@@ -60,12 +62,16 @@ const ViewJobs = () => {
       ? job.location?.toLowerCase() === selectedArea.toLowerCase()
       : true;
 
+    const matchesCategory = selectedCategory
+    ? job.jobTitle?.toLowerCase() === selectedCategory.toLowerCase()
+    : true;
+
     const matchesSalary = job.payment >= salaryRange[0] && job.payment <= salaryRange[1];
 
     const jobHours = job.duration; // approx
     const matchesWorkingHours = jobHours >= workingHours[0] && jobHours <= workingHours[1];
 
-  return matchesSearch && matchesDistrict && matchesArea && matchesSalary && matchesWorkingHours;
+  return matchesSearch && matchesDistrict && matchesArea && matchesCategory && matchesSalary && matchesWorkingHours;
   });
 
   const handleDelete = async () => {
@@ -115,6 +121,8 @@ const ViewJobs = () => {
           onSearchChange={setSearchTerm}
           onDistrictChange={setSelectedDistrict}
           onAreaChange={setSelectedArea}
+          selectedCategory={selectedCategory} 
+          onCategoryChange={setSelectedCategory} 
           salaryRange={salaryRange}
           setSalaryRange={setSalaryRange}
           workingHours={workingHours}

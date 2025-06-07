@@ -19,7 +19,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
         console.error("Failed to fetch locations", err);
       }
     };
-    fetchDistricts();
+    fetchDistricts(); 
   }, []);
 
   useEffect(() => {
@@ -39,6 +39,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
     if (onDistrictChange) {
       console.log("Selected District:", district );
       onDistrictChange(district.name);
+      onAreaChange();
     }
   };
 
@@ -56,6 +57,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
     setIsOpen(false);
     if (onAreaChange) {
       onAreaChange();
+      onDistrictChange();
     }
   };
 
@@ -90,7 +92,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
             >
               <div
                 onClick={(e) => {
-                  e.stopPropagation();
+                  // e.stopPropagation();
                   //console.log("District clicked:", district);
                   handleDistrictClick(district);
                 }}

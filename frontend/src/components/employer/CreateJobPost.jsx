@@ -305,13 +305,14 @@ return (
           </div>
           <div className="flex-1">
             <label className="block text-sm font-medium text-green-800">Date To</label>
-            <input
-              type="date"
-              name="dateTo"
-              value={formData.dateTo}
-              onChange={handleChange}
-              className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+           <input
+              type="number"
+              name="duration"
+              value={formData.duration}
+              readOnly
+              className="w-full border border-green-400 rounded px-3 py-2 bg-gray-100"
             />
+
             {errors.dateTo && <p className="text-red-500 text-xs">{errors.dateTo}</p>}
           </div>
         </div>

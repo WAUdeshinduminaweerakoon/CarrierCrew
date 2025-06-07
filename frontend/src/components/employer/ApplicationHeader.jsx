@@ -31,7 +31,7 @@ const ApplictionHeader = ({
       <ToastContainer />
       <header className="w-full text-white bg-green-800 shadow-md">
         {/* Top Navbar */}
-        <div className="flex items-center justify-between max-w-screen-lg px-4 py-4 mx-auto">
+        <div className="flex items-center justify-between max-w-screen-lg px-4 py-2 mx-auto">
           <h1 className="text-lg font-semibold sm:text-xl">CareerCrew.LK</h1>
 
           {/* Mobile menu button */}
@@ -92,6 +92,19 @@ const ApplictionHeader = ({
              onChange={onCategoryChange}
             />
           </div>
+
+          {/* <div className="mt-4 text-right"> */}
+            <button
+                onClick={() => {
+                onSearchChange('');
+                onDistrictChange('');
+                onAreaChange('');
+                onCategoryChange('');
+                }}
+                className="px-3 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+            >
+                Reset Filters
+            </button>
         </div>
       </header>
     </>

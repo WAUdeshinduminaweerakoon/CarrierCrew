@@ -97,7 +97,7 @@ const filteredApplications = applications.filter((app) => {
 
       {/* Mobile Menu */}
       <div
-        className={`absolute left-0 top-16 w-full bg-green-800 text-white text-center sm:hidden transition-all duration-300 ease-in-out ${
+        className={`fixed top-16 left-0 w-full bg-green-800 text-white text-center sm:hidden z-30 transition-all duration-300 ease-in-out ${
           isMenuOpen ? 'max-h-screen' : 'max-h-0 overflow-hidden'
         }`}
       >

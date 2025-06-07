@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { HomeIcon } from "lucide-react";
 import API_ROUTES from "../configs/config";
+import axios from 'axios';
 
 const districts = [
   "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
@@ -28,8 +29,15 @@ const GeneralSettings = () => {
 
   const [categoryName, setCategoryName] = useState("");
   const [categories, setCategories] = useState([]);
+  const [file, setFile] = useState(null);
 
-
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+    });
 
   useEffect(() => {
     fetchPlans();
@@ -122,29 +130,30 @@ const GeneralSettings = () => {
     }
   };
 
-  const handleAddCategory = async () => {
-    if (!categoryName.trim()) {
-      alert("Please enter a category name");
-      return;
-    }
-    try {
-      const response = await fetch(API_ROUTES.ADMIN_CATEGORY + "/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: categoryName }),
-      });
-      const data = await response.json();
-      if (!response.ok) alert(`Error: ${data.message || "Unknown error"}`);
-      else {
+    const handleAddCategory = async (e) => {
+      e.preventDefault();
+  
+      const base64Image = await convertToBase64(file);
+
+      const name = categoryName;
+
+      const payload = {
+        name,
+        base64Image,
+        contentType: file.type,
+      };
+  
+      try {
+        const response = await axios.post(API_ROUTES.ADMIN_CATEGORY + "/add", payload);
         alert("Category added successfully!");
         setCategoryName("");
         fetchCategories(); 
+      } catch (error) {
+        console.error(error);
+        alert(`Error: ${error.response?.data?.message || "Failed to create category"}`);
       }
-    } catch (error) {
-      alert("Something went wrong while adding the category");
-      console.error(error);
-    }
-  };
+
+    };
 
   const fetchCategories = async () => {
     try {
@@ -273,6 +282,7 @@ const GeneralSettings = () => {
                   placeholder="Enter category name"
                 />
               </label>
+              <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} required />
               <div className="flex gap-4 mb-6">
                 <button onClick={handleAddCategory} className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
                 <button onClick={() => setCategoryName("")} className="bg-gray-300 text-gray-800 px-4 py-2 rounded">Reset</button>

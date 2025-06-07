@@ -12,6 +12,7 @@ const companySchema = new mongoose.Schema({
   description: String,
   rating: { type: Number, default: 0 },
   authorizedPerson: String,
+  authorizationLetterUrl: String,
 });
 
 const employerSchema = new mongoose.Schema({
@@ -32,6 +33,7 @@ const employerSchema = new mongoose.Schema({
   planStartDate: Date,
   planEndDate: Date,
   postsUsed: { type: Number, default: 0 },
+
 }
 }, { timestamps: true });
 

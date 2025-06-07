@@ -40,6 +40,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
     if (onDistrictChange) {
       console.log("Selected District:", district );
       onDistrictChange(district.name);
+      onAreaChange();
     }
   };
 
@@ -57,6 +58,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
     setIsOpen(false);
     if (onAreaChange) {
       onAreaChange();
+      onDistrictChange();
     }
   };
 

@@ -19,7 +19,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
         console.error("Failed to fetch locations", err);
       }
     };
-    fetchDistricts();
+    fetchDistricts(); 
   }, []);
 
   useEffect(() => {
@@ -39,6 +39,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
     if (onDistrictChange) {
       console.log("Selected District:", district );
       onDistrictChange(district.name);
+      onAreaChange();
     }
   };
 
@@ -52,17 +53,18 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
   };
 
   const handleReset = () => {
-    setSelectedLabel("All District");
+    setSelectedLabel("All Districts and Areas");
     setIsOpen(false);
     if (onAreaChange) {
       onAreaChange();
+      onDistrictChange();
     }
   };
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
       <button
-        className="p-2 text-green-700 bg-white border border-green-900 rounded hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+        className="p-2 text-gray-700 bg-white border border-green-900 rounded hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500"
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="true"
         aria-expanded={isOpen}
@@ -77,7 +79,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
             className="px-4 py-2 text-black cursor-pointer hover:bg-green-200 hover:text-green-800"
             onClick={handleReset}
           >
-            All District
+            All Districts and Areas
           </div>
 
           {/* Districts and Areas */}
@@ -90,7 +92,7 @@ const DistrictAreaDropdown = ({ onAreaChange, onDistrictChange }) => {
             >
               <div
                 onClick={(e) => {
-                  e.stopPropagation();
+                  // e.stopPropagation();
                   //console.log("District clicked:", district);
                   handleDistrictClick(district);
                 }}

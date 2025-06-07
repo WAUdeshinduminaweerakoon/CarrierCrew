@@ -31,7 +31,7 @@ const Header = ({
         </button>
 
         <nav className="hidden space-x-6 text-base md:flex">
-          <Link to="/home" className="py-2 hover:no-underline">All Jobs</Link>
+          <Link to="/jobseeker/home" className="py-2 hover:no-underline">All Jobs</Link>
           <Link to="/" className="py-2 hover:no-underline">Logout</Link>
           <Link to="/jobseeker/profile" className="py-2 hover:no-underline">Profile</Link>
           <Link to="/jobseeker/settings" className="py-2 hover:no-underline">Settings</Link>
@@ -41,7 +41,7 @@ const Header = ({
       {/* Mobile Menu */}
       <div className={`md:hidden overflow-hidden transition-max-height duration-300 ease-in-out ${isMenuOpen ? "max-h-screen" : "max-h-0"}`}>
         <nav className="flex flex-col text-center text-white bg-green-700">
-          <Link to="/home" className="py-3 border-b border-green-600 hover:bg-green-600" onClick={() => setIsMenuOpen(false)}>All Jobs</Link>
+          <Link to="/jobseeker/home" className="py-3 border-b border-green-600 hover:bg-green-600" onClick={() => setIsMenuOpen(false)}>All Jobs</Link>
           <Link to="/" className="py-3 border-b border-green-600 hover:bg-green-600" onClick={() => setIsMenuOpen(false)}>Logout</Link>
           <Link to="/jobseeker/profile" className="py-3 hover:bg-green-600" onClick={() => setIsMenuOpen(false)}>Profile</Link>
           <Link to="/jobseeker/settings" className="py-3 hover:bg-green-600" onClick={() => setIsMenuOpen(false)}>Settings</Link>

@@ -96,7 +96,7 @@ export default function JobSeekerProfileView() {
             </button>
               <button
                 className="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-700"
-                onClick={() => alert("Delete function not implemented yet")}
+                onClick={() => navigate("/jobseeker/settings")}
               >
                 Delete
               </button>

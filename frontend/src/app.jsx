@@ -30,6 +30,8 @@ import EditJobForm from "./components/employer/EditMyPosts";
 //import PaymentSuccess from "./components/employer/SubscriptionPlans/PaymentSuccess";
 //import PaymentFailure from "./components/employer/SubscriptionPlans/PaymentFailure";
 import ForgotPasswordPage1 from "./components/login/ForgotPasswordPage1";
+import EmployerSettings from "./components/employer/EmployerSettings";
+import JobSeekerSettings from "./components/jobSeeker/JobSeekerSettings";
 
 // Create router with routes
 const router = createBrowserRouter([
@@ -146,6 +148,14 @@ const router = createBrowserRouter([
     path: "/payment-failure",
     element: <PaymentFailure />,
   },*/
+  {
+    path:"/employer/settings",
+    element: <EmployerSettings/>
+  },
+  {
+    path:"/jobseeker/settings",
+    element: <JobSeekerSettings/>
+  },
 ]);
 
 const App = () => {

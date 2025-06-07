@@ -11,6 +11,27 @@ const getAllCategories = async (req, res) => {
   }
 };
 
+const getAllCategoryImages = async (req, res) => {
+  try {
+    const categories = await Category.find({});
+
+    const formattedCategories = categories
+      .filter(cat => cat.image && cat.image.data && cat.image.contentType) // Only categories with image data
+      .map(cat => ({
+        _id: cat._id,
+        name: cat.name,
+        image: `data:${cat.image.contentType};base64,${cat.image.data.toString('base64')}`,
+      }));
+
+    res.json(formattedCategories);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch categories', error });
+  }
+};
+
+
+
 module.exports = {
   getAllCategories,
+  getAllCategoryImages,
 };

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HomeIcon, Menu } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
 
 const JobSeekerSettings = () => {
@@ -62,6 +62,19 @@ const JobSeekerSettings = () => {
     }
   };
 
+  useEffect(() => {
+  if (activeTab === "accountView") {
+    navigate("/jobseeker/profile");
+    }
+  }, [activeTab, navigate]);
+
+  useEffect(() => {
+  if (activeTab === "accountEdit") {
+    navigate("/jobseeker/edit-profile/:jobSeekerId");
+    }
+  }, [activeTab, navigate]);
+
+
   return (
     <div className="min-h-screen bg-green-700 flex flex-col">
       {/* Header */}
@@ -104,6 +117,24 @@ const JobSeekerSettings = () => {
             >
               Jobseeker Profile Deletion
             </button>
+            <button
+              onClick={() => {
+                setActiveTab("accountView");
+                setMenuOpen(false);
+              }}
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-100"
+            >
+              Jobseeker Profile View
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab("accountEdit");
+                setMenuOpen(false);
+              }}
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-100"
+            >
+              Jobseeker Profile Edit
+            </button>
           </div>
         )}
       </header>
@@ -128,6 +159,22 @@ const JobSeekerSettings = () => {
                 onClick={() => setActiveTab('accountDeletion')}
               >
                 Jobseeker Profile Deletion
+              </button>
+            </li>
+            <li>
+              <button
+                className={`block w-full text-left ${activeTab === 'accountView' ? 'text-blue-800 font-semibold' : 'text-gray-700'}`}
+                onClick={() => setActiveTab('accountView')}
+              >
+                Jobseeker Profile View
+              </button>
+            </li>
+            <li>
+              <button
+                className={`block w-full text-left ${activeTab === 'accountEdit' ? 'text-blue-800 font-semibold' : 'text-gray-700'}`}
+                onClick={() => setActiveTab('accountEdit')}
+              >
+                Jobseeker Profile Edit
               </button>
             </li>
           </ul>
@@ -195,6 +242,19 @@ const JobSeekerSettings = () => {
               </div>
             </div>
           )}
+          {activeTab === 'accountView' && (
+            (() => {
+             navigate("/jobseeker/profile");
+             return null;
+            })()
+          )}
+          {activeTab === 'accountEdit' && (
+            (() => {
+             navigate("/jobseeker/edit-profile/:jobSeekerId");
+             return null;
+            })()
+          )}
+
         </main>
       </div>
     </div>

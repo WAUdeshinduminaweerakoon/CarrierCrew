@@ -186,6 +186,31 @@ export default function NewJobForm() {
 
   //   if (employerId) checkPlanValidity();
   // }, [employerId]);
+useEffect(() => {
+  if (formData.timeFrom && formData.timeTo) {
+    const [fromHours, fromMinutes] = formData.timeFrom.split(':').map(Number);
+    const [toHours, toMinutes] = formData.timeTo.split(':').map(Number);
+
+    const fromInMinutes = fromHours * 60 + fromMinutes;
+    const toInMinutes = toHours * 60 + toMinutes;
+
+    const diffInMinutes = toInMinutes - fromInMinutes;
+
+    if (diffInMinutes >= 0) {
+      const durationInHours = diffInMinutes / 60;
+      setFormData((prev) => ({
+        ...prev,
+        duration: durationInHours.toFixed(2),
+      }));
+    } else {
+      // Optional: reset or show invalid range
+      setFormData((prev) => ({
+        ...prev,
+        duration: "",
+      }));
+    }
+  }
+}, [formData.timeFrom, formData.timeTo]);
 
   
 return (

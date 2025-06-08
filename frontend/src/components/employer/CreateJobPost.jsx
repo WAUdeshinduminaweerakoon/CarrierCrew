@@ -63,6 +63,32 @@ export default function NewJobForm() {
   }, []);
 
   useEffect(() => {
+  if (formData.timeFrom && formData.timeTo) {
+    const [fromHours, fromMinutes] = formData.timeFrom.split(':').map(Number);
+    const [toHours, toMinutes] = formData.timeTo.split(':').map(Number);
+
+    const fromInMinutes = fromHours * 60 + fromMinutes;
+    const toInMinutes = toHours * 60 + toMinutes;
+
+    const diffInMinutes = toInMinutes - fromInMinutes;
+
+    if (diffInMinutes >= 0) {
+      const durationInHours = diffInMinutes / 60;
+      setFormData((prev) => ({
+        ...prev,
+        duration: durationInHours.toFixed(2),
+      }));
+    } else {
+      
+      setFormData((prev) => ({
+        ...prev,
+        duration: "",
+      }));
+    }
+  }
+}, [formData.timeFrom, formData.timeTo]);
+
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await fetch(API_ROUTES.CATEGORY+"/all");

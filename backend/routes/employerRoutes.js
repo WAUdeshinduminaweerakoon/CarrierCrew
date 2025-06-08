@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Employer = require('../models/Employer');
 
+
 // GET employer by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -62,5 +63,19 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+router.get('/', async (req, res) => {
+  try {
+    const employers = await Employer.find().select('-password').lean(); // Exclude passwords
+    res.json(employers);
+  } catch (error) {
+    console.error('Error fetching all employers:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
 
 module.exports = router;

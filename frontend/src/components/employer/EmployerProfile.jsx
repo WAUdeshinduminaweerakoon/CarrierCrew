@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "./Header";
+import API_ROUTES from "../../configs/config";
 
 export default function EmployerProfile() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function EmployerProfile() {
       return;
     }
 
-    fetch(`http://localhost:5000/api/employers/${employerId}`)
+    fetch(`${API_ROUTES.EMPLOYER}/${employerId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Server error: ${res.status} ${res.statusText}`);

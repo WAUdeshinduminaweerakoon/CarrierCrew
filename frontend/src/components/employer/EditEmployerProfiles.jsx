@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import Header from "./Header";
+import API_ROUTES from '../../configs/config';
 
 export default function EditEmployerProfile() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function EditEmployerProfile() {
       return;
     }
 
-    fetch(`http://localhost:5000/api/employers/${employerId}`)
+    fetch(`${API_ROUTES.EMPLOYER}/${employerId}`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch employer');
         return res.json();
@@ -78,7 +79,7 @@ export default function EditEmployerProfile() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`http://localhost:5000/api/employers/${employerId}`, {
+    fetch(`${API_ROUTES.EMPLOYER}/${employerId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),

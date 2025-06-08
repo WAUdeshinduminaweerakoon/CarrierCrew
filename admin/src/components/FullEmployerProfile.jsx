@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FullEmployerProfile = () => {
+const FullEmployerProfile = ({ onFileSelect }) => {
   const [expandedIds, setExpandedIds] = useState([]);
   const [employers, setEmployers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,9 +50,6 @@ const FullEmployerProfile = () => {
       {employers.map((employer) => {
         const isExpanded = expandedIds.includes(employer._id);
         const company = employer.company || {};
-        const companyLetters = company.companyLetters || {};
-        const fileId = company.fileId || '';
-        const companyLetterId = companyLetters._id || '';
 
         return (
           <div
@@ -77,17 +74,17 @@ const FullEmployerProfile = () => {
                 <p>{company.nearestCity || 'No Nearest City'}</p>
 
                 <button
-                    className="px-3 py-1 mt-2 text-white bg-green-700 rounded hover:bg-green-800"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        
-                        const letter = employer.company.uploadedFileID;
-                      
-                        console.log('First Letter ID:', letter);
-                    }}
-                    >
-                    Apply Now
-                    </button>
+                  className="px-3 py-1 mt-2 text-white bg-green-700 rounded hover:bg-green-800"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const fileId = company.uploadedFileID;
+                    if (fileId && onFileSelect) {
+                      onFileSelect(fileId);
+                    }
+                  }}
+                >
+                  Authorization Letter
+                </button>
               </div>
             )}
           </div>

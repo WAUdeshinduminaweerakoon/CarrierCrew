@@ -17,6 +17,8 @@ const EmployerRegistration = () => {
   const [locations, setLocations] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [nearestCityOptions, setNearestCityOptions] = useState([]);
+  const [file, setFile] = useState(null);
+  const [fileId, setFileId] = useState(null);
 
   const [companyForm, setCompanyForm] = useState({
     name: "",
@@ -104,6 +106,26 @@ const EmployerRegistration = () => {
     e.preventDefault();
     if (validateCompany()) {
       setStep("employerDetails");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFileId(null);
+  };
+
+  const handleUpload = async () => {
+    if (!file) return alert("Please select a file");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post(API_ROUTES.UPLOAD+"/file", formData);
+      setFileId(response.data.fileId);
+    } catch (err) {
+      console.error('Upload error', err);
+      alert("Upload failed");
     }
   };
 
@@ -244,11 +266,15 @@ const EmployerRegistration = () => {
               )}
               <label htmlFor="upload" className="text-sm text-left text-green-600 cursor-pointer">
                 Upload Authorization Letter
-                <input
-                  type="file"
-                  id="upload"
-                  className="w-full p-2 mt-1 text-sm border border-green-500 rounded-md"
-                />
+                  <div style={{ padding: '20px' }}>
+                    <input type="file" accept="application/pdf" onChange={handleFileChange} />
+                    <button onClick={handleUpload} style={{ marginLeft: '10px' }}>Upload</button>
+                    {fileId && (
+                      <div style={{ marginTop: '10px' }}>
+                        <strong>Uploaded File ID:</strong> {fileId}
+                      </div>
+                    )}
+                  </div>
               </label>
               <div className="flex justify-end mt-5">
                 <button
@@ -265,6 +291,8 @@ const EmployerRegistration = () => {
                   Skip
                 </button>
               </div>
+
+
             </form>
           </>
         )}

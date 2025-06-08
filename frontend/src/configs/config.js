@@ -12,6 +12,7 @@ const API_ROUTES = {
   CATEGORY : `${BASE_URL}/api/category`,
   PAYMENT : `${PAYMENT_GATEWAY}/api/payment`,
   ACCOUNT :  `${BASE_URL}/api/auth/account`,
+  UPLOAD :  `${BASE_URL}/api/upload`,
   JOBSEEKER: `${BASE_URL}/api/jobSeeker`,
 };
 

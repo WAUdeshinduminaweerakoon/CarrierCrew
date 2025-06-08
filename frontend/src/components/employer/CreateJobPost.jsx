@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import API_ROUTES from "../../configs/config";
 import Header from "./Header";
-
+import axios from "axios";
 
 export default function NewJobForm() {
   const navigate = useNavigate();
@@ -31,6 +31,9 @@ export default function NewJobForm() {
 
   const [employerId, setEmployerId] = useState("");
   const [errors, setErrors] = useState({});
+  
+
+  
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -212,7 +215,23 @@ export default function NewJobForm() {
 
   //   if (employerId) checkPlanValidity();
   // }, [employerId]);
+  const [imageUrl, setImageUrl] = useState("");
+const handleImageSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await axios.post(`${API_ROUTES.BASE_URL}/api/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setImageUrl(res.data.imageUrl);
+    } catch (err) {
+      console.error("Image upload failed:", err);
+    }
+  };
   
 return (
   <div>
@@ -228,11 +247,21 @@ return (
         <h2 className="text-xl font-bold text-green-700">New Job</h2>
       </div>
 
-      <div className="flex justify-center mb-4">
-        <div className="w-24 h-24 bg-green-100 rounded-lg flex items-center justify-center cursor-pointer border border-green-400">
+       <div className="flex justify-center mb-4">
+      <label className="w-24 h-24 bg-green-100 rounded-lg flex items-center justify-center cursor-pointer border border-green-400 relative">
+        {imageUrl ? (
+          <img src={imageUrl} alt="Uploaded" className="w-full h-full object-cover rounded-lg" />
+        ) : (
           <span className="text-green-600 text-sm">Image +</span>
-        </div>
-      </div>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          className="absolute inset-0 opacity-0 cursor-pointer"
+          onChange={handleImageSelect}
+        />
+      </label>
+    </div>
 
       <div className="space-y-3">
         <div>

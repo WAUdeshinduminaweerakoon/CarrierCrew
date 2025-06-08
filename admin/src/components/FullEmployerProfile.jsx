@@ -46,7 +46,7 @@ const FullEmployerProfile = ({ onFileSelect }) => {
   if (!employers.length) return <p className="text-gray-500">No employer data available.</p>;
 
   return (
-    <div className="w-full max-w-4xl p-4 mx-auto space-y-4 transition bg-white rounded-lg shadow hover:bg-green-50">
+    <div className="space-y-4">
       {employers.map((employer) => {
         const isExpanded = expandedIds.includes(employer._id);
         const company = employer.company || {};
@@ -54,27 +54,36 @@ const FullEmployerProfile = ({ onFileSelect }) => {
         return (
           <div
             key={employer._id}
-            className="p-4 border rounded cursor-pointer hover:bg-green-50"
+            className="p-5 transition-all duration-200 bg-white border border-gray-200 rounded-lg shadow cursor-pointer hover:shadow-md"
             onClick={() => toggleExpand(employer._id)}
           >
-            <h3 className="text-lg font-semibold text-green-800">
-              {(employer.firstName || '') + ' ' + (employer.lastName || '')}
-            </h3>
-            <p className="text-sm text-gray-600">{employer.location || 'No Location'}</p>
-            <p className="text-sm text-gray-600">{employer.email || 'No Email'}</p>
-            <p className="text-sm text-gray-600">{employer.mobile || 'No Mobile'}</p>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-green-700">
+                {(employer.firstName || '') + ' ' + (employer.lastName || '')}
+              </h3>
+              <span className="text-sm text-gray-500">
+                {isExpanded ? '▲' : '▼'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 mt-1 text-sm text-gray-700 sm:grid-cols-2 gap-x-4 gap-y-1">
+              <p><span className="font-medium">District:</span> {employer.district || 'N/A'}</p>
+              <p><span className="font-medium">Nearest City:</span> {employer.nearestCity || 'N/A'}</p>
+              <p><span className="font-medium">Email:</span> {employer.email || 'N/A'}</p>
+              <p><span className="font-medium">Contact:</span> {employer.mobileNumber || 'N/A'}</p>
+            </div>
 
             {isExpanded && (
-              <div className="mt-2 space-y-1 text-sm text-gray-700">
-                <p className="font-bold">Company Information:</p>
-                <p>{company.name || 'No Company Name'}</p>
-                <p>{company.email || 'No Company Email'}</p>
-                <p>{company.telephone || 'No Company Telephone'}</p>
-                <p>{company.address || 'No Company Address'}</p>
-                <p>{company.nearestCity || 'No Nearest City'}</p>
-
+              <div className="p-4 mt-4 space-y-2 text-sm border-t border-gray-200 rounded-md bg-gray-50">
+                <h4 className="font-semibold text-green-800">Company Information</h4>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                  <p><span className="font-medium">Name:</span> {company.name || 'N/A'}</p>
+                  <p><span className="font-medium">Email:</span> {company.email || 'N/A'}</p>
+                  <p><span className="font-medium">Phone:</span> {company.telephone || 'N/A'}</p>
+                  <p><span className="font-medium">Address:</span> {company.address || 'N/A'}</p>
+                  <p><span className="font-medium">Nearest City:</span> {company.nearestCity || 'N/A'}</p>
+                </div>
                 <button
-                  className="px-3 py-1 mt-2 text-white bg-green-700 rounded hover:bg-green-800"
+                  className="inline-block px-4 py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800"
                   onClick={(e) => {
                     e.stopPropagation();
                     const fileId = company.uploadedFileID;
@@ -83,7 +92,7 @@ const FullEmployerProfile = ({ onFileSelect }) => {
                     }
                   }}
                 >
-                  Authorization Letter
+                  View Authorization Letter
                 </button>
               </div>
             )}

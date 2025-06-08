@@ -43,8 +43,6 @@ getFileById = async (req, res) => {
       'Content-Disposition': `inline; filename="${file.name}"`
     });
 
-    console.log("step2")
-
     res.send(file.data);
   } catch (error) {
     console.error('File retrieval error:', error);

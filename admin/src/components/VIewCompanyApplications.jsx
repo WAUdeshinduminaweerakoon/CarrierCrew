@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { HomeIcon } from 'lucide-react';
+import API_ROUTES from '../configs/config';
 
 const FileCompanyApplications = () => {
   const [fileId, setFileId] = useState('');
@@ -9,7 +10,7 @@ const FileCompanyApplications = () => {
 
   const handleView = () => {
     if (!fileId.trim()) return alert('Please enter a valid File ID');
-    setPreviewUrl(`http://localhost:5000/api/upload/view/${fileId}`);
+    setPreviewUrl(`${API_ROUTES.ADMIN_UPLOAD}/view/${fileId}`);
   };
 
   return (

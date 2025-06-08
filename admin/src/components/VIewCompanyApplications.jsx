@@ -29,31 +29,20 @@ const FileCompanyApplications = () => {
 
       <main className="flex-grow p-8 bg-gray-100">
         <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 h-[calc(100vh-100px)]">
-          {/* Employer Profile Section - Left */}
+          {/* Left: Employer Profile */}
           <div className="p-6 overflow-y-auto bg-white rounded shadow">
             <h2 className="mb-4 text-2xl font-bold text-gray-800">Employer Profile</h2>
-            <FullEmployerProfile />
+            <FullEmployerProfile
+              onFileSelect={(id) => {
+                setFileId(id);
+                setPreviewUrl(`${API_ROUTES.ADMIN_UPLOAD}/view/${id}`);
+              }}
+            />
           </div>
 
-          {/* PDF Viewer Section - Right (Fixed height) */}
+          {/* Right: PDF Viewer */}
           <div className="flex flex-col p-6 bg-white rounded shadow">
             <h2 className="mb-4 text-2xl font-bold text-gray-800">View or Download PDF</h2>
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Enter File ID"
-                value={fileId}
-                onChange={(e) => setFileId(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-            </div>
-            <button
-              onClick={handleView}
-              className="px-4 py-2 mb-4 text-white bg-blue-600 rounded"
-            >
-              View File
-            </button>
-
             <div className="flex-1 overflow-y-auto">
               {previewUrl && (
                 <>

@@ -2,15 +2,11 @@ import React, { useState } from 'react';
 import { HomeIcon } from 'lucide-react';
 import API_ROUTES from '../configs/config';
 import FullEmployerProfile from './FullEmployerProfile';
+import { BriefcaseIcon } from 'lucide-react';
 
 const FileCompanyApplications = () => {
   const [fileId, setFileId] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
-
-  const handleView = () => {
-    if (!fileId.trim()) return alert('Please enter a valid File ID');
-    setPreviewUrl(`${API_ROUTES.ADMIN_UPLOAD}/view/${fileId}`);
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -31,7 +27,10 @@ const FileCompanyApplications = () => {
         <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 h-[calc(100vh-100px)]">
           {/* Left: Employer Profile */}
           <div className="p-6 overflow-y-auto bg-white rounded shadow">
-            <h2 className="mb-4 text-2xl font-bold text-gray-800">Employer Profile</h2>
+            <h2 className="flex items-center gap-2 mb-4 text-2xl font-bold text-gray-800">
+              <BriefcaseIcon className="w-6 h-6 text-green-600" />
+              Employer Profiles
+            </h2>
             <FullEmployerProfile
               onFileSelect={(id) => {
                 setFileId(id);

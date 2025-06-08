@@ -12,6 +12,7 @@ const companySchema = new mongoose.Schema({
   description: String,
   rating: { type: Number, default: 0 },
   authorizedPerson: String,
+  uploadedFileID: String,
   companyLetters: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'CompanyLetter'

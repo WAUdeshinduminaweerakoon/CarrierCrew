@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Star } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import API_ROUTES from "../../configs/config";
 
 export default function JobSeekerProfileView() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function JobSeekerProfileView() {
       return;
     }
 
-    fetch(`http://localhost:5000/api/jobSeeker/${jobSeekerId}`)
+    fetch(`${API_ROUTES.JOBSEEKERS}/${jobSeekerId}`)
       .then((res) => res.json())
       .then((data) => {
         setProfile(data);

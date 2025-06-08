@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+import API_ROUTES from "../../configs/config";
 
 export default function JobSeekerProfileEdit() {
   const navigate = useNavigate();
@@ -14,13 +15,13 @@ export default function JobSeekerProfileEdit() {
 
   useEffect(() => {
     // Fetch profile data
-    fetch(`http://localhost:5000/api/jobseeker/${jobSeekerId}`)
+    fetch(`${API_ROUTES.JOBSEEKERS}/${jobSeekerId}`)
       .then((res) => res.json())
       .then((data) => setProfile(data))
       .catch((err) => console.error("Fetch error:", err));
 
     // Fetch education options
-    fetch(`http://localhost:5000/api/jobseeker/education-options`)
+    fetch(`${API_ROUTES.JOBSEEKERS}/education-options`)
       .then((res) => res.json())
       .then((data) => setEducationOptions(data))
       .catch((err) => console.error("Error fetching education options:", err));
@@ -45,7 +46,7 @@ export default function JobSeekerProfileEdit() {
   const handleSave = () => {
     const errors = validate();
     if (Object.keys(errors).length === 0) {
-      fetch(`http://localhost:5000/api/jobseeker/${jobSeekerId}`, {
+      fetch(`${API_ROUTES.JOBSEEKERS}/${jobSeekerId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),

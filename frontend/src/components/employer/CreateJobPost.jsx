@@ -348,8 +348,8 @@ return (
             type="number"
             name="duration"
             value={formData.duration}
-            onChange={handleChange}
-            className="w-full border border-green-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            readOnly
+            className="w-full border border-green-400 rounded px-3 py-2 bg-gray-100"
           />
           {errors.duration && <p className="text-red-500 text-xs">{errors.duration}</p>}
         </div>

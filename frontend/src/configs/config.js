@@ -13,6 +13,7 @@ const API_ROUTES = {
   PAYMENT : `${PAYMENT_GATEWAY}/api/payment`,
   ACCOUNT :  `${BASE_URL}/api/auth/account`,
   UPLOAD :  `${BASE_URL}/api/upload`,
+  JOBSEEKER: `${BASE_URL}/api/jobSeeker`,
 };
 
 export default API_ROUTES;

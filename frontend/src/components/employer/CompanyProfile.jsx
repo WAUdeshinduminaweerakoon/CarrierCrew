@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "./Header";
+import API_ROUTES from "../../configs/config";
 
 export default function CompanyProfile() {
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function CompanyProfile() {
 
         const fetchCompany = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/employers/${employerId}`);
+                const res = await fetch(`${API_ROUTES.EMPLOYER}/${employerId}`);
                 if (!res.ok) {
                     throw new Error("Failed to fetch company");
                 }

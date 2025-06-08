@@ -14,6 +14,8 @@ const API_ROUTES = {
   ACCOUNT :  `${BASE_URL}/api/auth/account`,
   UPLOAD :  `${BASE_URL}/api/upload`,
   JOBSEEKER: `${BASE_URL}/api/jobSeeker`,
+  JOBSEEKERS: `${BASE_URL}/api/jobseeker`,
+  EMPLOYER: `${BASE_URL}/api/employers`,
 };
 
 export default API_ROUTES;

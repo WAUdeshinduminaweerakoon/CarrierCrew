@@ -14,7 +14,7 @@ const RenewStatus = () => {
 
       if (state.success) {
         try {
-          await axios.post("http://localhost:5000/api/subscription/renew", {
+          await axios.post(API_ROUTES.SUBSCRIPTIONS+"/renew", {
             activeSubscriptionId: state.activeSubscriptionId,
           });
           toast.success("Subscription renewed successfully!");

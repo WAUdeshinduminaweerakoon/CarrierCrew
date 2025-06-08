@@ -63,38 +63,36 @@ const JobSeekerSettings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="flex items-center justify-between p-4 bg-white shadow relative">
-        <div className="flex items-center space-x-2">
-          <img src="/logo.png" alt="Logo" className="h-8" />
-          <h1 className="text-2xl font-bold text-gray-800 hidden md:block">CareerCrew.LK</h1>
-        </div>
+    <div className="min-h-screen bg-green-700 flex flex-col">
+      {/* Header */}
+      <header className="flex items-center justify-between p-4 bg-green-800 shadow">
+        <h1 className="text-2xl font-bold text-white">CareerCrew.LK</h1>
         <div className="flex items-center space-x-4">
           <button
-            className="text-gray-600 hover:text-blue-600 flex items-center md:px-2"
+            className="text-white hover:text-blue-200 flex items-center"
             onClick={() => navigate("/jobseeker/home")}
           >
             <HomeIcon className="h-6 w-6" />
             <span className="hidden md:inline ml-1">Home</span>
           </button>
           <button
-            className="md:hidden text-gray-700"
+            className="md:hidden text-green-800"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <Menu className="h-6 w-6" />
           </button>
         </div>
         {menuOpen && (
-          <div className="absolute right-4 top-16 w-48 bg-white border rounded shadow-md md:hidden">
+          <div className="absolute right-4 top-16 w-48 bg-white border rounded shadow-md md:hidden z-10">
             <button
               onClick={() => setActiveTab("jobSeekerAccounts")}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50"
             >
               Manage Jobseeker Accounts
             </button>
             <button
               onClick={() => setActiveTab("accountDeletion")}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              className="block w-full text-left px-4 py-2 text-blue-700 hover:bg-blue-50"
             >
               Jobseeker Profile Deletion
             </button>
@@ -102,13 +100,15 @@ const JobSeekerSettings = () => {
         )}
       </header>
 
+      {/* Main Layout */}
       <div className="flex flex-grow flex-col md:flex-row">
-        <aside className="hidden md:block w-64 bg-white shadow-md p-4">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">Settings</h2>
+        {/* Sidebar */}
+        <aside className="hidden md:block w-64 bg-green-200 p-4">
+          <h2 className="text-lg font-semibold mb-4 text-blue-900">Settings</h2>
           <ul className="space-y-2">
             <li>
               <button
-                className={`block w-full text-left ${activeTab === 'jobSeekerAccounts' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}
+                className={`block w-full text-left ${activeTab === 'jobSeekerAccounts' ? 'text-blue-800 font-semibold' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('jobSeekerAccounts')}
               >
                 Manage Jobseeker Accounts
@@ -116,7 +116,7 @@ const JobSeekerSettings = () => {
             </li>
             <li>
               <button
-                className={`block w-full text-left ${activeTab === 'accountDeletion' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}
+                className={`block w-full text-left ${activeTab === 'accountDeletion' ? 'text-blue-800 font-semibold' : 'text-gray-700'}`}
                 onClick={() => setActiveTab('accountDeletion')}
               >
                 Jobseeker Profile Deletion
@@ -125,22 +125,26 @@ const JobSeekerSettings = () => {
           </ul>
         </aside>
 
-        <main className="flex-grow p-4 bg-gray-100">
+        {/* Main Content */}
+        <main className="flex-grow p-6 bg-green-100">
           {activeTab === 'jobSeekerAccounts' && (
-            <div className="text-gray-700 text-center text-lg font-medium">Jobseeker account management content goes here.</div>
+            <div className="text-gray-800 text-center text-lg font-medium">
+              Jobseeker account management content goes here.
+            </div>
           )}
 
           {activeTab === 'accountDeletion' && (
-            <div className="bg-green-100 p-6 rounded-lg shadow max-w-xl mx-auto w-full">
-              <h2 className="text-2xl font-bold mb-4">Profile Deletion</h2>
+            <div className="bg-white p-6 rounded-lg shadow max-w-xl mx-auto w-full">
+              <h2 className="text-2xl font-bold mb-4 text-green-800">Profile Deletion</h2>
               <p className="text-gray-700 mb-2">
                 <strong>This action will delete your jobseeker profile and all related information from CareerCrew.LK permanently.</strong>
               </p>
               <p className="text-gray-700 mb-4">
-                <strong>Would you like to proceed with the account deletion process</strong>
+                <strong>Would you like to proceed with the account deletion process?</strong>
               </p>
+
               <div className="mb-4">
-                <label className="inline-flex items-center">
+                <label className="inline-flex items-center text-gray-700">
                   <input
                     type="checkbox"
                     checked={confirmChecked}
@@ -150,6 +154,7 @@ const JobSeekerSettings = () => {
                   Confirm Deletion
                 </label>
               </div>
+
               <div className="mb-4">
                 <label className="block text-gray-700 font-medium mb-2">
                   Please enter your account password:
@@ -158,15 +163,17 @@ const JobSeekerSettings = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-lg px-3 py-2 border border-green-500 rounded"
+                  className="w-full px-3 py-2 border border-green-500 rounded"
                   placeholder="Enter your password"
                 />
               </div>
+
               {errorMessage && <p className="text-red-600 mb-4">{errorMessage}</p>}
               {successMessage && <p className="text-green-600 mb-4">{successMessage}</p>}
+
               <div className="flex justify-between flex-wrap sm:justify-end gap-4">
                 <button
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
                   onClick={() => navigate("/jobseeker/home")}
                 >
                   Cancel

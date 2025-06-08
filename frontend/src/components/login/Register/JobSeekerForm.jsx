@@ -136,11 +136,38 @@ const JobSeekerRegistration = () => {
   };
 
   const handleInitialSubmit = async (e) => {
-    e.preventDefault();
-    if (validateStepOne() && !loadingOtp) {
-      await handleSendOtp();
+  e.preventDefault();
+  if (!validateStepOne()) return;
+
+  try {
+    const res = await axios.post(`${API_ROUTES.REGISTER}/check-unique/jobseeker`, {
+      email: formData.email,
+      mobileNumber: formData.mobileNumber,
+      nic: formData.nic
+    });
+
+    const { emailExists, mobileExists, nicExists } = res.data;
+    const newErrors = {};
+
+    if (emailExists) newErrors.email = "Email already exists";
+    if (mobileExists) newErrors.mobileNumber = "Mobile number already exists";
+    if (nicExists) newErrors.nic = "NIC already exists";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors((prev) => ({ ...prev, ...newErrors }));
+      toast.error("Some details already exist. Please fix them before continuing.", { autoClose: 2000 });
+      return;
     }
-  };
+
+    if (!loadingOtp) {
+      await handleSendOtp(); // send OTP if all values are unique
+    }
+  } catch (err) {
+    console.error("Error checking uniqueness", err);
+    toast.error("Failed to check uniqueness. Please try again.", { autoClose: 2000 });
+  }
+};
+
 
   const handleFinalSubmit = async (e) => {
     e.preventDefault();

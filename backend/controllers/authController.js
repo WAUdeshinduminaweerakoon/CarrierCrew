@@ -37,25 +37,26 @@ const registerEmployer = async (req, res) => {
           "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
       });
     }
-
+    
+    //this part add seperately
     // Check for existing records
-    const existing = await Employer.findOne({
-      $or: [
-        { username },
-        { nic },
-        { email },
-        { mobileNumber }
-      ]
-    });
+    // const existing = await Employer.findOne({
+    //   $or: [
+    //     { username },
+    //     { nic },
+    //     { email },
+    //     { mobileNumber }
+    //   ]
+    // });
 
-    if (existing) {
-      let conflictField = 'Username';
-      if (existing.nic === nic) conflictField = 'NIC';
-      else if (existing.email === email) conflictField = 'Email';
-      else if (existing.mobileNumber === mobileNumber) conflictField = 'Contact';
+    // if (existing) {
+    //   let conflictField = 'Username';
+    //   if (existing.nic === nic) conflictField = 'NIC';
+    //   else if (existing.email === email) conflictField = 'Email';
+    //   else if (existing.mobileNumber === mobileNumber) conflictField = 'Contact';
 
-      return res.status(400).json({ message: `${conflictField} already exists` });
-    }
+    //   return res.status(400).json({ message: `${conflictField} already exists` });
+    // }
 
     const newEmployer = new Employer({
       company,
@@ -85,25 +86,25 @@ const registerJobSeeker = async (req, res) => {
           "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
       });
     }
-
+    // this part is already add seperately
     // Check for existing records
-    const existing = await JobSeeker.findOne({
-      $or: [
-        { username },
-        { nic },
-        { email },
-        { mobileNumber }
-      ]
-    });
+    // const existing = await JobSeeker.findOne({
+    //   $or: [
+    //     { username },
+    //     { nic },
+    //     { email },
+    //     { mobileNumber }
+    //   ]
+    // });
 
-    if (existing) {
-      let conflictField = 'Username';
-      if (existing.nic === nic) conflictField = 'NIC';
-      else if (existing.email === email) conflictField = 'Email';
-      else if (existing.mobileNumber === mobileNumber) conflictField = 'Contact';
+    // if (existing) {
+    //   let conflictField = 'Username';
+    //   if (existing.nic === nic) conflictField = 'NIC';
+    //   else if (existing.email === email) conflictField = 'Email';
+    //   else if (existing.mobileNumber === mobileNumber) conflictField = 'Contact';
 
-      return res.status(400).json({ message: `${conflictField} already exists` });
-    }
+    //   return res.status(400).json({ message: `${conflictField} already exists` });
+    // }
 
     const newJobSeeker = new JobSeeker({
       username,
@@ -337,7 +338,7 @@ const checkEmployerUniqueness = async (req, res) => {
   try {
     const { email, mobileNumber, nic } = req.body;
 
-    const existing = await JobSeeker.findOne({
+    const existing = await Employer.findOne({
       $or: [
         { email },
         { mobileNumber },
@@ -368,7 +369,7 @@ const checkJobSeekerUniqueness = async (req, res) => {
   try {
     const { email, mobileNumber, nic } = req.body;
 
-    const existing = await Employer.findOne({
+    const existing = await JobSeeker.findOne({
       $or: [
         { email },
         { mobileNumber },

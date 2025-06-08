@@ -1,6 +1,6 @@
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:5000";
 
-const PAYMENT_GATEWAY = "http://localhost:5001";
+const PAYMENT_GATEWAY = "http://Payment-gateway-simulation-env.eba-2pp66gsy.ap-south-1.elasticbeanstalk.com";
 
 const API_ROUTES = {
   AUTH: `${BASE_URL}/api/auth`,

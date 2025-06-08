@@ -65,34 +65,42 @@ const JobSeekerSettings = () => {
   return (
     <div className="min-h-screen bg-green-700 flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between p-4 bg-green-800 shadow">
+      <header className="flex items-center justify-between p-4 bg-green-800 shadow relative">
         <h1 className="text-2xl font-bold text-white">CareerCrew.LK</h1>
         <div className="flex items-center space-x-4">
           <button
-            className="text-white hover:text-blue-200 flex items-center"
+            className="text-white hover:text-green-200 flex items-center"
             onClick={() => navigate("/jobseeker/home")}
           >
             <HomeIcon className="h-6 w-6" />
             <span className="hidden md:inline ml-1">Home</span>
           </button>
           <button
-            className="md:hidden text-green-800"
+            className="md:hidden text-white"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <Menu className="h-6 w-6" />
           </button>
         </div>
+
+        {/* Mobile Dropdown Menu */}
         {menuOpen && (
-          <div className="absolute right-4 top-16 w-48 bg-white border rounded shadow-md md:hidden z-10">
+          <div className="absolute right-4 top-16 w-60 bg-white border rounded shadow-md md:hidden z-20">
             <button
-              onClick={() => setActiveTab("jobSeekerAccounts")}
-              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-50"
+              onClick={() => {
+                setActiveTab("jobSeekerAccounts");
+                setMenuOpen(false);
+              }}
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-100"
             >
               Manage Jobseeker Accounts
             </button>
             <button
-              onClick={() => setActiveTab("accountDeletion")}
-              className="block w-full text-left px-4 py-2 text-blue-700 hover:bg-blue-50"
+              onClick={() => {
+                setActiveTab("accountDeletion");
+                setMenuOpen(false);
+              }}
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-green-100"
             >
               Jobseeker Profile Deletion
             </button>

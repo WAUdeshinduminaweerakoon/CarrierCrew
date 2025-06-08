@@ -333,6 +333,69 @@ const verifyJobSeekerPassword = async (req, res) => {
   }
 };
 
+const checkEmployerUniqueness = async (req, res) => {
+  try {
+    const { email, mobileNumber, nic } = req.body;
+
+    const existing = await JobSeeker.findOne({
+      $or: [
+        { email },
+        { mobileNumber },
+        { nic }
+      ]
+    });
+
+    if (!existing) {
+      return res.status(200).json({
+        emailExists: false,
+        mobileExists: false,
+        nicExists: false
+      });
+    }
+
+    res.status(200).json({
+      emailExists: existing.email === email,
+      mobileExists: existing.mobileNumber === mobileNumber,
+      nicExists: existing.nic === nic
+    });
+  } catch (err) {
+    console.error('Error checking uniqueness:', err);
+    res.status(500).json({ message: 'Server error checking uniqueness' });
+  }
+};
+
+const checkJobSeekerUniqueness = async (req, res) => {
+  try {
+    const { email, mobileNumber, nic } = req.body;
+
+    const existing = await Employer.findOne({
+      $or: [
+        { email },
+        { mobileNumber },
+        { nic }
+      ]
+    });
+
+    if (!existing) {
+      return res.status(200).json({
+        emailExists: false,
+        mobileExists: false,
+        nicExists: false
+      });
+    }
+
+    res.status(200).json({
+      emailExists: existing.email === email,
+      mobileExists: existing.mobileNumber === mobileNumber,
+      nicExists: existing.nic === nic
+    });
+  } catch (err) {
+    console.error('Error checking uniqueness:', err);
+    res.status(500).json({ message: 'Server error checking uniqueness' });
+  }
+};
+
+
 
 module.exports = {
   registerEmployer,
@@ -344,4 +407,6 @@ module.exports = {
   resetPassword,
   verifyEmployerPassword,
   verifyJobSeekerPassword,
+  checkEmployerUniqueness,
+  checkJobSeekerUniqueness,
 };

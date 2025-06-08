@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import API_ROUTES from '../../configs/config';
 import { FaBars } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import Header from "./Header";
+import ApplicationHeader from "./ApplicationHeader";
 
 const ViewApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -12,6 +12,10 @@ const ViewApplications = () => {
   const [error, setError] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedArea, setSelectedArea] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const applicationsPerPage = 5;
 
   const employerId = localStorage.getItem('userId');
@@ -28,11 +32,11 @@ const ViewApplications = () => {
           ...job,
           jobSeeker: applicant.jobSeeker,
         }))
+        
       );
 
       // Sort by appliedAt or updatedAt in descending order
       flatApplications.sort((a, b) => new Date(b.appliedAt || b.updatedAt) - new Date(a.appliedAt || a.updatedAt));
-
       setApplications(flatApplications);
     } catch (err) {
       setError('Failed to fetch applicant data.');
@@ -45,24 +49,55 @@ const ViewApplications = () => {
   fetchApplicants();
 }, [apiURL]);
 
+const filteredApplications = applications.filter((app) => {
+  const search = searchTerm.toLowerCase();
+  const fullName = `${app.jobSeeker.firstName} ${app.jobSeeker.lastName}`.toLowerCase();
+  const title = app.jobTitle?.toLowerCase() || '';
+  const area = app.location.toLowerCase() || '';
+  const district = app.district.toLowerCase() || '';
+  const category = app.jobTitle?.toLowerCase() || '';
+
+  const matchesSearch =
+    fullName.includes(search) ||
+    title.includes(search) ||
+    area.includes(search);
+
+  const matchesDistrict = !selectedDistrict || district === selectedDistrict.toLowerCase();
+  const matchesArea = !selectedArea || area === selectedArea.toLowerCase();
+  const matchesCategory = !selectedCategory || category === selectedCategory.toLowerCase();
+
+
+  return matchesSearch && matchesDistrict && matchesArea && matchesCategory;
+});
+
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   // Pagination logic
-  const totalPages = Math.ceil(applications.length / applicationsPerPage);
+  const totalPages = Math.ceil(filteredApplications.length / applicationsPerPage);
   const indexOfLast = currentPage * applicationsPerPage;
   const indexOfFirst = indexOfLast - applicationsPerPage;
-  const currentApps = applications.slice(indexOfFirst, indexOfLast);
+  const currentApps = filteredApplications.slice(indexOfFirst, indexOfLast);
 
   return (
     <div className="flex flex-col items-center min-h-screen overflow-x-hidden bg-green-100">
-     <Header/>
+     <ApplicationHeader
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        onDistrictChange={setSelectedDistrict}
+        onAreaChange={setSelectedArea}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}     
+      />
+
+     
 
       {/* Mobile Menu */}
       <div
-        className={`absolute left-0 top-16 w-full bg-green-800 text-white text-center sm:hidden transition-all duration-300 ease-in-out ${
+        className={`fixed top-16 left-0 w-full bg-green-800 text-white text-center sm:hidden z-30 transition-all duration-300 ease-in-out ${
           isMenuOpen ? 'max-h-screen' : 'max-h-0 overflow-hidden'
         }`}
       >

@@ -27,6 +27,7 @@ const EmployerRegistration = () => {
     companyType: "",
     address: "",
     nearestCity: "",
+    uploadedFileID:"",
   });
 
   const [companyErrors, setCompanyErrors] = useState({});
@@ -122,7 +123,13 @@ const EmployerRegistration = () => {
 
     try {
       const response = await axios.post(API_ROUTES.UPLOAD+"/file", formData);
-      setFileId(response.data.fileId);
+      const uploadedFileId = response.data.fileId;
+      setFileId(uploadedFileId);
+    // udesh add
+      setCompanyForm(prev => ({
+      ...prev,
+      uploadedFileID: uploadedFileId
+      }));
     } catch (err) {
       console.error('Upload error', err);
       alert("Upload failed");
@@ -395,7 +402,7 @@ const EmployerRegistration = () => {
 
         {/* OTP Modal */}
         {showOtpModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="w-full max-w-sm p-6 bg-white rounded shadow-lg">
               <h3 className="mb-4 text-lg font-semibold text-center text-green-600">Enter OTP</h3>
               <input
@@ -457,7 +464,7 @@ const EmployerRegistration = () => {
                   }`}
                 />
                 <div
-                  className="absolute top-2 right-2 cursor-pointer"
+                  className="absolute cursor-pointer top-2 right-2"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -477,7 +484,7 @@ const EmployerRegistration = () => {
                   }`}
                 />
                 <div
-                  className="absolute top-2 right-2 cursor-pointer"
+                  className="absolute cursor-pointer top-2 right-2"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}

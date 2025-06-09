@@ -15,6 +15,8 @@ const API_ROUTES = {
   ADMIN_CATEGORY: `${BASE_URL}/api/admin/category`,
   ADMIN_UPLOAD: `${BASE_URL}/api/upload`,
   JOBS_CATEGORY:`${BASE_URL}/api/category`,
+  ADMIN_ALL_EMPLOYERS: `${BASE_URL}/api/employers`,
+
 };
 
 export default API_ROUTES;

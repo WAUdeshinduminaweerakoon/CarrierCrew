@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_ROUTES from '../configs/config';
 
+
 const FullEmployerProfile = ({ onFileSelect }) => {
   const [expandedIds, setExpandedIds] = useState([]);
   const [employers, setEmployers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiURL = `${API_ROUTES.ADMIN_JOBS} /`;
-
+  const apiURL = `${API_ROUTES.ADMIN_ALL_EMPLOYERS}/`;
   useEffect(() => {
     const fetchEmployers = async () => {
       try {
@@ -34,7 +34,7 @@ const FullEmployerProfile = ({ onFileSelect }) => {
     };
 
     fetchEmployers();
-  }, []);
+  }, [apiURL]);
 
   const toggleExpand = (id) => {
     setExpandedIds((prev) =>
@@ -83,18 +83,22 @@ const FullEmployerProfile = ({ onFileSelect }) => {
                   <p><span className="font-medium">Address:</span> {company.address || 'N/A'}</p>
                   <p><span className="font-medium">Nearest City:</span> {company.nearestCity || 'N/A'}</p>
                 </div>
-                <button
-                  className="inline-block px-4 py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const fileId = company.uploadedFileID;
-                    if (fileId && onFileSelect) {
-                      onFileSelect(fileId);
-                    }
-                  }}
-                >
-                  View Authorization Letter
-                </button>
+                {company.uploadedFileID ? (
+                  <button
+                    className="inline-block px-4 py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const fileId = company.uploadedFileID;
+                      if (onFileSelect) {
+                        onFileSelect(fileId || null);
+                      }
+                    }}
+                  >
+                    View Authorization Letter
+                  </button>
+                ) : (
+                  <p className="mt-3 text-sm italic text-gray-500">Authorization letter not uploaded.</p>
+                )}
               </div>
             )}
           </div>

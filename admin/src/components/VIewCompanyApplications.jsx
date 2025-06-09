@@ -41,32 +41,49 @@ const FileCompanyApplications = () => {
 
           {/* Right: PDF Viewer */}
           <div className="flex flex-col p-6 bg-white rounded shadow">
-            <h2 className="mb-4 text-2xl font-bold text-gray-800">View or Download PDF</h2>
-            <div className="flex-1 overflow-y-auto">
-              {previewUrl && (
-                <>
-                  <iframe
-                    src={previewUrl}
-                    className="w-full h-[600px] border"
-                    title="PDF Preview"
-                  />
-                  <p className="mt-2 text-sm text-gray-600">
-                    If the PDF doesn't display,{' '}
-                    <a
-                      href={previewUrl}
-                      download
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-600 underline"
-                    >
-                      click here to download
-                    </a>
-                    .
-                  </p>
-                </>
-              )}
-            </div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-gray-800">View or Download PDF</h2>
+            <button
+              onClick={() => {
+                setFileId('');
+                setPreviewUrl('');
+              }}
+              className="px-3 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
+            >
+              Reset
+            </button>
           </div>
+
+          <div className="flex-1 overflow-y-auto">
+            {previewUrl ? (
+              <>
+                <iframe
+                  key={fileId}
+                  src={previewUrl}
+                  className="w-full h-[600px] border"
+                  title="PDF Preview"
+                />
+
+                <p className="mt-2 text-sm text-gray-600">
+                  If the PDF doesn't display,{' '}
+                  <a
+                    href={previewUrl}
+                    download
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    click here to download
+                  </a>
+                  .
+                </p>
+              </>
+            ) : (
+              <p className="text-gray-500">Select an employer with an uploaded authorization letter to preview.</p>
+            )}
+          </div>
+        </div>
+
         </div>
       </main>
     </div>

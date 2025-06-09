@@ -2,6 +2,7 @@ import { useState } from "react";
 import { HomeIcon, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import API_ROUTES from "../../configs/config";
+import Header from "./Header";
 
 const EmployerSettings = () => {
   const [activeTab, setActiveTab] = useState("employerAccounts");
@@ -64,46 +65,11 @@ const EmployerSettings = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="flex items-center justify-between p-4 bg-white shadow relative">
-        <div className="flex items-center space-x-2">
-          <img src="/logo.png" alt="Logo" className="h-8" />
-          <h1 className="text-2xl font-bold text-gray-800 hidden md:block">CareerCrew.LK</h1>
-        </div>
-        <div className="flex items-center space-x-4">
-          <button
-            className="text-gray-600 hover:text-blue-600 flex items-center md:px-2"
-            onClick={() => navigate("/employer/home")}
-          >
-            <HomeIcon className="h-6 w-6" />
-            <span className="hidden md:inline ml-1">Home</span>
-          </button>
-          <button
-            className="md:hidden text-gray-700"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <Menu className="h-6 w-6" />
-          </button>
-        </div>
-        {menuOpen && (
-          <div className="absolute right-4 top-16 w-48 bg-white border rounded shadow-md md:hidden">
-            <button
-              onClick={() => setActiveTab("employerAccounts")}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-            >
-              Manage Employer Accounts
-            </button>
-            <button
-              onClick={() => setActiveTab("accountDeletion")}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-            >
-              Employer Profile Deletion
-            </button>
-          </div>
-        )}
-      </header>
+      <Header/>
 
       <div className="flex flex-grow flex-col md:flex-row">
-        <aside className="hidden md:block w-64 bg-white shadow-md p-4">
+
+        <aside className="hidden md:block w-64 bg-green-200 p-4">
           <h2 className="text-lg font-semibold mb-4 text-gray-700">Settings</h2>
           <ul className="space-y-2">
             <li>
@@ -125,7 +91,7 @@ const EmployerSettings = () => {
           </ul>
         </aside>
 
-        <main className="flex-grow p-4 bg-gray-100">
+        <main className="flex-grow p-6 bg-green-100">
           {activeTab === 'employerAccounts' && (
             <div className="text-gray-700 text-center text-lg font-medium">Employer account management content goes here.</div>
           )}

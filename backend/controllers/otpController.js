@@ -19,7 +19,7 @@ const sendOtp = async (email) => {
   await Otp.create({ email, otp });
 
   await transporter.sendMail({
-    from: `"Part Time Jobs LK" <${process.env.EMAIL_USER}>`,
+    from: `"CareerCrew.LK" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: "Your OTP Code",
     text: `Your OTP is ${otp}`,

@@ -267,9 +267,9 @@ const EmployerRegistration = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen pt-10 pb-10 bg-green-50">
+    <div className="flex items-center justify-center min-h-screen pt-10 pb-10 ">
       <ToastContainer />
-      <div className="w-full max-w-md p-5 mx-auto bg-white border rounded-lg shadow-md">
+      <div className="w-full max-w-md p-5 mx-auto ">
         {/* Company Step */}
         {step === "company" && (
           <>
@@ -298,28 +298,43 @@ const EmployerRegistration = () => {
                   </div>
                 )
               )}
-              <label htmlFor="upload" className="text-sm text-left text-green-600 cursor-pointer">
+              <label className="text-sm text-left text-green-600 mb-2 block">
                 Upload Authorization Letter
-                  <div style={{ padding: '20px' }}>
-                    <input type="file" accept="application/pdf" onChange={handleFileChange} />
-                    <button onClick={handleUpload} style={{ marginLeft: '10px' }}>Upload</button>
-                    {fileId && (
-                      <div style={{ marginTop: '10px' }}>
-                        <strong>Uploaded File ID:</strong> {fileId}
-                      </div>
-                    )}
-                  </div>
               </label>
-              <div className="flex justify-end mt-5">
+              <div className="flex items-center">
+                 {/* File input container with reduced right padding */}
+               <div className="flex items-center border border-green-600 rounded-md pl-3 pr-1 py-2 flex-1">
+                <input type="file" accept="application/pdf" onChange={handleFileChange}
+                  className="text-sm text-gray-700 w-full" id="authorizationLetter"
+               />
+             </div>
+
+                {/* Upload button aligned next to the input */}
+              <button onClick={handleUpload} type="button"
+               className="ml-3 px-4 py-2 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+              >
+              Upload
+              </button>
+            </div>
+
+             {/* Uploaded file ID display */}
+            {fileId && (
+            <div className="mt-2 text-sm text-green-700">
+            <strong>Uploaded File ID:</strong> {fileId}
+            </div>
+            )}
+
+
+              <div className="flex justify-between mt-5">
                 <button
                   type="submit"
-                  className="py-2 text-sm text-white bg-green-500 rounded-md px-7"
+                  className="px-4 py-2 text-sm text-white bg-green-600 rounded-md"
                 >
                   Save and Continue
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 ml-2 text-sm text-white bg-gray-600 rounded-md"
+                  className="py-2 text-sm text-white bg-gray-500 rounded-md px-7"
                   onClick={() => setStep("employerDetails")}
                 >
                   Skip

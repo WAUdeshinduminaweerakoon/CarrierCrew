@@ -43,7 +43,7 @@ const FileCompanyApplications = () => {
           <div className="flex flex-col p-6 bg-white rounded shadow">
             <h2 className="mb-4 text-2xl font-bold text-gray-800">View or Download PDF</h2>
             <div className="flex-1 overflow-y-auto">
-              {previewUrl && (
+              {previewUrl ? (
                 <>
                   <iframe
                     src={previewUrl}
@@ -64,7 +64,10 @@ const FileCompanyApplications = () => {
                     .
                   </p>
                 </>
+              ) : (
+                <p className="text-gray-500">Select an employer with an uploaded authorization letter to preview.</p>
               )}
+
             </div>
           </div>
         </div>

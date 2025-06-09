@@ -82,18 +82,22 @@ const FullEmployerProfile = ({ onFileSelect }) => {
                   <p><span className="font-medium">Address:</span> {company.address || 'N/A'}</p>
                   <p><span className="font-medium">Nearest City:</span> {company.nearestCity || 'N/A'}</p>
                 </div>
-                <button
-                  className="inline-block px-4 py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const fileId = company.uploadedFileID;
-                    if (fileId && onFileSelect) {
-                      onFileSelect(fileId);
-                    }
-                  }}
-                >
-                  View Authorization Letter
-                </button>
+                {company.uploadedFileID ? (
+                  <button
+                    className="inline-block px-4 py-2 mt-3 text-white transition bg-green-700 rounded hover:bg-green-800"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const fileId = company.uploadedFileID;
+                      if (fileId && onFileSelect) {
+                        onFileSelect(fileId);
+                      }
+                    }}
+                  >
+                    View Authorization Letter
+                  </button>
+                ) : (
+                  <p className="mt-3 text-sm italic text-gray-500">Authorization letter not uploaded.</p>
+                )}
               </div>
             )}
           </div>

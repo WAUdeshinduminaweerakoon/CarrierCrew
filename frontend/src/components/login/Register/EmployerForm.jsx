@@ -269,7 +269,7 @@ const EmployerRegistration = () => {
   return (
     <div className="flex items-center justify-center min-h-screen pt-10 pb-10 ">
       <ToastContainer />
-      <div className="w-full max-w-md p-5 mx-auto bg-white border rounded-lg shadow-md">
+      <div className="w-full max-w-md p-5 mx-auto ">
         {/* Company Step */}
         {step === "company" && (
           <>

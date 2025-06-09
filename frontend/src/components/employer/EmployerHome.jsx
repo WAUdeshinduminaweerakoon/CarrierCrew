@@ -159,10 +159,20 @@ const EmployerHome = () => {
         </div>
       </div>
 
+      {/* Banner Image */}
+      <div className="w-full max-w-screen-sm px-4 pt-4">
+        <img
+          src="/home-page.png" // Change this to your image path or URL
+          alt="Employer Dashboard"
+          className="rounded-xl shadow-md w-full object-cover h-65"
+        />
+      </div>
+
+
       {/* Stats Display */}
       <div className="w-full max-w-screen-sm px-4 pt-2">
         <div className="bg-white text-green-900 font-medium rounded-xl shadow p-4 grid grid-cols-1 gap-2 text-center">
-          <p>Total Job Posts: {jobs.length}</p>
+          <p>My Advertisements : {jobs.length}</p>
           <p>Total Applicants: {totalApplicants}</p>
           <p>Total Job Seekers: {jobSeekerCount !== null ? jobSeekerCount : 'Loading...'}</p>
         </div>

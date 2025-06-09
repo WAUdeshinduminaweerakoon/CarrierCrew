@@ -19,7 +19,6 @@ const Header = () => {
           <Link to="/employer/home" className="py-2 px-2 hover:bg-green-700 rounded">Home</Link>
           <Link to="/" className="py-2 px-2 hover:bg-green-700 rounded">Login</Link>
           <Link to="/employer/profile" className="py-2 px-2 hover:bg-green-700 rounded">Profile</Link>
-          <Link to="#" className="py-2 px-2 hover:underline">Settings</Link>
           <Link to="/" className="py-2 px-2 hover:underline">Logout</Link>
         </nav>
 
@@ -39,7 +38,6 @@ const Header = () => {
           <Link to="/employer/home" className="block py-2 hover:bg-green-700">Home</Link>
           <Link to="/" className="block py-2 hover:bg-green-700">Login</Link>
           <Link to="/employer/profile" className="block py-2 hover:bg-green-700">Profile</Link>
-          <Link to="#" className="block py-2 hover:bg-green-700">Settings</Link>
           <Link to="/" className="block py-2 hover:bg-green-700">Logout</Link>
         </nav>
       </div>

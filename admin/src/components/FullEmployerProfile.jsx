@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_ROUTES from '../configs/config';
+
 
 const FullEmployerProfile = ({ onFileSelect }) => {
   const [expandedIds, setExpandedIds] = useState([]);
@@ -7,8 +9,7 @@ const FullEmployerProfile = ({ onFileSelect }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiURL = `http://localhost:5000/api/employers/`;
-
+  const apiURL = `${API_ROUTES.ADMIN_ALL_EMPLOYERS}/`;
   useEffect(() => {
     const fetchEmployers = async () => {
       try {

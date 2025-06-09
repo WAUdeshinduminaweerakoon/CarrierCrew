@@ -174,7 +174,7 @@ const GeneralSettings = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="flex items-center justify-between p-4 bg-white shadow">
         <div className="flex items-center space-x-2">
-          <img src="/logo.png" alt="Logo" className="h-8" />
+          {/*<img src="/logo.png" alt="Logo" className="h-8" />*/}
           <h1 className="text-2xl font-bold text-gray-800">CareerCrew.LK</h1>
         </div>
         <button
@@ -198,7 +198,7 @@ const GeneralSettings = () => {
         </aside>
 
         <main className="flex-grow p-8 bg-gray-100">
-          {activeTab === 'adminAccounts' && <div className="text-gray-700">Admin account management content goes here.</div>}
+          {activeTab === 'adminAccounts' && <div className="text-gray-700">Development in Progress - Admin account related settings will go here</div>}
 
           {activeTab === 'locations' && (
             <div className="bg-white p-6 rounded shadow">

@@ -320,7 +320,7 @@ const EmployerRegistration = () => {
              {/* Uploaded file ID display */}
             {fileId && (
             <div className="mt-2 text-sm text-green-700">
-            <strong>Uploaded File ID:</strong> {fileId}
+            {/*<strong>Uploaded File ID:</strong> {fileId}*/}
             </div>
             )}
 

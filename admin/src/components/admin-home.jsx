@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BarChart3, Users, Briefcase, Settings, FileText, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import API_ROUTES from "../configs/config";
 import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
@@ -17,20 +17,17 @@ const AdminDashboardHome = () => {
   const [jobCount, setJobCount] = useState(0);
   const [applicantCount, setApplicantCount] = useState(0);
   const [userRegistrations, setUserRegistrations] = useState([]);
-
-
-  // State to hold the job count by month data from API
   const [jobsByMonth, setJobsByMonth] = useState([]);
 
   useEffect(() => {
     const fetchCounts = async () => {
       try {
         const [employerRes, jobSeekerRes, jobRes, applicantRes] = await Promise.all([
-          axios.get(`${API_ROUTES.ADMIN_EMPLOYERS}/count`),
-          axios.get(`${API_ROUTES.ADMIN_JOBSEEKERS}/count`),
-          axios.get(`${API_ROUTES.ADMIN_JOBS}/count`),
+            axios.get(`${API_ROUTES.ADMIN_EMPLOYERS}/count`),
+            axios.get(`${API_ROUTES.ADMIN_JOBSEEKERS}/count`),
+            axios.get(`${API_ROUTES.ADMIN_JOBS}/count`),
           axios.get(`${API_ROUTES.ADMIN_APPLICANTS}/count`)
-        ]);
+          ]);
 
         setEmployerCount(employerRes.data.totalEmployers || 0);
         setJobSeekerCount(jobSeekerRes.data.totalJobSeekers || 0);
@@ -49,10 +46,7 @@ const AdminDashboardHome = () => {
     const fetchJobsByMonth = async () => {
       try {
         const res = await axios.get(`${API_ROUTES.ADMIN_JOBS}/last-four-months`);
-        // API returns something like:
-        // [{ year: 2025, month: 3, count: 10 }, ...]
-        
-        // Format data for chart: label as "MMM YYYY", value as count
+
         const formattedData = res.data.map(({ year, month, count }) => ({
           name: moment().year(year).month(month - 1).format("MMM YYYY"),
           JobsPublished: count
@@ -92,24 +86,24 @@ const AdminDashboardHome = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         {[{
-          title: "Total Users",
-          value: totalUsers.toLocaleString(),
+            title: "Total Users",
+            value: totalUsers.toLocaleString(),
           icon: <Users className="w-10 h-10 text-blue-500" />
         }, {
-          title: "Job Listings",
-          value: jobCount.toLocaleString(),
+            title: "Job Listings",
+            value: jobCount.toLocaleString(),
           icon: <Briefcase className="w-10 h-10 text-green-500" />
         }, {
-          title: "Applications",
-          value: applicantCount.toLocaleString(),
+            title: "Applications",
+            value: applicantCount.toLocaleString(),
           icon: <BarChart3 className="w-10 h-10 text-purple-500" />
         }].map((item, index) => (
           <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
             <div className="flex items-center space-x-4">
               {item.icon}
               <div>
-                <p className="text-sm text-gray-500">{item.title}</p>
-                <p className="text-xl font-semibold">{item.value}</p>
+                <p className="text-1xl text-gray-500">{item.title}</p>
+                <p className="text-4xl font-semibold">{item.value}</p>
               </div>
             </div>
           </div>
@@ -117,7 +111,7 @@ const AdminDashboardHome = () => {
       </div>
 
       {/* Actions Panel */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-1 h-40 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 ">
         <Link to="/jobs">
           <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
             <div className="flex items-center mb-4">
@@ -129,13 +123,13 @@ const AdminDashboardHome = () => {
         </Link>
 
         <Link to="/company/authorization">
-        <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
-          <div className="flex items-center mb-4">
-            <ShieldCheck className="w-6 h-6 text-emerald-500 mr-2" />
+          <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
+            <div className="flex items-center mb-4">
+              <ShieldCheck className="w-6 h-6 text-emerald-500 mr-2" />
             <h2 className="text-lg font-medium text-gray-700">Review Applications</h2>
-          </div>
+            </div>
           <p className="text-sm text-gray-600">Moderate and monitor job seeker applications and activity.</p>
-        </div>
+          </div>
         </Link>
 
         <Link to="/settings">
@@ -149,13 +143,18 @@ const AdminDashboardHome = () => {
         </Link>
       </div>
 
-      {/* Charts Grid Section */}
+      {/* Charts Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-        {/* Chart 1: Jobs Published */}
-        <div className="bg-white rounded-xl shadow p-4">
-          <h3 className="text-base font-semibold text-gray-700 mb-2">Jobs Published (Last 4 Months)</h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={jobsByMonth} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+        {/* Jobs Published */}
+        <div className="bg-white rounded-xl shadow p-4 h-80">
+          <h3 className="text-base font-semibold text-gray-700 mb-2">
+            Jobs Published (Last 4 Months)
+          </h3>
+          <ResponsiveContainer width="100%" height="90%">
+            <BarChart
+              data={jobsByMonth}
+              margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" fontSize={10} />
               <YAxis allowDecimals={false} fontSize={10} />
@@ -166,43 +165,48 @@ const AdminDashboardHome = () => {
           </ResponsiveContainer>
         </div>
 
-                {/* Chart 3: Placeholder for additional chart */}
-<div className="bg-white rounded-xl shadow p-4">
-  <h3 className="text-base font-semibold text-gray-700 mb-2">Subscription Types</h3>
-  <ResponsiveContainer width="100%" height={200}>
-    <PieChart>
-      <Pie
-        data={[
-          { name: 'Free', value: 3 },
-          { name: 'Basic', value: 10 },
-          { name: 'Premium', value: 2 },
-          { name: 'Ultimate', value: 1 },
-        ]}
-        cx="50%"
-        cy="50%"
-        outerRadius={70}
-        fill="#8884d8"
-        dataKey="value"
-        label
-      >
-        <Cell fill="#34d399" /> {/* Green - Free */}
-        <Cell fill="#60a5fa" /> {/* Blue - Basic */}
-        <Cell fill="#fbbf24" /> {/* Amber - Premium */}
-        <Cell fill="#f87171" /> {/* Red - Ultimate */}
-      </Pie>
-      <Tooltip />
-      <Legend wrapperStyle={{ fontSize: 12 }} />
-    </PieChart>
-  </ResponsiveContainer>
-</div>
+        {/* Subscription Types */}
+        <div className="bg-white rounded-xl shadow p-4 h-80">
+          <h3 className="text-base font-semibold text-gray-700 mb-2">
+            Subscription Types
+          </h3>
+          <ResponsiveContainer width="100%" height="90%">
+            <PieChart>
+              <Pie
+                data={[
+                  { name: "Free", value: 3 },
+                  { name: "Basic", value: 10 },
+                  { name: "Premium", value: 2 },
+                  { name: "Ultimate", value: 1 },
+                ]}
+                cx="50%"
+                cy="50%"
+                outerRadius={70}
+                fill="#8884d8"
+                dataKey="value"
+                label
+              >
+                <Cell fill="#34d399" />
+                <Cell fill="#60a5fa" />
+                <Cell fill="#fbbf24" />
+                <Cell fill="#f87171" />
+              </Pie>
+              <Tooltip />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
 
-
-
-        {/* Chart 2: User Registrations */}
-        <div className="bg-white rounded-xl shadow p-4">
-          <h3 className="text-base font-semibold text-gray-700 mb-2">User Registrations (Last 5 Months)</h3>
-          <ResponsiveContainer width="100%" height={180}>
-            <LineChart data={userRegistrations} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+        {/* User Registrations */}
+        <div className="bg-white rounded-xl shadow p-4 h-80">
+          <h3 className="text-base font-semibold text-gray-700 mb-2">
+            User Registrations (Last 5 Months)
+          </h3>
+          <ResponsiveContainer width="100%" height="90%">
+            <LineChart
+              data={userRegistrations}
+              margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" fontSize={10} />
               <YAxis allowDecimals={false} fontSize={10} />
@@ -213,15 +217,8 @@ const AdminDashboardHome = () => {
             </LineChart>
           </ResponsiveContainer>
         </div>
-
-
       </div>
-
-
-
     </div>
-
-    
   );
 };
 

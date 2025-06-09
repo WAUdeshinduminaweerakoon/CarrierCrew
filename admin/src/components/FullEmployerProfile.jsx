@@ -88,8 +88,8 @@ const FullEmployerProfile = ({ onFileSelect }) => {
                     onClick={(e) => {
                       e.stopPropagation();
                       const fileId = company.uploadedFileID;
-                      if (fileId && onFileSelect) {
-                        onFileSelect(fileId);
+                      if (onFileSelect) {
+                        onFileSelect(fileId || null);
                       }
                     }}
                   >

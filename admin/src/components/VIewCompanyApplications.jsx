@@ -46,10 +46,12 @@ const FileCompanyApplications = () => {
               {previewUrl ? (
                 <>
                   <iframe
+                    key={fileId}
                     src={previewUrl}
                     className="w-full h-[600px] border"
                     title="PDF Preview"
                   />
+
                   <p className="mt-2 text-sm text-gray-600">
                     If the PDF doesn't display,{' '}
                     <a

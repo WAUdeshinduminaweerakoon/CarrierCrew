@@ -189,7 +189,7 @@ const JobSeekerRegistration = () => {
   return (
     <div className="flex items-center justify-center min-h-screen py-10 ">
       <ToastContainer />
-      <div className="w-full max-w-md p-6 bg-white border rounded-lg shadow-md">
+      <div className="w-full max-w-md p-6 ">
         <h1 className="mb-6 text-2xl font-bold text-center text-green-600">
           Register as Job Seeker
         </h1>

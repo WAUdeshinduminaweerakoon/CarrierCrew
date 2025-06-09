@@ -115,7 +115,7 @@ const ViewJobs = () => {
     <div className="flex flex-col min-h-screen bg-gray-50">
       <header className="flex items-center justify-between p-4 bg-white shadow">
         <div className="flex items-center space-x-2">
-          <img src="/logo.png" alt="Logo" className="h-8" />
+          {/*<img src="/logo.png" alt="Logo" className="h-8" />*/}
           <h1 className="text-2xl font-bold text-gray-800">CareerCrew.LK</h1>
         </div>
         <button

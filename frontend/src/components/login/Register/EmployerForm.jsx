@@ -17,6 +17,8 @@ const EmployerRegistration = () => {
   const [locations, setLocations] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [nearestCityOptions, setNearestCityOptions] = useState([]);
+  const [file, setFile] = useState(null);
+  const [fileId, setFileId] = useState(null);
 
   const [companyForm, setCompanyForm] = useState({
     name: "",
@@ -107,6 +109,26 @@ const EmployerRegistration = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFileId(null);
+  };
+
+  const handleUpload = async () => {
+    if (!file) return alert("Please select a file");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post(API_ROUTES.UPLOAD+"/file", formData);
+      setFileId(response.data.fileId);
+    } catch (err) {
+      console.error('Upload error', err);
+      alert("Upload failed");
+    }
+  };
+
   const handleDataChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
@@ -179,11 +201,38 @@ const EmployerRegistration = () => {
 
   // Handle employer details submit (send OTP)
   const handleEmployerDetailsSubmit = async (e) => {
-    e.preventDefault();
-    if (validateEmployerDetails() && !loadingOtp) {
-      await handleSendOtp();
+  e.preventDefault();
+  if (!validateEmployerDetails()) return;
+
+  try {
+    const res = await axios.post(`${API_ROUTES.REGISTER}/check-unique/employer`, {
+      email: formData.email,
+      mobileNumber: formData.mobileNumber,
+      nic: formData.nic
+    });
+
+    const { emailExists, mobileExists, nicExists } = res.data;
+    const newErrors = {};
+
+    if (emailExists) newErrors.email = "Email already exists";
+    if (mobileExists) newErrors.mobileNumber = "Mobile number already exists";
+    if (nicExists) newErrors.nic = "NIC already exists";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors((prev) => ({ ...prev, ...newErrors }));
+      toast.error("Some details already exist. Please fix them before continuing.", { autoClose: 3000 });
+      return;
     }
-  };
+
+    if (!loadingOtp) {
+      await handleSendOtp(); // send OTP if all values are unique
+    }
+  } catch (err) {
+    console.error("Error checking uniqueness", err);
+    toast.error("Failed to check uniqueness. Please try again.", { autoClose: 2000 });
+  }
+};
+
 
   // Handle final credentials submit (complete registration)
   const handleCredentialsSubmit = async (e) => {
@@ -244,11 +293,15 @@ const EmployerRegistration = () => {
               )}
               <label htmlFor="upload" className="text-sm text-left text-green-600 cursor-pointer">
                 Upload Authorization Letter
-                <input
-                  type="file"
-                  id="upload"
-                  className="w-full p-2 mt-1 text-sm border border-green-500 rounded-md"
-                />
+                  <div style={{ padding: '20px' }}>
+                    <input type="file" accept="application/pdf" onChange={handleFileChange} />
+                    <button onClick={handleUpload} style={{ marginLeft: '10px' }}>Upload</button>
+                    {fileId && (
+                      <div style={{ marginTop: '10px' }}>
+                        <strong>Uploaded File ID:</strong> {fileId}
+                      </div>
+                    )}
+                  </div>
               </label>
               <div className="flex justify-end mt-5">
                 <button
@@ -265,6 +318,8 @@ const EmployerRegistration = () => {
                   Skip
                 </button>
               </div>
+
+
             </form>
           </>
         )}

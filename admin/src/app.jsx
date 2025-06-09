@@ -5,6 +5,7 @@ import Home from "./components/admin-home";
 import GeneralSettings from "./components/GeneralSettings";
 import LoginPage from "./components/login/Login"; 
 import AllJobs from "./components/ViewAllJobs";
+import FileViewer from "./components/VIewCompanyApplications";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
     {
     path: "/jobs",
     element: <AllJobs />, 
+  },
+      {
+    path: "/company/authorization",
+    element: <FileViewer />, 
   },
 ]);
 

@@ -128,6 +128,7 @@ const AdminDashboardHome = () => {
           </div>
         </Link>
 
+        <Link to="/company/authorization">
         <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
           <div className="flex items-center mb-4">
             <ShieldCheck className="w-6 h-6 text-emerald-500 mr-2" />
@@ -135,6 +136,7 @@ const AdminDashboardHome = () => {
           </div>
           <p className="text-sm text-gray-600">Moderate and monitor job seeker applications and activity.</p>
         </div>
+        </Link>
 
         <Link to="/settings">
           <div className="bg-white rounded-xl p-5 shadow hover:shadow-lg transition">
